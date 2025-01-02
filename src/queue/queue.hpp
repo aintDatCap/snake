@@ -1,7 +1,10 @@
 #ifndef QUEUE_HPP
 #define QUEUE_HPP
 
+#include <cstddef>
+#include <functional>
 #include <vector>
+
 template <typename T> struct QueueElement {
     T value;
     QueueElement<T> *next;
@@ -9,31 +12,43 @@ template <typename T> struct QueueElement {
 
 template <typename T> class Queue {
   private:
-    QueueElement<T> head;
+    QueueElement<T> *head;
 
   public:
     Queue<T>(T value) {
-        this->head.value = value;
+        this->head = new QueueElement<T>;
+        this->head->value = value;
+        this->head->next = nullptr;
     }
 
     void append(T value) {
-        QueueElement<T> elem;
-        elem.value = value;
+        QueueElement<T> *current = this->head;
+        while (current->next) {
+            current = current->next;
+        }
 
+        current->next = new QueueElement<T>;
+        current->next->value = value;
+        current->next->next = nullptr;
+    }
+
+    T pop() {
+        QueueElement<T> *old = this->head;
+        if (this->head->next) {
+            this->head = this->head->next;
+        } else {
+            this->head = nullptr;
+        }
+        return old->value;
+    }
+
+    void foreach_element(std::function<T> callback) {
         QueueElement<T> current = this->head;
-        while (current.next) {
+        do {
+            callback(current.value);
             current = current.next;
-        }
-        current.next = &elem;
+        } while (current);
     }
-
-    void pop() {
-        QueueElement<T> old = this->head;
-        if (this->head.next) {
-            this->head = this->head.next;
-        }
-    }
-
     std::vector<T> to_vector() {
         std::vector<T> result;
         QueueElement<T> current = this->head;
