@@ -1,6 +1,7 @@
 #ifndef LOGIC_HPP
 #define LOGIC_HPP
 
+#include "queue/queue.hpp"
 #include <cstdint>
 #include <vector>
 
@@ -19,7 +20,7 @@ typedef struct {
 
 bool coordinates_are_equal(Coordinates a, Coordinates b);
 
-typedef enum: int8_t {
+typedef enum : int8_t {
     DIRECTION_UP = 1,
     DIRECTION_DOWN = 2,
     DIRECTION_LEFT = ~1,
@@ -40,8 +41,8 @@ class Game {
     Direction current_direction;
     Coordinates snake_head_position;
     Coordinates apple_position;
-    std::vector<Coordinates> snake_occupied_cells;
-    
+    Queue<Coordinates> snake_body;
+
     void new_apple_position();
 
   public:
