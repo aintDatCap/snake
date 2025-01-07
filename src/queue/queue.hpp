@@ -1,7 +1,6 @@
 #ifndef QUEUE_HPP
 #define QUEUE_HPP
 
-#include <cstddef>
 #include <functional>
 #include <vector>
 
@@ -15,6 +14,10 @@ template <typename T> class Queue {
     QueueElement<T> *head;
 
   public:
+    Queue<T>() {
+        this->head = nullptr;
+    }
+
     Queue<T>(T value) {
         this->head = new QueueElement<T>;
         this->head->value = value;
@@ -22,6 +25,13 @@ template <typename T> class Queue {
     }
 
     void append(T value) {
+        if(!this->head) {
+            this->head = new QueueElement<T>;
+            this->head->value = value;
+            this->head->next = nullptr;
+            return;
+        }
+
         QueueElement<T> *current = this->head;
         while (current->next) {
             current = current->next;

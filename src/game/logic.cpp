@@ -22,6 +22,8 @@ Game::Game(uint16_t table_height, uint16_t table_width) {
     this->snake_head_position.y = table_height / 2;
 
     this->new_apple_position();
+
+    this->snake_body = Queue<Coordinates>();
 }
 
 void Game::new_apple_position() {
@@ -30,7 +32,7 @@ void Game::new_apple_position() {
 GameResult Game::update_game(Direction player_input) {
     if(coordinates_are_equal(this->snake_head_position, this->apple_position)) {
 
-        // TODO: the snake should grow
+        // TODO: update player score and create a new apple
 
     }
 

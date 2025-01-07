@@ -1,30 +1,25 @@
-#include "queue/queue.hpp"
+#include "game/logic.hpp"
 #include <check.h>
 #include <cstdint>
 
-START_TEST(test_queue_1) {
-    Queue<uint32_t> queue;
-    queue.append(3);
-    queue.append(6);
-    queue.append(984);
-
-    ck_assert_uint_eq(queue.pop(), 3);
-    ck_assert_uint_eq(queue.pop(), 6);
-    ck_assert_uint_eq(queue.pop(), 984);
+START_TEST(test_game_logic_1) {
+    Snake::Game game = Snake::Game(300, 300);
+    game.update_game(Snake::DIRECTION_UP);
+    game.update_game(Snake::DIRECTION_RIGHT);
 }
 END_TEST
 
-Suite *queue_test_suite(void) {
+Suite *game_logic_test_suite(void) {
     Suite *s;
     TCase *tc_core;
     TCase *tc_limits;
 
-    s = suite_create("Queue");
+    s = suite_create("Game logic");
 
     /* Core test case */
     tc_core = tcase_create("Core");
 
-    tcase_add_test(tc_core, test_queue_1);
+    tcase_add_test(tc_core, test_game_logic_1);
     suite_add_tcase(s, tc_core);
 
     /* Limits test case */
@@ -41,7 +36,7 @@ int main(void) {
     Suite *s;
     SRunner *sr;
 
-    s = queue_test_suite();
+    s = game_logic_test_suite();
     sr = srunner_create(s);
 
     srunner_set_fork_status(sr, CK_NOFORK);
