@@ -11,18 +11,31 @@ template <typename T> class Queue {
     QueueElement<T> *head;
 
   public:
-    Queue<T>() {
+    Queue() {
         this->head = nullptr;
     }
 
-    Queue<T>(T value) {
+    Queue(T value) {
         this->head = new QueueElement<T>;
         this->head->value = value;
         this->head->next = nullptr;
     }
 
+    ~Queue() {
+        if (!head) {
+            return;
+        }
+
+        QueueElement<T> *current = head;
+        do {
+            QueueElement<T> *previous = current;
+            current = current->next;
+            delete previous;
+        } while (current->next);
+    }
+
     void append(T value) {
-        if(!this->head) {
+        if (!this->head) {
             this->head = new QueueElement<T>;
             this->head->value = value;
             this->head->next = nullptr;

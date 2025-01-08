@@ -46,9 +46,9 @@ class Game {
 
   public:
     Game(uint16_t table_height, uint16_t table_width);
-    ~Game();
 
     GameResult update_game(Direction player_input);
+
 };
 
 } // namespace Snake
