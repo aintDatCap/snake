@@ -15,12 +15,14 @@ class UI {
     WINDOW *window;
     Game* game;
 
+
   public:
     UI(Game *game) {
         this->game = game;
     }
 
     void update_game_window();
+    Direction get_player_input ();
 };
 } // namespace Snake
 
