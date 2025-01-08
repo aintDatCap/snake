@@ -16,11 +16,11 @@ class UI {
     Game* game;
 
   public:
-    UI(Game *game) {
-        this->game = game;
-    }
+    UI(Game *game);
+    ~UI();
 
     void update_game_window();
+    void close_window();
 };
 } // namespace Snake
 
