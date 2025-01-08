@@ -3,7 +3,6 @@
 
 #include "queue/queue.hpp"
 #include <cstdint>
-#include <vector>
 
 namespace Snake {
 

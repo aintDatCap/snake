@@ -1,20 +1,27 @@
-cmake_minimum_required(VERSION 3.20.0)
+cmake_minimum_required(VERSION 3.25.0)
 project(Snake VERSION 0.1.0 LANGUAGES C CXX)
+
+set(CMAKE_CXX_STANDARD 17)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(SNAKE_SOURCE_DIR ${PROJECT_SOURCE_DIR}/src)
 
 add_subdirectory(dependencies)
 
-add_executable(Snake ${SNAKE_SOURCE_DIR}/main.cpp)
+set(PROGRAM_SOURCES
+  ${SNAKE_SOURCE_DIR}/queue/queue.hpp
+
+  ${SNAKE_SOURCE_DIR}/game/logic.hpp
+  ${SNAKE_SOURCE_DIR}/game/logic.cpp
+  ${SNAKE_SOURCE_DIR}/game/graphics.hpp
+)
+
+add_executable(Snake ${SNAKE_SOURCE_DIR}/main.cpp ${PROGRAM_SOURCES})
 
 target_include_directories(Snake PUBLIC ${SNAKE_SOURCE_DIR})
 
-if(MSVC)
-  target_compile_options(Snake PRIVATE /W4 /WX)
-else()
-  target_compile_options(Snake PRIVATE -Wall -Wextra -Wpedantic -Werror)
-endif()
+target_compile_options(Snake PRIVATE -Wall -Wextra -Wpedantic -Werror)
+
 
 set(CURSES_NEED_NCURSES TRUE)
 find_package(Curses REQUIRED)
