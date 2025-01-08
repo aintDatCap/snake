@@ -1,9 +1,6 @@
 #ifndef QUEUE_HPP
 #define QUEUE_HPP
 
-#include <functional>
-#include <vector>
-
 template <typename T> struct QueueElement {
     T value;
     QueueElement<T> *next;
@@ -52,19 +49,11 @@ template <typename T> class Queue {
         return old->value;
     }
 
-    void foreach_element(std::function<T> callback) {
-        QueueElement<T> current = this->head;
+    void foreach_element(void (*callback)(T)) {
+        QueueElement<T> *current = this->head;
         do {
-            callback(current.value);
-            current = current.next;
-        } while (current);
-    }
-    std::vector<T> to_vector() {
-        std::vector<T> result;
-        QueueElement<T> current = this->head;
-        do {
-            result.push_back(current.value);
-            current = current.next;
+            callback(current->value);
+            current = current->next;
         } while (current);
     }
 };
