@@ -1,9 +1,9 @@
 #include "game/logic.hpp"
 #include <check.h>
-#include <cstdint>
+#include <cstdlib>
 
 START_TEST(test_game_logic_1) {
-    Snake::Game game = Snake::Game(300, 300);
+    Snake::Game game(300, 300);
     game.update_game(Snake::DIRECTION_UP);
     game.update_game(Snake::DIRECTION_RIGHT);
 }

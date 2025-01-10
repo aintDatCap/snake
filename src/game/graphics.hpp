@@ -15,7 +15,6 @@ class UI {
     WINDOW *window;
     Game* game;
 
-
   public:
     UI(Game *game);
     ~UI();

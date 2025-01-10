@@ -1,7 +1,7 @@
 #ifndef LOGIC_HPP
 #define LOGIC_HPP
 
-#include "queue/queue.hpp"
+#include "utils/queue.hpp"
 #include <cstdint>
 
 namespace Snake {
@@ -49,6 +49,17 @@ class Game {
 
     GameResult update_game(Direction player_input);
 
+    GameTable get_game_table() const {
+        return game_table;
+    }
+    
+    Coordinates get_snake_head_position() const {
+        return snake_head_position;
+    }
+
+    Queue<Coordinates> get_snake_body() const {
+        return snake_body;
+    }
 };
 
 } // namespace Snake

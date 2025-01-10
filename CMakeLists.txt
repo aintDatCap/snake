@@ -9,11 +9,13 @@ set(SNAKE_SOURCE_DIR ${PROJECT_SOURCE_DIR}/src)
 add_subdirectory(dependencies)
 
 set(PROGRAM_SOURCES
-  ${SNAKE_SOURCE_DIR}/queue/queue.hpp
+  ${SNAKE_SOURCE_DIR}/utils/queue.hpp
+  ${SNAKE_SOURCE_DIR}/utils/list.hpp
 
   ${SNAKE_SOURCE_DIR}/game/logic.hpp
   ${SNAKE_SOURCE_DIR}/game/logic.cpp
   ${SNAKE_SOURCE_DIR}/game/graphics.hpp
+  ${SNAKE_SOURCE_DIR}/game/graphics.cpp
 )
 
 add_executable(Snake ${SNAKE_SOURCE_DIR}/main.cpp ${PROGRAM_SOURCES})
