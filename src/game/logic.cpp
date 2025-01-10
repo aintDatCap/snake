@@ -35,12 +35,16 @@ Game::Game(uint16_t table_height, uint16_t table_width) {
 }
 
 void Game::new_apple_position() {
+    // TODO
+    this->apple_position.x = 3;
+    this->apple_position.y = 3;
 }
 
 GameResult Game::update_game(Direction player_input) {
     if(coordinates_are_equal(this->snake_head_position, this->apple_position)) {
 
         // TODO: update player score and create a new apple
+        this->new_apple_position();
 
     }
 

@@ -57,6 +57,10 @@ class Game {
         return snake_head_position;
     }
 
+    Coordinates get_apple_position() const {
+        return apple_position;
+    }
+
     Queue<Coordinates> get_snake_body() const {
         return snake_body;
     }
