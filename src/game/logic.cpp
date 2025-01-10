@@ -54,24 +54,28 @@ GameResult Game::update_game(Direction player_input) {
         // TODO
         switch (player_input) {
         case DIRECTION_UP: {
+            // remove 1 to y
             break;
         }
         case DIRECTION_DOWN: {
+            // add 1 to y
             break;
         }
         case DIRECTION_LEFT: {
+            // remove 1 to x
             break;
         }
         case DIRECTION_RIGHT: {
+            // add 1 to x
             break;
         }
         default:
             throw std::invalid_argument("player_input should assume only values defined by the 'Direction' enum");
             break;
         }
-    }
 
-    
+        // set direction
+    }
 
     return GAME_UNFINISHED;
 }

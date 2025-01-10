@@ -28,23 +28,21 @@ template <typename T> class List {
         ListElement<T> *new_element = new ListElement<T>;
         new_element->value = value;
 
-        if(!this->head->before && !this->head->next) {
-            this->head->before = new_element;
-            this->head->next = new_element;
-            new_element->before = this->head;
-            new_element->next = this->head;
-            return;
+        ListElement<T> *current = this->head;
+        while (current->next) {
+            current = current->next;
         }
-
-        new_element->before = this->head->before;
-        new_element->next = this->head;
-        this->head->before = new_element; 
+        current->next = new_element;
+        new_element->before = current;
     }
 
     T get_element_at(uint32_t index) {
         ListElement<T> *current = this->head;
         uint32_t i = 0;
         while ((++i) < index) {
+            if(!current->next) {
+                return NULL;
+            }
             current = current->next;
         }
         return current->value;
