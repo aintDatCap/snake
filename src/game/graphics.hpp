@@ -10,10 +10,16 @@
 #endif
 
 namespace Snake {
+
+typedef enum {
+    APPLE_COLOR = 0,
+    SNAKE_COLOR = 1
+} SnakeColors;
+
 class UI {
   private:
     WINDOW *window;
-    Game* game;
+    Game *game;
 
   public:
     UI(Game *game);
@@ -21,7 +27,7 @@ class UI {
 
     void update_game_window();
     void close_window();
-    Direction get_player_input ();
+    Direction get_player_input();
 };
 } // namespace Snake
 
