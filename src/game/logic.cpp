@@ -2,7 +2,10 @@
 #define LOGIC_CPP
 
 #include "logic.hpp"
+#include <cstdint>
 #include <stdexcept>
+
+#define SNAKE_BODY_SIZE 4
 
 namespace Snake {
 bool coordinates_are_equal(Coordinates a, Coordinates b) {
@@ -23,7 +26,12 @@ Game::Game(uint16_t table_height, uint16_t table_width) {
 
     this->new_apple_position();
 
-    this->snake_body = Queue<Coordinates>();
+    for(uint16_t i = this->snake_head_position.y + 1 ; i < this->snake_head_position.y + SNAKE_BODY_SIZE; i++) {
+        Coordinates coords;
+        coords.x = this->snake_head_position.x;
+        coords.y = i;
+        this->snake_body.append(coords);
+    }
 }
 
 void Game::new_apple_position() {
