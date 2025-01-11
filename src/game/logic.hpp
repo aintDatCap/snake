@@ -52,7 +52,7 @@ class Game {
     GameTable get_game_table() const {
         return game_table;
     }
-    
+
     Coordinates get_snake_head_position() const {
         return snake_head_position;
     }

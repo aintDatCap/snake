@@ -12,7 +12,6 @@ bool coordinates_are_equal(Coordinates a, Coordinates b) {
     return a.x == b.x && a.y == b.y;
 }
 
-
 Game::Game(uint16_t table_height, uint16_t table_width) {
     this->result = GAME_UNFINISHED;
 
@@ -26,7 +25,7 @@ Game::Game(uint16_t table_height, uint16_t table_width) {
 
     this->new_apple_position();
 
-    for(uint16_t i = this->snake_head_position.y + 1 ; i < this->snake_head_position.y + SNAKE_BODY_SIZE; i++) {
+    for (uint16_t i = this->snake_head_position.y + 1; i < this->snake_head_position.y + SNAKE_BODY_SIZE; i++) {
         Coordinates coords;
         coords.x = this->snake_head_position.x;
         coords.y = i;
@@ -41,40 +40,38 @@ void Game::new_apple_position() {
 }
 
 GameResult Game::update_game(Direction player_input) {
-    if(coordinates_are_equal(this->snake_head_position, this->apple_position)) {
-
+    if (coordinates_are_equal(this->snake_head_position, this->apple_position)) {
         // TODO: update player score and create a new apple
         this->new_apple_position();
-
     }
 
     // if the desired direction is valid and is different from the current one
+    // we should change the current direction based on player input
     if (player_input != this->current_direction && player_input != ~this->current_direction) {
+        // set this->current_direction
+    }
 
-        // TODO
-        switch (player_input) {
-        case DIRECTION_UP: {
-            // remove 1 to y
-            break;
-        }
-        case DIRECTION_DOWN: {
-            // add 1 to y
-            break;
-        }
-        case DIRECTION_LEFT: {
-            // remove 1 to x
-            break;
-        }
-        case DIRECTION_RIGHT: {
-            // add 1 to x
-            break;
-        }
-        default:
-            throw std::invalid_argument("player_input should assume only values defined by the 'Direction' enum");
-            break;
-        }
-
-        // set direction
+    switch (player_input) {
+    case DIRECTION_UP: {
+        // remove 1 to y
+        break;
+    }
+    case DIRECTION_DOWN: {
+        // add 1 to y
+        break;
+    }
+    case DIRECTION_LEFT: {
+        // remove 1 to x
+        break;
+    }
+    case DIRECTION_RIGHT: {
+        // add 1 to x
+        break;
+    }
+    default: {
+        throw std::invalid_argument("player_input should assume only values defined by the 'Direction' enum");
+        break;
+    }
     }
 
     return GAME_UNFINISHED;
