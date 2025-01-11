@@ -40,7 +40,7 @@ class Game {
     Direction current_direction;
     Coordinates snake_head_position;
     Coordinates apple_position;
-    Queue<Coordinates> snake_body;
+    Queue<Coordinates> *snake_body;
 
     void new_apple_position();
 
@@ -61,7 +61,7 @@ class Game {
         return apple_position;
     }
 
-    Queue<Coordinates> get_snake_body() const {
+    Queue<Coordinates> *get_snake_body() const {
         return snake_body;
     }
 };

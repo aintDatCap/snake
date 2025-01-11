@@ -3,7 +3,6 @@
 
 #include "logic.hpp"
 #include <cstdint>
-#include <functional>
 
 #ifdef _WIN32
 #include <ncurses/ncurses.h>
@@ -34,14 +33,21 @@ class GameUI {
     void close_window();
 };
 
+typedef enum {
+  MENU_EXIT_PROGRAM,
+  MENU_PLAY_GAME
+} MenuAction;
+
 class MenuUI {
   private:
     WINDOW *window;
-    std::function<void()> start_game_callback;
+    WINDOW *button_window;
 
   public:
-    MenuUI(uint16_t width, uint16_t height, std::function<void()> start_game_callback);
+    MenuUI(uint16_t width, uint16_t height);
     ~MenuUI();
+
+    MenuAction wait_for_user_input();
 };
 
 } // namespace Snake

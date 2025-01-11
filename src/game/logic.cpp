@@ -2,6 +2,7 @@
 #define LOGIC_CPP
 
 #include "logic.hpp"
+#include "utils/queue.hpp"
 #include <cstdint>
 #include <stdexcept>
 
@@ -25,11 +26,12 @@ Game::Game(uint16_t table_height, uint16_t table_width) {
 
     this->new_apple_position();
 
+    this->snake_body = new Queue<Coordinates>();
     for (uint16_t i = this->snake_head_position.y + 1; i < this->snake_head_position.y + SNAKE_BODY_SIZE; i++) {
         Coordinates coords;
         coords.x = this->snake_head_position.x;
         coords.y = i;
-        this->snake_body.append(coords);
+        this->snake_body->append(coords);
     }
 }
 
