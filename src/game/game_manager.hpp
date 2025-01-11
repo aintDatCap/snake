@@ -21,7 +21,8 @@ class SnakeGameManager {
 
   public:
     SnakeGameManager(uint16_t window_width, uint16_t window_height, List<LevelInfo> levels);
-
+    ~SnakeGameManager();
+    
     void start_game();
     void stop_game();
     void next_level();
