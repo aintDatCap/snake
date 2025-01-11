@@ -9,6 +9,9 @@ SnakeGameManager::SnakeGameManager(uint16_t window_width, uint16_t window_height
     this->game = nullptr;
     this->game_ui = nullptr;
     this->menu_ui = new MenuUI(window_width, window_height);
+    
+    this->window_height = window_height;
+    this->window_width = window_width;
 
     MenuAction action = this->menu_ui->wait_for_user_input();
     switch (action) {
@@ -46,7 +49,7 @@ void SnakeGameManager::start_game() {
 
     // TODO: timer, player input
     Direction player_direction = this->get_player_input();
-    while (game->update_game(player_direction) != GAME_UNFINISHED) {
+    while (game->update_game(player_direction) == GAME_UNFINISHED && false) {
         game_ui->update_game_window();
 // timer
 #ifdef _WIN32
@@ -55,6 +58,9 @@ void SnakeGameManager::start_game() {
 // linux timer
 #endif
     }
+
+    game_ui->update_game_window();
+    getch();
 
     this->next_level();
 }

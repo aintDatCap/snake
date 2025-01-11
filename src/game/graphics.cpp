@@ -21,6 +21,7 @@ void start_ncurses() {
 }
 
 void stop_ncurses() {
+    erase();
     endwin();
 }
 
@@ -33,12 +34,13 @@ GameUI::GameUI(Game *game) {
     this->window = newwin(game_table.height, game_table.width, 0, 0);
     refresh();
 
-    wborder(this->window, 0, 0, 0, 0, 0, 0, 0, 0);
+    box(this->window, 0, 0);
     wrefresh(this->window);
 }
 
 GameUI::~GameUI() {
     delwin(this->window);
+    refresh();
 }
 
 void GameUI::update_game_window() {
@@ -60,13 +62,14 @@ void GameUI::update_game_window() {
     }
     wattroff(this->window, COLOR_PAIR(SNAKE_COLOR));
     wrefresh(this->window);
+    refresh();
 }
 
 MenuUI::MenuUI(uint16_t width, uint16_t height) {
     this->window = newwin(height, width, 0, 0);
     refresh();
 
-    wborder(this->window, 0, 0, 0, 0, 0, 0, 0, 0);
+    box(this->window, 0, 0);
 
     wrefresh(this->window);
 
@@ -83,12 +86,13 @@ MenuUI::MenuUI(uint16_t width, uint16_t height) {
 }
 
 MenuUI::~MenuUI() {
-    delwin(window);
-    delwin(button_window);
+    delwin(this->window);
+    delwin(this->button_window);
+    refresh();
 }
 
 MenuAction MenuUI::wait_for_user_input() {
-    keypad(this->button_window, TRUE); 
+    keypad(this->button_window, TRUE);
 
     while (true) {
         int c = wgetch(this->button_window);
