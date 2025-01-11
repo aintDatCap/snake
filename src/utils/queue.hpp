@@ -55,6 +55,10 @@ template <typename T> class Queue {
     }
 
     T pop() {
+        if(!this->head) {
+            return NULL;
+        }
+
         QueueElement<T> *old = this->head;
         if (this->head->next) {
             this->head = this->head->next;
