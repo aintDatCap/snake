@@ -4,8 +4,8 @@
 
 template <typename T> struct ListElement {
     T value;
-    T *before;
-    T *next;
+    ListElement<T> *before;
+    ListElement<T> *next;
 };
 
 template <typename T> class List {
@@ -36,19 +36,39 @@ template <typename T> class List {
         new_element->before = current;
     }
 
-    T get_element_at(uint32_t index) {
+    T* get_element_at(uint32_t index) {
         ListElement<T> *current = this->head;
         uint32_t i = 0;
-        while ((++i) < index) {
+        while (i < index) {
             if(!current->next) {
-                return NULL;
+                return nullptr;
             }
             current = current->next;
+            i++;
         }
-        return current->value;
+        return &current->value;
     }
 
-    void remove_elements_with(T value);
+    void remove_element_at(uint32_t index) {
+        ListElement<T> *current = this->head;
+        uint32_t i = 0;
+        while (i < index) {
+            if(!current->next) {
+                return;
+            }
+            current = current->next;
+            i++;
+        }
+        
+        if(current == this->head) {
+            this->head = this->head->next;
+            return;
+        }
+
+        current->before->next = current->next;
+        current->next->before = current->before;
+        delete current;
+    }
 };
 
 #endif
