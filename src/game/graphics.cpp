@@ -56,8 +56,10 @@ void GameUI::update_game_window() {
     wrefresh(this->window);
 }
 
-MenuUI::MenuUI(uint16_t width, uint16_t height) {
+MenuUI::MenuUI(uint16_t width, uint16_t height, std::function<void()> start_game_callback) {
     this->window = newwin(height, width, 0, 0);
+    this->start_game_callback = start_game_callback;
+
     refresh();
 
     wborder(this->window, 0, 0, 0, 0, 0, 0, 0, 0);

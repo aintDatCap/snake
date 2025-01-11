@@ -3,6 +3,7 @@
 
 #include "logic.hpp"
 #include <cstdint>
+#include <functional>
 
 #ifdef _WIN32
 #include <ncurses/ncurses.h>
@@ -31,15 +32,15 @@ class GameUI {
 
     void update_game_window();
     void close_window();
-    Direction get_player_input();
 };
 
 class MenuUI {
   private:
     WINDOW *window;
+    std::function<void()> start_game_callback;
 
   public:
-    MenuUI(uint16_t width, uint16_t height);
+    MenuUI(uint16_t width, uint16_t height, std::function<void()> start_game_callback);
     ~MenuUI();
 };
 
