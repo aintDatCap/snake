@@ -16,6 +16,8 @@ set(PROGRAM_SOURCES
   ${SNAKE_SOURCE_DIR}/game/logic.cpp
   ${SNAKE_SOURCE_DIR}/game/graphics.hpp
   ${SNAKE_SOURCE_DIR}/game/graphics.cpp
+  ${SNAKE_SOURCE_DIR}/game/game_manager.hpp
+  ${SNAKE_SOURCE_DIR}/game/game_manager.cpp
 )
 
 add_executable(Snake ${SNAKE_SOURCE_DIR}/main.cpp ${PROGRAM_SOURCES})

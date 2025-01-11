@@ -24,11 +24,11 @@ template <typename T> class Queue {
     }
 
     ~Queue() {
-        if (!head) {
+        if (!this->head) {
             return;
         }
 
-        QueueElement<T> *current = head;
+        QueueElement<T> *current = this->head;
         do {
             QueueElement<T> *previous = current;
             current = current->next;
