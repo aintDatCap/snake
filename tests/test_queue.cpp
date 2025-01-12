@@ -6,13 +6,13 @@
 
 START_TEST(test_queue_1) {
     Queue<uint32_t> queue;
-    queue.append(3);
-    queue.append(6);
-    queue.append(984);
+    queue.enqueue(3);
+    queue.enqueue(6);
+    queue.enqueue(984);
 
-    ck_assert_uint_eq(queue.pop(), 3);
-    ck_assert_uint_eq(queue.pop(), 6);
-    ck_assert_uint_eq(queue.pop(), 984);
+    ck_assert_uint_eq(queue.dequeue()->value, 3);
+    ck_assert_uint_eq(queue.dequeue()->value, 6);
+    ck_assert_uint_eq(queue.dequeue()->value, 984);
 }
 END_TEST
 

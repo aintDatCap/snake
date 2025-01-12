@@ -34,20 +34,29 @@ class GameUI {
 };
 
 typedef enum {
-  MENU_EXIT_PROGRAM,
-  MENU_PLAY_GAME
+    MENU_EXIT_PROGRAM,
+    MENU_PLAY_GAME
 } MenuAction;
+
+typedef struct {
+    MenuAction action;
+    GameDifficulty game_difficulty;
+} PlayerSelection;
 
 class MenuUI {
   private:
     WINDOW *window;
-    WINDOW *button_window;
+    WINDOW *play_game_button;
+    WINDOW *difficulty_button;
+    PlayerSelection player_selection;
+
 
   public:
     MenuUI(uint16_t width, uint16_t height);
     ~MenuUI();
 
-    MenuAction wait_for_user_input();
+    PlayerSelection wait_for_user_input();
+    void render_difficulty_button();
 };
 
 } // namespace Snake

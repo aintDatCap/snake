@@ -33,8 +33,15 @@ typedef enum {
     GAME_LOST
 } GameResult;
 
+typedef enum {
+    DIFFICULTY_EASY,
+    DIFFICULTY_NORMAL,
+    DIFFICULTY_HARD
+} GameDifficulty;
+
 class Game {
   private:
+    GameDifficulty game_difficulty;
     GameResult result;
     GameTable game_table;
     Direction current_direction;
@@ -45,10 +52,14 @@ class Game {
     void new_apple_position();
 
   public:
-    Game(uint16_t table_height, uint16_t table_width);
+    Game(uint16_t table_height, uint16_t table_width, GameDifficulty game_difficulty);
 
     GameResult update_game(Direction player_input);
 
+    GameDifficulty get_game_difficulty() const {
+        return game_difficulty;
+    }
+    
     GameTable get_game_table() const {
         return game_table;
     }

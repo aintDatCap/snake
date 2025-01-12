@@ -9,17 +9,18 @@ SnakeGameManager::SnakeGameManager(uint16_t window_width, uint16_t window_height
     this->game = nullptr;
     this->game_ui = nullptr;
     this->menu_ui = new MenuUI(window_width, window_height);
-    
+
     this->window_height = window_height;
     this->window_width = window_width;
 
-    MenuAction action = this->menu_ui->wait_for_user_input();
-    switch (action) {
+    PlayerSelection player_selection = this->menu_ui->wait_for_user_input();
+    switch (player_selection.action) {
     case MENU_PLAY_GAME: {
-        this->start_game();
+        this->start_game(player_selection.game_difficulty);
         break;
     }
     case MENU_EXIT_PROGRAM: {
+        clear();
         return;
     }
     }
@@ -39,12 +40,12 @@ SnakeGameManager::~SnakeGameManager() {
     }
 }
 
-void SnakeGameManager::start_game() {
+void SnakeGameManager::start_game(GameDifficulty game_difficulty) {
 
     delete this->menu_ui;
     this->menu_ui = nullptr;
 
-    this->game = new Game(window_height, window_width);
+    this->game = new Game(window_height, window_width, game_difficulty);
     this->game_ui = new GameUI(this->game);
 
     // TODO: timer, player input
@@ -65,23 +66,26 @@ void SnakeGameManager::start_game() {
     this->next_level();
 }
 
-void SnakeGameManager::stop_game() {
-    delete this->game;
-    this->game = nullptr;
-    delete this->game_ui;
-    this->game_ui = nullptr;
+void SnakeGameManager::show_menu() {
+    while (true) {
+        delete this->game;
+        this->game = nullptr;
+        delete this->game_ui;
+        this->game_ui = nullptr;
 
-    this->menu_ui = new MenuUI(window_width, window_height);
+        this->menu_ui = new MenuUI(window_width, window_height);
 
-    MenuAction action = this->menu_ui->wait_for_user_input();
-    switch (action) {
-    case MENU_PLAY_GAME: {
-        this->start_game();
-        break;
-    }
-    case MENU_EXIT_PROGRAM: {
-        return;
-    }
+        PlayerSelection player_selection = this->menu_ui->wait_for_user_input();
+        switch (player_selection.action) {
+        case MENU_PLAY_GAME: {
+            this->start_game(player_selection.game_difficulty);
+            break;
+        }
+        case MENU_EXIT_PROGRAM: {
+            clear();
+            return;
+        }
+        }
     }
 }
 
@@ -92,5 +96,6 @@ Direction SnakeGameManager::get_player_input() {
 
 void SnakeGameManager::next_level() {
     // todo
+    // if there's no remaining levels, just return;
 }
 } // namespace Snake

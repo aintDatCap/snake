@@ -13,7 +13,8 @@ bool coordinates_are_equal(Coordinates a, Coordinates b) {
     return a.x == b.x && a.y == b.y;
 }
 
-Game::Game(uint16_t table_height, uint16_t table_width) {
+Game::Game(uint16_t table_height, uint16_t table_width, GameDifficulty game_difficulty) {
+    this->game_difficulty = game_difficulty;
     this->result = GAME_UNFINISHED;
 
     this->game_table.height = table_height;
@@ -31,7 +32,7 @@ Game::Game(uint16_t table_height, uint16_t table_width) {
         Coordinates coords;
         coords.x = this->snake_head_position.x;
         coords.y = i;
-        this->snake_body->append(coords);
+        this->snake_body->enqueue(coords);
     }
 }
 

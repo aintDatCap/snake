@@ -7,13 +7,13 @@
 START_TEST(test_list_1) {
     List<uint32_t> list;
     list.add_element(42);
-    ck_assert_uint_eq(*list.get_element_at(0), 42);
+    ck_assert_uint_eq(list.get_element_at(0)->value, 42);
     ck_assert(list.get_element_at(1) == nullptr);
 
     list.add_element(90);
-    ck_assert_uint_eq(*list.get_element_at(1), 90);
+    ck_assert_uint_eq(list.get_element_at(1)->value, 90);
     list.remove_element_at(0);
-    ck_assert_uint_eq(*list.get_element_at(0), 90);
+    ck_assert_uint_eq(list.get_element_at(0)->value, 90);
 }
 END_TEST
 
