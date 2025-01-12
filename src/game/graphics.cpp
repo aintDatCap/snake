@@ -8,7 +8,12 @@
 #include <vector>
 
 #define PUT_TEXT_IN_THE_MIDDLE_OF(window, text)                                                                        \
-    mvwprintw(window, getmaxy(window) / 2, (getmaxx(window) - sizeof(text) - 1) / 2, "%s", text)
+    mvwprintw(window, getmaxy(window) / 2, (getmaxx(window) - sizeof(text)) / 2, "%s", text)
+
+#define PUT_COLORED_TEXT(window, text, color)                                                                          \
+    wattron(window, COLOR_PAIR(color));                                                                                \
+    PUT_TEXT_IN_THE_MIDDLE_OF(window, text);                                                                           \
+    wattroff(window, COLOR_PAIR(color))
 
 #define IS_INSIDE_WINDOW(window, x, y)                                                                                 \
     (getbegx(window) <= x && (getbegx(window) + getmaxx(window)) >= x) &&                                              \
@@ -18,8 +23,10 @@ void start_ncurses() {
     initscr();
     start_color();
 
-    init_pair(Snake::APPLE_COLOR, COLOR_RED, COLOR_BLACK);
-    init_pair(Snake::SNAKE_COLOR, COLOR_GREEN, COLOR_BLACK);
+    init_pair(Snake::RED_TEXT, COLOR_RED, COLOR_BLACK);
+    init_pair(Snake::GREEN_TEXT, COLOR_GREEN, COLOR_BLACK);
+    init_pair(Snake::BLUE_TEXT, COLOR_BLUE, COLOR_BLACK);
+
     mousemask(ALL_MOUSE_EVENTS, NULL);
 
     curs_set(0);
@@ -50,13 +57,13 @@ GameUI::~GameUI() {
 
 void GameUI::update_game_window() {
     // Rendering the apple
-    wattron(this->window, COLOR_PAIR(APPLE_COLOR));
+    wattron(this->window, COLOR_PAIR(RED_TEXT));
     Coordinates apple_position = this->game->get_apple_position();
     mvwaddch(this->window, apple_position.y, apple_position.x, 'o');
-    wattroff(this->window, COLOR_PAIR(APPLE_COLOR));
+    wattroff(this->window, COLOR_PAIR(RED_TEXT));
 
     // Rendering the snake
-    wattron(this->window, COLOR_PAIR(SNAKE_COLOR));
+    wattron(this->window, COLOR_PAIR(GREEN_TEXT));
     Coordinates snake_head = this->game->get_snake_head_position();
     mvwaddch(this->window, snake_head.y, snake_head.x, '@');
 
@@ -65,7 +72,7 @@ void GameUI::update_game_window() {
     for (Coordinates coord : snake_body) {
         mvwaddch(this->window, coord.y, coord.x, '*');
     }
-    wattroff(this->window, COLOR_PAIR(SNAKE_COLOR));
+    wattroff(this->window, COLOR_PAIR(GREEN_TEXT));
     wrefresh(this->window);
     refresh();
 }
@@ -105,16 +112,17 @@ void MenuUI::render_difficulty_button() {
     box(this->difficulty_button, 0, 0);
     switch (this->player_selection.game_difficulty) {
     case DIFFICULTY_EASY:
-        PUT_TEXT_IN_THE_MIDDLE_OF(this->difficulty_button, "Facile");
+        PUT_COLORED_TEXT(difficulty_button, "Facile", GREEN_TEXT);
         break;
     case DIFFICULTY_NORMAL:
-        PUT_TEXT_IN_THE_MIDDLE_OF(this->difficulty_button, "Normale");
+        PUT_COLORED_TEXT(difficulty_button, "Normale", BLUE_TEXT);
         break;
     case DIFFICULTY_HARD:
-        PUT_TEXT_IN_THE_MIDDLE_OF(this->difficulty_button, "Difficile");
+        PUT_COLORED_TEXT(difficulty_button, "Difficile", RED_TEXT);
         break;
     }
-        wrefresh(this->difficulty_button);
+    wrefresh(this->difficulty_button);
+    curs_set(0);
 }
 
 MenuUI::~MenuUI() {
@@ -156,7 +164,7 @@ PlayerSelection MenuUI::wait_for_user_input() {
                     }
                 }
             }
-        } else if(c == KEY_EXIT) { // NOT WORKING AS INTENDED
+        } else if (c == KEY_EXIT) { // NOT WORKING AS INTENDED
             player_selection.action = MENU_EXIT_PROGRAM;
             return player_selection;
         }

@@ -16,9 +16,10 @@ void stop_ncurses();
 namespace Snake {
 
 typedef enum {
-    APPLE_COLOR = 1,
-    SNAKE_COLOR = 2
-} SnakeColors;
+    RED_TEXT = 1,
+    GREEN_TEXT = 2,
+    BLUE_TEXT = 3,
+} UIColors;
 
 class GameUI {
   private:
