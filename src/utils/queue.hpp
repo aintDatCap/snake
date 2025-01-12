@@ -36,7 +36,7 @@ template <typename T> class Queue {
         } while (current->next);
     }
 
-    void append(T value) {
+    void enqueue(T value) {
         if (!this->head) {
             this->head = new QueueElement<T>;
             this->head->value = value;
@@ -54,8 +54,8 @@ template <typename T> class Queue {
         current->next->next = nullptr;
     }
 
-    T pop() {
-        if(!this->head) {
+    QueueElement<T> *dequeue() {
+        if (!this->head) {
             return NULL;
         }
 
@@ -65,7 +65,7 @@ template <typename T> class Queue {
         } else {
             this->head = nullptr;
         }
-        return old->value;
+        return old;
     }
 
     std::vector<T> to_vector() {

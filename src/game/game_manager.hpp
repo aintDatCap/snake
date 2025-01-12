@@ -23,8 +23,8 @@ class SnakeGameManager {
     SnakeGameManager(uint16_t window_width, uint16_t window_height, List<LevelInfo> levels);
     ~SnakeGameManager();
     
-    void start_game();
-    void stop_game();
+    void start_game(GameDifficulty game_difficulty);
+    void show_menu();
     void next_level();
     Direction get_player_input();
 };
