@@ -21,6 +21,8 @@ void start_ncurses() {
     init_pair(Snake::APPLE_COLOR, COLOR_RED, COLOR_BLACK);
     init_pair(Snake::SNAKE_COLOR, COLOR_GREEN, COLOR_BLACK);
     mousemask(ALL_MOUSE_EVENTS, NULL);
+
+    curs_set(0);
 }
 
 void stop_ncurses() {
