@@ -1,6 +1,6 @@
 #ifndef LIST_HPP
 #define LIST_HPP
-#include <cstddef>
+
 #include <cstdint>
 
 template <typename T> struct ListElement {
