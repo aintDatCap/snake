@@ -5,6 +5,7 @@
 #include "utils/queue.hpp"
 #include <cstdint>
 #include <stdexcept>
+#include <cstdlib>
 
 #define SNAKE_BODY_SIZE 4
 
@@ -37,9 +38,24 @@ Game::Game(uint16_t table_height, uint16_t table_width, GameDifficulty game_diff
 }
 
 void Game::new_apple_position() {
-    // TODO
-    this->apple_position.x = 3;
-    this->apple_position.y = 3;
+    bool valid_position = false;
+    while (!valid_position) {
+        // Generate random coordinates within the bounds of the playable area
+        this -> apple_position.x = rand() % this -> game_table.width;
+        this -> apple_position.y = rand() % this -> game_table.height;
+
+        // Check if the apple position is valid, i.e. the apple 
+        // does not overlap with the snake's body
+
+        valid_position = true;
+        for (uint16_t i = 0; i < this->snake_body->size(); ++i) {
+            auto body_part_element = this->snake_body->get_element_at(i);
+            if (body_part_element && coordinates_are_equal(this->apple_position, body_part_element->value)) {
+                valid_position = false;
+                break;
+            }
+        }
+    }
 }
 
 GameResult Game::update_game(Direction player_input) {

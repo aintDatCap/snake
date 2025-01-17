@@ -1,10 +1,13 @@
 #include "game/game_manager.hpp"
 #include "game/graphics.hpp"
 #include "game/logic.hpp"
-#include <ncurses.h>
+#include <ctime>
+#include <cstdlib>
+
 namespace Snake {
 
 SnakeGameManager::SnakeGameManager(uint16_t window_width, uint16_t window_height, List<LevelInfo> levels) {
+    std::srand((time(NULL)));
     this->levels = levels;
     this->game = nullptr;
     this->game_ui = nullptr;

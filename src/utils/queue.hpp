@@ -1,7 +1,6 @@
 #ifndef QUEUE_HPP
 #define QUEUE_HPP
-
-#include <vector>
+#include <cstddef>
 
 template <typename T> struct QueueElement {
     T value;
@@ -56,7 +55,7 @@ template <typename T> class Queue {
 
     QueueElement<T> *dequeue() {
         if (!this->head) {
-            return NULL;
+            return nullptr;
         }
 
         QueueElement<T> *old = this->head;
@@ -68,16 +67,32 @@ template <typename T> class Queue {
         return old;
     }
 
-    std::vector<T> to_vector() {
-        std::vector<T> result;
-        QueueElement<T> *current = this->head;
-        do {
-            result.push_back(current->value);
+        // Method to get the size of the queue
+    size_t size() const {
+        size_t count = 0;
+        QueueElement<T>* current = this->head;
+        while (current) {
+            ++count;
             current = current->next;
-        } while (current);
-
-        return result;
+        }
+        return count;
     }
+
+    // Method to get an element at a specific index in the queue
+    QueueElement<T>* get_element_at(size_t index) {
+        QueueElement<T>* current = this->head;
+        size_t current_index = 0;
+
+        while (current) {
+            if (current_index == index) {
+                return current;
+            }
+            ++current_index;
+            current = current->next;
+        }
+        return nullptr; // Return nullptr if index is out of bounds
+    }
+
 };
 
 #endif

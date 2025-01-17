@@ -1,6 +1,8 @@
 #include "game/game_manager.hpp"
 #include "game/graphics.hpp"
 
+#define max(a, b) a > b ? a : b
+
 int main(int, char **) {
     start_ncurses();
     List<Snake::LevelInfo> levels;
@@ -8,7 +10,10 @@ int main(int, char **) {
     uint16_t window_width, window_height;
     getmaxyx(stdscr, window_height, window_width);
 
+    window_width = max(window_width, 20);
+    window_height = max(window_height, 10);
+
     Snake::SnakeGameManager game_manager(window_width, window_height, levels);
-    
+
     stop_ncurses();
 }
