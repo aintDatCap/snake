@@ -78,6 +78,34 @@ template <typename T> class Queue {
 
         return result;
     }
+
+        // Method to get the size of the queue
+    size_t size() const {
+        size_t count = 0;
+        QueueElement<T>* current = this->head;
+        while (current) {
+            ++count;
+            current = current->next;
+        }
+        return count;
+    }
+
+    // Method to get an element at a specific index in the queue
+    QueueElement<T>* get_element_at(size_t index) {
+        QueueElement<T>* current = this->head;
+        size_t current_index = 0;
+
+        while (current) {
+            if (current_index == index) {
+                return current;
+            }
+            ++current_index;
+            current = current->next;
+        }
+
+        return nullptr; // Return nullptr if index is out of bounds
+    }
+
 };
 
 #endif
