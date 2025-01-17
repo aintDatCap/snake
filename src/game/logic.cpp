@@ -6,7 +6,6 @@
 #include <cstdint>
 #include <stdexcept>
 #include <cstdlib>
-#include <ctime>
 
 #define SNAKE_BODY_SIZE 4
 
@@ -39,13 +38,6 @@ Game::Game(uint16_t table_height, uint16_t table_width, GameDifficulty game_diff
 }
 
 void Game::new_apple_position() {
-  // Function to generate a new seed for the apple rng
-    static bool seeded = false;
-    if (!seeded) {
-        srand(static_cast<unsigned>(time(nullptr)));
-        seeded = true;
-    }
-
     bool valid_position = false;
     while (!valid_position) {
         // Generate random coordinates within the bounds of the playable area

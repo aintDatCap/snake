@@ -5,7 +5,6 @@
 #include "game/logic.hpp"
 #include <cstdint>
 #include <ncurses.h>
-#include <vector>
 
 #define PUT_TEXT_IN_THE_MIDDLE_OF(window, text)                                                                        \
     mvwprintw(window, getmaxy(window) / 2, (getmaxx(window) - sizeof(text)) / 2, "%s", text)
@@ -67,9 +66,8 @@ void GameUI::update_game_window() {
     Coordinates snake_head = this->game->get_snake_head_position();
     mvwaddch(this->window, snake_head.y, snake_head.x, '@');
 
-    std::vector<Coordinates> snake_body = this->game->get_snake_body()->to_vector();
-
-    for (Coordinates coord : snake_body) {
+    for (uint16_t i = 0; i < this->game->get_snake_body()->size(); ++i) {
+        Coordinates coord = this->game->get_snake_body()->get_element_at(i)->value;
         mvwaddch(this->window, coord.y, coord.x, '*');
     }
     wattroff(this->window, COLOR_PAIR(GREEN_TEXT));
