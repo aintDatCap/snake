@@ -58,6 +58,28 @@ void Game::new_apple_position() {
     }
 }
 
+int Game::calculate_points(uint32_t level, GameDifficulty difficulty) const {
+    uint32_t base_points = 10; // Points awarded for eating an apple 
+    uint32_t difficulty_multiplier = 1;
+
+    // Change multiplier based on difficulty
+    switch (difficulty) {
+    case DIFFICULTY_EASY:
+        difficulty_multiplier = 1;
+        break;
+    case DIFFICULTY_NORMAL:
+        difficulty_multiplier = 2;
+        break;
+    case DIFFICULTY_HARD:
+        difficulty_multiplier = 3;
+        break;
+    default:
+        throw std::invalid_argument("Invalid game difficulty");
+    }
+
+    return base_points * difficulty_multiplier * level;
+}
+
 GameResult Game::update_game(Direction player_input) {
     if (coordinates_are_equal(this->snake_head_position, this->apple_position)) {
         // TODO: update player score and create a new apple

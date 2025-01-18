@@ -3,13 +3,13 @@
 
 #include "utils/queue.hpp"
 #include <cstdint>
+#include <stdexcept>
 
 namespace Snake {
 
 typedef struct {
     uint16_t height;
     uint16_t width;
-
 } GameTable;
 
 typedef struct {
@@ -48,6 +48,7 @@ class Game {
     Coordinates snake_head_position;
     Coordinates apple_position;
     Queue<Coordinates> *snake_body;
+    uint32_t level;
 
     void new_apple_position();
 
@@ -56,10 +57,12 @@ class Game {
 
     GameResult update_game(Direction player_input);
 
+    int calculate_points(uint32_t level, GameDifficulty difficulty) const; 
+
     GameDifficulty get_game_difficulty() const {
         return game_difficulty;
     }
-    
+
     GameTable get_game_table() const {
         return game_table;
     }
@@ -74,6 +77,14 @@ class Game {
 
     Queue<Coordinates> *get_snake_body() const {
         return snake_body;
+    }
+
+    uint32_t get_level() const {
+        return level;
+    }
+
+    void set_level(uint32_t new_level) {
+        level = new_level;
     }
 };
 
