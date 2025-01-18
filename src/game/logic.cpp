@@ -4,8 +4,8 @@
 #include "logic.hpp"
 #include "utils/queue.hpp"
 #include <cstdint>
-#include <stdexcept>
 #include <cstdlib>
+#include <stdexcept>
 
 #define SNAKE_BODY_SIZE 4
 
@@ -26,8 +26,6 @@ Game::Game(uint16_t table_height, uint16_t table_width, GameDifficulty game_diff
     this->snake_head_position.x = table_width / 2;
     this->snake_head_position.y = table_height / 2;
 
-    this->new_apple_position();
-
     this->snake_body = new Queue<Coordinates>();
     for (uint16_t i = this->snake_head_position.y + 1; i < this->snake_head_position.y + SNAKE_BODY_SIZE; i++) {
         Coordinates coords;
@@ -35,16 +33,18 @@ Game::Game(uint16_t table_height, uint16_t table_width, GameDifficulty game_diff
         coords.y = i;
         this->snake_body->enqueue(coords);
     }
+
+    this->new_apple_position();
 }
 
 void Game::new_apple_position() {
     bool valid_position = false;
     while (!valid_position) {
         // Generate random coordinates within the bounds of the playable area
-        this -> apple_position.x = rand() % this -> game_table.width;
-        this -> apple_position.y = rand() % this -> game_table.height;
+        this->apple_position.x = rand() % this->game_table.width;
+        this->apple_position.y = rand() % this->game_table.height;
 
-        // Check if the apple position is valid, i.e. the apple 
+        // Check if the apple position is valid, i.e. the apple
         // does not overlap with the snake's body
 
         valid_position = true;

@@ -51,13 +51,13 @@ class MenuUI {
     WINDOW *difficulty_button;
     PlayerSelection player_selection;
 
+    void render_difficulty_button();
 
   public:
     MenuUI(uint16_t width, uint16_t height);
     ~MenuUI();
 
     PlayerSelection wait_for_user_input();
-    void render_difficulty_button();
 };
 
 } // namespace Snake
