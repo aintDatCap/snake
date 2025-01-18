@@ -139,7 +139,7 @@ PlayerSelection MenuUI::wait_for_user_input() {
             MEVENT mouse_event;
             if (getmouse(&mouse_event) == OK) {
                 // left button clicked
-                if (mouse_event.bstate & BUTTON1_CLICKED) {
+                if (mouse_event.bstate & BUTTON1_CLICKED || mouse_event.bstate & BUTTON1_PRESSED) {
 
                     if (IS_INSIDE_WINDOW(play_game_button, mouse_event.x, mouse_event.y)) {
                         player_selection.action = MENU_PLAY_GAME;

@@ -66,11 +66,12 @@ GameResult Game::update_game(Direction player_input) {
 
     // if the desired direction is valid and is different from the current one
     // we should change the current direction based on player input
-    if (player_input != this->current_direction && player_input != ~this->current_direction) {
-        // set this->current_direction
+    if (player_input != DIRECTION_NONE && player_input != this->current_direction &&
+        player_input != ~this->current_direction) {
+        // the new direction is valid, we can change this->current_direction
     }
 
-    switch (player_input) {
+    switch (this->current_direction) {
     case DIRECTION_UP: {
         // remove 1 to y
         break;
