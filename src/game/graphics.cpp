@@ -6,12 +6,12 @@
 #include <cstdint>
 #include <ncurses.h>
 
-#define PUT_TEXT_IN_THE_MIDDLE_OF(window, text)                                                                        \
+#define PUT_CENTERED_TEXT(window, text)                                                                                \
     mvwprintw(window, getmaxy(window) / 2, (getmaxx(window) - sizeof(text)) / 2, "%s", text)
 
-#define PUT_COLORED_TEXT(window, text, color)                                                                          \
+#define PUT_CENTERED_COLORED_TEXT(window, text, color)                                                                 \
     wattron(window, COLOR_PAIR(color));                                                                                \
-    PUT_TEXT_IN_THE_MIDDLE_OF(window, text);                                                                           \
+    PUT_CENTERED_TEXT(window, text);                                                                                   \
     wattroff(window, COLOR_PAIR(color))
 
 #define IS_INSIDE_WINDOW(window, x, y)                                                                                 \
@@ -89,7 +89,7 @@ MenuUI::MenuUI(uint16_t width, uint16_t height) {
     refresh();
 
     box(this->play_game_button, 0, 0);
-    PUT_TEXT_IN_THE_MIDDLE_OF(play_game_button, "Gioca");
+    PUT_CENTERED_TEXT(play_game_button, "Gioca");
 
     wrefresh(this->play_game_button);
     refresh();
@@ -110,13 +110,13 @@ void MenuUI::render_difficulty_button() {
     box(this->difficulty_button, 0, 0);
     switch (this->player_selection.game_difficulty) {
     case DIFFICULTY_EASY:
-        PUT_COLORED_TEXT(difficulty_button, "Facile", GREEN_TEXT);
+        PUT_CENTERED_COLORED_TEXT(difficulty_button, "Facile", GREEN_TEXT);
         break;
     case DIFFICULTY_NORMAL:
-        PUT_COLORED_TEXT(difficulty_button, "Normale", BLUE_TEXT);
+        PUT_CENTERED_COLORED_TEXT(difficulty_button, "Normale", BLUE_TEXT);
         break;
     case DIFFICULTY_HARD:
-        PUT_COLORED_TEXT(difficulty_button, "Difficile", RED_TEXT);
+        PUT_CENTERED_COLORED_TEXT(difficulty_button, "Difficile", RED_TEXT);
         break;
     }
     wrefresh(this->difficulty_button);
