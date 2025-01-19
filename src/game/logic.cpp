@@ -80,6 +80,30 @@ int Game::calculate_points(uint32_t level, GameDifficulty difficulty) const {
     return base_points * difficulty_multiplier * level;
 }
 
+void Game::set_speed(int level) {
+    switch (this->game_difficulty) {
+        // the game is made harder by making the snake move every 
+        // unit of time expressed in milliseconds
+        // the lower the time intervals the harder the game
+    case DIFFICULTY_EASY: // tentative values for speed before playtesting
+        speed = 300 - (level * 10); // Lower speed 
+        break;
+    case DIFFICULTY_NORMAL:
+        speed = 200 - (level * 15); // Moderate speed 
+        break;
+    case DIFFICULTY_HARD:
+        speed = 100 - (level * 20); // Faster speed
+        break;
+    default:
+        speed = 200; // Default speed
+        break;
+    }
+
+    if (speed < 50) {
+        speed = 50; // Cap the speed at a minimum interval (e.g., 50 ms)
+    }
+}
+
 GameResult Game::update_game(Direction player_input) {
     if (coordinates_are_equal(this->snake_head_position, this->apple_position)) {
         // TODO: update player score and create a new apple
