@@ -40,13 +40,13 @@ Game::Game(uint16_t table_height, uint16_t table_width, GameDifficulty game_diff
 void Game::new_apple_position() {
     bool valid_position = false;
     while (!valid_position) {
-        // Generate random coordinates within the bounds of the playable area
-        this->apple_position.x = rand() % this->game_table.width;
-        this->apple_position.y = rand() % this->game_table.height;
+        // Generate random coordinates within the bounds of the playable area,
+        // but avoid the borders (first and last rows/columns)
+        this->apple_position.x = rand() % (this->game_table.width - 2) + 1;  // Avoid left and right borders
+        this->apple_position.y = rand() % (this->game_table.height - 2) + 1; // Avoid top and bottom borders
 
-        // Check if the apple position is valid, i.e. the apple
+        // Check if the apple position is valid, i.e., the apple
         // does not overlap with the snake's body
-
         valid_position = true;
         for (uint16_t i = 0; i < this->snake_body->size(); ++i) {
             auto body_part_element = this->snake_body->get_element_at(i);

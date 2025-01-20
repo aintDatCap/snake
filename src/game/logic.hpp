@@ -49,7 +49,7 @@ class Game {
     Coordinates apple_position;
     Queue<Coordinates> *snake_body;
     uint32_t level;
-    int speed;
+    uint16_t speed;
 
     void new_apple_position();
 
