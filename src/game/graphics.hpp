@@ -42,6 +42,7 @@ typedef enum {
 typedef struct {
     MenuAction action;
     GameDifficulty game_difficulty;
+    uint32_t level;
 } PlayerSelection;
 
 class MenuUI {
@@ -58,6 +59,24 @@ class MenuUI {
     ~MenuUI();
 
     PlayerSelection wait_for_user_input();
+};
+
+typedef enum {
+    LEVEL_SELECT_EXIT,
+    LEVEL_SELECT_PLAY
+} LevelSelectAction;
+
+class LevelSelectorUI {
+  private:
+    WINDOW *window;
+    LevelSelectAction level_selection;
+
+  public:
+    LevelSelectorUI(uint16_t width, uint16_t height);
+    ~LevelSelectorUI();
+
+    LevelSelectAction wait_for_level_input();
+    void render_level_buttons();
 };
 
 } // namespace Snake

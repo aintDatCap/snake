@@ -40,13 +40,13 @@ Game::Game(uint16_t table_height, uint16_t table_width, GameDifficulty game_diff
 void Game::new_apple_position() {
     bool valid_position = false;
     while (!valid_position) {
-        // Generate random coordinates within the bounds of the playable area
-        this->apple_position.x = rand() % this->game_table.width;
-        this->apple_position.y = rand() % this->game_table.height;
+        // Generate random coordinates within the bounds of the playable area,
+        // but avoid the borders (first and last rows/columns)
+        this->apple_position.x = rand() % (this->game_table.width - 2) + 1;  // Avoid left and right borders
+        this->apple_position.y = rand() % (this->game_table.height - 2) + 1; // Avoid top and bottom borders
 
-        // Check if the apple position is valid, i.e. the apple
+        // Check if the apple position is valid, i.e., the apple
         // does not overlap with the snake's body
-
         valid_position = true;
         for (uint16_t i = 0; i < this->snake_body->size(); ++i) {
             auto body_part_element = this->snake_body->get_element_at(i);
@@ -55,6 +55,52 @@ void Game::new_apple_position() {
                 break;
             }
         }
+    }
+}
+
+int Game::calculate_points(uint32_t level, GameDifficulty difficulty) const {
+    uint32_t base_points = 10; // Points awarded for eating an apple 
+    uint32_t difficulty_multiplier = 1;
+
+    // Change multiplier based on difficulty
+    switch (difficulty) {
+    case DIFFICULTY_EASY:
+        difficulty_multiplier = 1;
+        break;
+    case DIFFICULTY_NORMAL:
+        difficulty_multiplier = 2;
+        break;
+    case DIFFICULTY_HARD:
+        difficulty_multiplier = 3;
+        break;
+    default:
+        throw std::invalid_argument("Invalid game difficulty");
+    }
+
+    return base_points * difficulty_multiplier * level;
+}
+
+void Game::set_speed(int level) {
+    switch (this->game_difficulty) {
+        // the game is made harder by making the snake move every 
+        // unit of time expressed in milliseconds
+        // the lower the time intervals the harder the game
+    case DIFFICULTY_EASY: // tentative values for speed before playtesting
+        speed = 300 - (level * 10); // Lower speed 
+        break;
+    case DIFFICULTY_NORMAL:
+        speed = 200 - (level * 15); // Moderate speed 
+        break;
+    case DIFFICULTY_HARD:
+        speed = 100 - (level * 20); // Faster speed
+        break;
+    default:
+        speed = 200; // Default speed
+        break;
+    }
+
+    if (speed < 50) {
+        speed = 50; // Cap the speed at a minimum interval (e.g., 50 ms)
     }
 }
 
