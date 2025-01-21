@@ -17,6 +17,7 @@ class SnakeGameManager {
     Game *game;
     MenuUI *menu_ui;
     GameUI *game_ui;
+    LevelSelectorUI *level_selector_ui;
     List<LevelInfo> levels;
 
   public:

@@ -3,6 +3,7 @@
 
 #include "graphics.hpp"
 #include "game/logic.hpp"
+#include "ncurses/ncurses.h"
 #include <cstdint>
 #include <ncurses.h>
 
@@ -92,6 +93,15 @@ MenuUI::MenuUI(uint16_t width, uint16_t height) {
     PUT_CENTERED_TEXT(play_game_button, "Gioca");
 
     wrefresh(this->play_game_button);
+
+    this->exit_button = newwin(height / 6, width / 4, height - height / 2, (width - width / 4) / 2);
+    refresh();
+
+    box(this->exit_button, 0, 0);
+    PUT_CENTERED_TEXT(exit_button, "Esci");
+
+    wrefresh(this->exit_button);
+
     refresh();
 
     this->render_difficulty_button();
@@ -126,6 +136,8 @@ void MenuUI::render_difficulty_button() {
 MenuUI::~MenuUI() {
     delwin(this->window);
     delwin(this->play_game_button);
+    delwin(this->difficulty_button);
+    delwin(this->exit_button);
     refresh();
 }
 
@@ -143,10 +155,7 @@ PlayerSelection MenuUI::wait_for_user_input() {
 
                     if (IS_INSIDE_WINDOW(play_game_button, mouse_event.x, mouse_event.y)) {
                         // Instead of directly starting the game, go to the level selector
-                        player_selection.action = MENU_PLAY_GAME;
-                        LevelSelectorUI level_selector(getmaxx(this->window), getmaxy(this->window));
-                        LevelSelectAction selected_level = level_selector.wait_for_level_input(); // Save the value of the selected level (1,2, etc.)
-                        player_selection.level = static_cast<uint32_t>(selected_level);
+                        player_selection.action = MENU_SELECT_LEVEL;
                         return player_selection;
                     } else if (IS_INSIDE_WINDOW(difficulty_button, mouse_event.x, mouse_event.y)) {
 
@@ -162,6 +171,10 @@ PlayerSelection MenuUI::wait_for_user_input() {
                             break;
                         }
                         render_difficulty_button();
+                    } else if (IS_INSIDE_WINDOW(exit_button,mouse_event.x, mouse_event.y)){
+                        player_selection.action = MENU_EXIT_PROGRAM;
+                        return player_selection;
+
                     }
                 }
             }
@@ -173,7 +186,6 @@ PlayerSelection MenuUI::wait_for_user_input() {
 }
 
 LevelSelectorUI::LevelSelectorUI(uint16_t width, uint16_t height) {
-    this->level_selection = LEVEL_SELECT_PLAY;
     this->window = newwin(height, width, 0, 0);
     refresh();
 
@@ -198,7 +210,7 @@ void LevelSelectorUI::render_level_buttons() {
     }
 }
 
-LevelSelectAction LevelSelectorUI::wait_for_level_input() {
+LevelSelection LevelSelectorUI::wait_for_level_input() {
     keypad(this->window, TRUE);
 
     while (true) {
@@ -212,8 +224,9 @@ LevelSelectAction LevelSelectorUI::wait_for_level_input() {
                         // Assuming level buttons are in a predetermined region (adjust coordinates as necessary)
                         WINDOW *level_button = newwin(getmaxy(this->window) / 8, getmaxx(this->window) / 3, (i * getmaxy(this->window)) / 6, (getmaxx(this->window) - getmaxx(this->window) / 3) / 2);
                         if (IS_INSIDE_WINDOW(level_button, mouse_event.x, mouse_event.y)) {
-                            level_selection = static_cast<LevelSelectAction>(i); // // Save the value of the selected level (1,2, etc.)
-                            return level_selection;
+                            this->level_selection.action = LEVEL_SELECT_PLAY;
+                            this->level_selection.level = i;
+                           return this->level_selection; // Save the value of the selected level (1,2, etc.)
                         }
                     }
                 }

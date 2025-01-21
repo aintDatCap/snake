@@ -36,7 +36,7 @@ class GameUI {
 
 typedef enum {
     MENU_EXIT_PROGRAM,
-    MENU_PLAY_GAME
+    MENU_SELECT_LEVEL,  
 } MenuAction;
 
 typedef struct {
@@ -50,6 +50,7 @@ class MenuUI {
     WINDOW *window;
     WINDOW *play_game_button;
     WINDOW *difficulty_button;
+    WINDOW *exit_button;
     PlayerSelection player_selection;
 
     void render_difficulty_button();
@@ -66,16 +67,21 @@ typedef enum {
     LEVEL_SELECT_PLAY
 } LevelSelectAction;
 
+typedef struct {
+  LevelSelectAction action;
+  uint32_t level;
+} LevelSelection;
+
 class LevelSelectorUI {
   private:
     WINDOW *window;
-    LevelSelectAction level_selection;
+    LevelSelection level_selection;
 
   public:
     LevelSelectorUI(uint16_t width, uint16_t height);
     ~LevelSelectorUI();
 
-    LevelSelectAction wait_for_level_input();
+    LevelSelection wait_for_level_input();
     void render_level_buttons();
 };
 

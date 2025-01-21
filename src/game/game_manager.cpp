@@ -1,13 +1,14 @@
 #include "game/game_manager.hpp"
 #include "game/graphics.hpp"
 #include "game/logic.hpp"
+#include "graphics.hpp"
 #include <ctime>
 #include <cstdlib>
 
 namespace Snake {
 
 SnakeGameManager::SnakeGameManager(uint16_t window_width, uint16_t window_height, List<LevelInfo> levels) {
-    std::srand((time(NULL)));
+    std::srand(time(NULL));
     this->levels = levels;
     this->game = nullptr;
     this->game_ui = nullptr;
@@ -15,18 +16,8 @@ SnakeGameManager::SnakeGameManager(uint16_t window_width, uint16_t window_height
 
     this->window_height = window_height;
     this->window_width = window_width;
+    this->show_menu();
 
-    PlayerSelection player_selection = this->menu_ui->wait_for_user_input();
-    switch (player_selection.action) {
-    case MENU_PLAY_GAME: {
-        this->start_game(player_selection.game_difficulty);
-        break;
-    }
-    case MENU_EXIT_PROGRAM: {
-        clear();
-        return;
-    }
-    }
 }
 
 SnakeGameManager::~SnakeGameManager() {
@@ -80,8 +71,15 @@ void SnakeGameManager::show_menu() {
 
         PlayerSelection player_selection = this->menu_ui->wait_for_user_input();
         switch (player_selection.action) {
-        case MENU_PLAY_GAME: {
-            this->start_game(player_selection.game_difficulty);
+        case MENU_SELECT_LEVEL: {
+            this->level_selector_ui = new LevelSelectorUI (this->window_width, this->window_height);
+            LevelSelection selected_level = this->level_selector_ui->wait_for_level_input();
+
+            if(selected_level.action == LEVEL_SELECT_PLAY) {
+                 this->start_game(player_selection.game_difficulty);
+            } else if(selected_level.action == LEVEL_SELECT_EXIT) {
+                break;
+            }
             break;
         }
         case MENU_EXIT_PROGRAM: {
@@ -91,7 +89,11 @@ void SnakeGameManager::show_menu() {
         }
     }
 }
-
+/*
+LevelSelectorUI level_selector(getmaxx(this->window), getmaxy(this->window));
+                        LevelSelectAction selected_level = level_selector.wait_for_level_input(); // Save the value of the selected level (1,2, etc.)
+                        player_selection.level = static_cast<uint32_t>(selected_level);
+*/
 Direction SnakeGameManager::get_player_input() {
     // TODO
     return DIRECTION_UP;
