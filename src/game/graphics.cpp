@@ -5,6 +5,7 @@
 #include "game/logic.hpp"
 #include "ncurses/ncurses.h"
 #include <cstdint>
+#include <cstdlib>
 #include <ncurses.h>
 
 #define PUT_CENTERED_TEXT(window, text)                                                                                \
@@ -151,7 +152,7 @@ PlayerSelection MenuUI::wait_for_user_input() {
             MEVENT mouse_event;
             if (getmouse(&mouse_event) == OK) {
                 // left button clicked
-                if (mouse_event.bstate & BUTTON1_CLICKED || mouse_event.bstate & BUTTON1_PRESSED)  {
+                if (mouse_event.bstate & BUTTON1_CLICKED || mouse_event.bstate & BUTTON1_PRESSED) {
 
                     if (IS_INSIDE_WINDOW(play_game_button, mouse_event.x, mouse_event.y)) {
                         // Instead of directly starting the game, go to the level selector
@@ -171,10 +172,9 @@ PlayerSelection MenuUI::wait_for_user_input() {
                             break;
                         }
                         render_difficulty_button();
-                    } else if (IS_INSIDE_WINDOW(exit_button,mouse_event.x, mouse_event.y)){
+                    } else if (IS_INSIDE_WINDOW(exit_button, mouse_event.x, mouse_event.y)) {
                         player_selection.action = MENU_EXIT_PROGRAM;
                         return player_selection;
-
                     }
                 }
             }
@@ -199,14 +199,16 @@ void LevelSelectorUI::render_level_buttons() {
     uint16_t width = getmaxx(this->window);
     uint16_t height = getmaxy(this->window);
 
-    for (int i = 1; i <= 5; ++i) {
-        WINDOW *level_button = newwin(height / 8, width / 3, (i * height) / 6, (width - width / 3) / 2);
+    this->level_buttons = (WINDOW **)malloc(sizeof(WINDOW *) * 5);
+
+    for (int i = 0; i < 5; ++i) {
+        level_buttons[i] = newwin(height / 8, width / 3, ((i + 1) * height) / 6, (width - width / 3) / 2);
         refresh();
-        box(level_button, 0, 0);
+        box(level_buttons[i], 0, 0);
         char level_text[10];
         snprintf(level_text, sizeof(level_text), "Level %d", i);
-        PUT_CENTERED_TEXT(level_button, level_text);
-        wrefresh(level_button);
+        PUT_CENTERED_TEXT(level_buttons[i], level_text);
+        wrefresh(level_buttons[i]);
     }
 }
 
@@ -220,13 +222,11 @@ LevelSelection LevelSelectorUI::wait_for_level_input() {
             if (getmouse(&mouse_event) == OK) {
                 // left button clicked
                 if (mouse_event.bstate & BUTTON1_CLICKED || mouse_event.bstate & BUTTON1_PRESSED) {
-                    for (int i = 1; i <= 5; ++i) {
-                        // Assuming level buttons are in a predetermined region (adjust coordinates as necessary)
-                        WINDOW *level_button = newwin(getmaxy(this->window) / 8, getmaxx(this->window) / 3, (i * getmaxy(this->window)) / 6, (getmaxx(this->window) - getmaxx(this->window) / 3) / 2);
-                        if (IS_INSIDE_WINDOW(level_button, mouse_event.x, mouse_event.y)) {
+                    for (int i = 0; i < 5; ++i) {
+                        if (IS_INSIDE_WINDOW(level_buttons[i], mouse_event.x, mouse_event.y)) {
                             this->level_selection.action = LEVEL_SELECT_PLAY;
                             this->level_selection.level = i;
-                           return this->level_selection; // Save the value of the selected level (1,2, etc.)
+                            return this->level_selection; // Save the value of the selected level (1,2, etc.)
                         }
                     }
                 }
@@ -237,8 +237,12 @@ LevelSelection LevelSelectorUI::wait_for_level_input() {
 
 // Destructor
 LevelSelectorUI::~LevelSelectorUI() {
-    delwin(this->window); 
-    refresh();             
+    delwin(this->window);
+    for (int i = 0; i < 5; ++i) {
+        delwin(this->level_buttons[i]);
+    }
+    delete this->level_buttons;
+    refresh();
 }
 
 } // namespace Snake

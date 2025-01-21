@@ -33,7 +33,7 @@ typedef enum {
 } GameResult;
 
 typedef enum {
-    DIFFICULTY_EASY,
+    DIFFICULTY_EASY = 0,
     DIFFICULTY_NORMAL,
     DIFFICULTY_HARD
 } GameDifficulty;

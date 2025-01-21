@@ -38,9 +38,7 @@ SnakeGameManager::~SnakeGameManager() {
 void SnakeGameManager::start_game(GameDifficulty game_difficulty, uint16_t level) {
 
     ListElement<LevelInfo>* elem = this->levels.get_element_at(level-1);
-
-    assert(elem);
-    
+    if(!elem){}
 
     delete this->menu_ui;
     this->menu_ui = nullptr;

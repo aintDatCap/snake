@@ -27,7 +27,7 @@ Game::Game(uint16_t table_height, uint16_t table_width, GameDifficulty game_diff
     this->snake_head_position.y = table_height / 2;
 
     this->snake_body = new Queue<Coordinates>();
-    for (uint16_t i = this->snake_head_position.y + 1; i < this->snake_head_position.y + SNAKE_BODY_SIZE; i++) {
+    for (uint16_t i = this->snake_head_position.y + 1; i < this->snake_head_position.y + SNAKE_BODY_SIZE + game_difficulty; i++) {
         Coordinates coords;
         coords.x = this->snake_head_position.x;
         coords.y = i;
