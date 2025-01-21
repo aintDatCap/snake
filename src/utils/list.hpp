@@ -39,6 +39,9 @@ template <typename T> class List {
     }
 
     ListElement<T> *get_element_at(uint32_t index) {
+        if (!this->head) {
+            return nullptr;
+        }
         ListElement<T> *current = this->head;
         uint32_t i = 0;
         while (i < index) {
@@ -52,6 +55,9 @@ template <typename T> class List {
     }
 
     ListElement<T> *remove_element_at(uint32_t index) {
+        if (!this->head) {
+            return nullptr;
+        }
         ListElement<T> *current = this->head;
         uint32_t i = 0;
         while (i < index) {
