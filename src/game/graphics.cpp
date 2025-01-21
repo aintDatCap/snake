@@ -201,8 +201,8 @@ void LevelSelectorUI::render_level_buttons() {
 
     this->level_buttons = (WINDOW **)malloc(sizeof(WINDOW *) * 5);
 
-    for (int i = 0; i < 5; ++i) {
-        level_buttons[i] = newwin(height / 8, width / 3, ((i + 1) * height) / 6, (width - width / 3) / 2);
+    for (int i = 1; i <= 5; ++i) {
+        level_buttons[i] = newwin(height / 8, width / 3, ((i) * height) / 6, (width - width / 3) / 2);
         refresh();
         box(level_buttons[i], 0, 0);
         char level_text[10];
@@ -222,7 +222,7 @@ LevelSelection LevelSelectorUI::wait_for_level_input() {
             if (getmouse(&mouse_event) == OK) {
                 // left button clicked
                 if (mouse_event.bstate & BUTTON1_CLICKED || mouse_event.bstate & BUTTON1_PRESSED) {
-                    for (int i = 0; i < 5; ++i) {
+                    for (int i = 1; i <= 5; ++i) {
                         if (IS_INSIDE_WINDOW(level_buttons[i], mouse_event.x, mouse_event.y)) {
                             this->level_selection.action = LEVEL_SELECT_PLAY;
                             this->level_selection.level = i;
