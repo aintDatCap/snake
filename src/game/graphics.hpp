@@ -69,7 +69,7 @@ typedef enum {
 
 typedef struct {
   LevelSelectAction action;
-  uint32_t level;
+  uint16_t level;
 } LevelSelection;
 
 class LevelSelectorUI {

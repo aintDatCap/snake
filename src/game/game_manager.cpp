@@ -2,6 +2,7 @@
 #include "game/graphics.hpp"
 #include "game/logic.hpp"
 #include "graphics.hpp"
+#include <cassert>
 #include <ctime>
 #include <cstdlib>
 
@@ -34,7 +35,12 @@ SnakeGameManager::~SnakeGameManager() {
     }
 }
 
-void SnakeGameManager::start_game(GameDifficulty game_difficulty) {
+void SnakeGameManager::start_game(GameDifficulty game_difficulty, uint16_t level) {
+
+    ListElement<LevelInfo>* elem = this->levels.get_element_at(level-1);
+
+    assert(elem);
+    
 
     delete this->menu_ui;
     this->menu_ui = nullptr;
@@ -76,7 +82,7 @@ void SnakeGameManager::show_menu() {
             LevelSelection selected_level = this->level_selector_ui->wait_for_level_input();
 
             if(selected_level.action == LEVEL_SELECT_PLAY) {
-                 this->start_game(player_selection.game_difficulty);
+                 this->start_game(player_selection.game_difficulty, selected_level.level);
             } else if(selected_level.action == LEVEL_SELECT_EXIT) {
                 break;
             }
