@@ -7,7 +7,7 @@
 
 namespace Snake {
 typedef struct {
-
+  uint32_t high_score;
 } LevelInfo;
 
 class SnakeGameManager {
@@ -17,13 +17,14 @@ class SnakeGameManager {
     Game *game;
     MenuUI *menu_ui;
     GameUI *game_ui;
+    LevelSelectorUI *level_selector_ui;
     List<LevelInfo> levels;
 
   public:
     SnakeGameManager(uint16_t window_width, uint16_t window_height, List<LevelInfo> levels);
     ~SnakeGameManager();
     
-    void start_game(GameDifficulty game_difficulty);
+    void start_game(GameDifficulty game_difficulty, uint16_t level);
     void show_menu();
     void next_level();
     Direction get_player_input();

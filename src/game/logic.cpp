@@ -58,7 +58,7 @@ void Game::new_apple_position() {
     }
 }
 
-int Game::calculate_points(uint32_t level, GameDifficulty difficulty) const {
+uint32_t Game::calculate_points(uint16_t level, GameDifficulty difficulty) const {
     uint32_t base_points = 10; // Points awarded for eating an apple 
     uint32_t difficulty_multiplier = 1;
 
@@ -80,7 +80,7 @@ int Game::calculate_points(uint32_t level, GameDifficulty difficulty) const {
     return base_points * difficulty_multiplier * level;
 }
 
-void Game::set_speed(int level) {
+void Game::set_speed(uint16_t level) {
     switch (this->game_difficulty) {
         // the game is made harder by making the snake move every 
         // unit of time expressed in milliseconds

@@ -3,7 +3,6 @@
 
 #include "utils/queue.hpp"
 #include <cstdint>
-#include <stdexcept>
 
 namespace Snake {
 
@@ -58,9 +57,9 @@ class Game {
 
     GameResult update_game(Direction player_input);
 
-    int calculate_points(uint32_t level, GameDifficulty difficulty) const; 
+    uint32_t calculate_points(uint16_t level, GameDifficulty difficulty) const; 
 
-    void set_speed(int level);
+    void set_speed(uint16_t level);
 
     GameDifficulty get_game_difficulty() const {
         return game_difficulty;
