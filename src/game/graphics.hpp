@@ -75,7 +75,9 @@ typedef struct {
 class LevelSelectorUI {
   private:
     WINDOW *window;
+    WINDOW** level_buttons;
     LevelSelection level_selection;
+    
 
   public:
     LevelSelectorUI(uint16_t width, uint16_t height);
