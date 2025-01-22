@@ -20,9 +20,9 @@
     (getbegx(window) <= x && (getbegx(window) + getmaxx(window)) >= x) &&                                              \
         (getbegy(window) <= y && (getbegy(window) + getmaxy(window)) >= y)
 
-#define IS_INSIDE_SUBPAD(subpad, x, y)                                                                                 \
+#define IS_INSIDE_SUBPAD(subpad, x, y, current_line)                                                                                 \
     (getparx(subpad) <= x && (getparx(subpad) + getmaxx(subpad)) >= x) &&                                              \
-        (getpary(subpad) <= y && (getpary(subpad) + getmaxy(subpad)) >= y)
+        ((getpary(subpad) - current_line) <= y && (getpary(subpad) + getmaxy(subpad) - current_line) >= y)
 
 WINDOW *new_bordered_window(uint16_t height, uint16_t width, uint16_t y, uint16_t x) {
     WINDOW *window = newwin(height, width, y, x);
@@ -234,7 +234,7 @@ LevelSelection LevelSelectorUI::wait_for_level_input() {
                 // left button clicked
                 if (mouse_event.bstate & BUTTON1_CLICKED || mouse_event.bstate & BUTTON1_PRESSED) {
                     for (int i = 1; i <= 8; ++i) {
-                        if (IS_INSIDE_SUBPAD(level_buttons[i], mouse_event.x, mouse_event.y)) {
+                        if (IS_INSIDE_SUBPAD(level_buttons[i], mouse_event.x, mouse_event.y, (int32_t)current_line)) {
                             this->level_selection.action = LEVEL_SELECT_PLAY;
                             this->level_selection.level = i;
                             return this->level_selection; // Save the value of the selected level (1,2, etc.)
