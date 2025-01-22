@@ -76,7 +76,7 @@ void SnakeGameManager::show_menu() {
         PlayerSelection player_selection = this->menu_ui->wait_for_user_input();
         switch (player_selection.action) {
         case MENU_SELECT_LEVEL: {
-            this->level_selector_ui = new LevelSelectorUI (this->window_width, this->window_height);
+            this->level_selector_ui = new LevelSelectorUI (this->window_width, this->window_height, 8);
             LevelSelection selected_level = this->level_selector_ui->wait_for_level_input();
 
             if(selected_level.action == LEVEL_SELECT_PLAY) {
