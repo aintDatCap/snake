@@ -20,6 +20,15 @@
     (getbegx(window) <= x && (getbegx(window) + getmaxx(window)) >= x) &&                                              \
         (getbegy(window) <= y && (getbegy(window) + getmaxy(window)) >= y)
 
+WINDOW *new_bordered_window(uint16_t height, uint16_t width, uint16_t y, uint16_t x) {
+    WINDOW *window = newwin(height, width, y, x);
+    refresh();
+
+    box(window, 0, 0);
+    wrefresh(window);
+    return window;
+}
+
 void start_ncurses() {
     initscr();
     start_color();
@@ -80,45 +89,34 @@ void GameUI::update_game_window() {
 MenuUI::MenuUI(uint16_t width, uint16_t height) {
     this->player_selection.game_difficulty = DIFFICULTY_NORMAL;
 
-    this->window = newwin(height, width, 0, 0);
-    refresh();
+    this->window = new_bordered_window(height, width, 0, 0);
 
-    box(this->window, 0, 0);
+    this->play_game_button = new_bordered_window(height / 6, width / 4, height - height / 5, (width - width / 4) / 2);
 
-    wrefresh(this->window);
-
-    this->play_game_button = newwin(height / 6, width / 4, height - height / 5, (width - width / 4) / 2);
-    refresh();
-
-    box(this->play_game_button, 0, 0);
     PUT_CENTERED_TEXT(play_game_button, "Gioca");
-
     wrefresh(this->play_game_button);
 
-    this->exit_button = newwin(height / 6, width / 4, height - height / 2, (width - width / 4) / 2);
-    refresh();
-
-    box(this->exit_button, 0, 0);
+    this->exit_button = new_bordered_window(height / 6, width / 4, height - height / 2, (width - width / 4) / 2);
     PUT_CENTERED_TEXT(exit_button, "Esci");
 
     wrefresh(this->exit_button);
 
     refresh();
 
+    this->difficulty_button = nullptr;
     this->render_difficulty_button();
 }
 
 void MenuUI::render_difficulty_button() {
-    if (this->difficulty_button) {
-        delwin(difficulty_button);
+    if (!this->difficulty_button) {
+        uint16_t width = getmaxx(this->window);
+        uint16_t height = getmaxy(this->window);
+        this->difficulty_button = new_bordered_window(height / 6, width / 4, height / 3, (width - width / 4) / 2);
     }
-    uint16_t width = getmaxx(this->window);
-    uint16_t height = getmaxy(this->window);
 
-    this->difficulty_button = newwin(height / 6, width / 4, height / 3, (width - width / 4) / 2);
-    refresh();
+    werase(this->difficulty_button);
+    box(this->difficulty_button, 0, 0); // border
 
-    box(this->difficulty_button, 0, 0);
     switch (this->player_selection.game_difficulty) {
     case DIFFICULTY_EASY:
         PUT_CENTERED_COLORED_TEXT(difficulty_button, "Facile", GREEN_TEXT);
@@ -130,6 +128,7 @@ void MenuUI::render_difficulty_button() {
         PUT_CENTERED_COLORED_TEXT(difficulty_button, "Difficile", RED_TEXT);
         break;
     }
+
     wrefresh(this->difficulty_button);
     curs_set(0);
 }
@@ -186,12 +185,10 @@ PlayerSelection MenuUI::wait_for_user_input() {
 }
 
 LevelSelectorUI::LevelSelectorUI(uint16_t width, uint16_t height) {
-    this->window = newwin(height, width, 0, 0);
-    refresh();
+    this->window = newpad(height, width);
+    prefresh(this->window, 0, 0, height, width, height * 2, width);
 
-    box(this->window, 0, 0);
-    wrefresh(this->window);
-
+    // scrollok(this->window, true);
     render_level_buttons();
 }
 
@@ -202,13 +199,18 @@ void LevelSelectorUI::render_level_buttons() {
     this->level_buttons = (WINDOW **)malloc(sizeof(WINDOW *) * 5);
 
     for (int i = 1; i <= 5; ++i) {
-        level_buttons[i] = newwin(height / 8, width / 3, ((i) * height) / 6, (width - width / 3) / 2);
-        refresh();
-        box(level_buttons[i], 0, 0);
+        uint16_t x = (width - width / 3) / 2;
+        uint16_t y = ((i)*height) / 6;
+        uint16_t btn_width = width / 3;
+        uint16_t btn_height = height / 8;
+
+        level_buttons[i] = subwin(this->window, btn_height, btn_width, y, x);
+
         char level_text[10];
         snprintf(level_text, sizeof(level_text), "Level %d", i);
         PUT_CENTERED_TEXT(level_buttons[i], level_text);
-        wrefresh(level_buttons[i]);
+
+        prefresh(level_buttons[i], y, x, btn_height, btn_width, btn_height, btn_width);
     }
 }
 
@@ -229,6 +231,12 @@ LevelSelection LevelSelectorUI::wait_for_level_input() {
                             return this->level_selection; // Save the value of the selected level (1,2, etc.)
                         }
                     }
+                } else if (mouse_event.bstate & BUTTON4_PRESSED) {
+                    wscrl(this->window, 1);
+                    wrefresh(this->window);
+                } else if (mouse_event.bstate & BUTTON5_PRESSED) {
+                    wscrl(this->window, -1);
+                    wrefresh(this->window);
                 }
             }
         }
@@ -237,10 +245,10 @@ LevelSelection LevelSelectorUI::wait_for_level_input() {
 
 // Destructor
 LevelSelectorUI::~LevelSelectorUI() {
-    delwin(this->window);
     for (int i = 0; i < 5; ++i) {
         delwin(this->level_buttons[i]);
     }
+    delwin(this->window);
     delete this->level_buttons;
     refresh();
 }
