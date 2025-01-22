@@ -194,9 +194,9 @@ LevelSelectorUI::LevelSelectorUI(uint16_t width, uint16_t height) {
 
     this->window = newpad(height * 2, width);
 
-    //box(this->window, 0, 0);
+    box(this->window, 0, 0);
     scrollok(this->window, true);
-    prefresh(this->window, 0, 0, 0, 0, height-1, width-1);
+    prefresh(this->window, 0, 0, 0, 0, height - 1, width - 1);
 
     render_level_buttons();
 }
@@ -218,7 +218,7 @@ void LevelSelectorUI::render_level_buttons() {
         snprintf(level_text, sizeof(level_text), "Level %d", i);
         PUT_CENTERED_TEXT(level_buttons[i], level_text);
     }
-    prefresh(this->window, 0, 0, 0, 0, height-1, width-1);
+    prefresh(this->window, 0, 0, 0, 0, height - 1, width - 1);
 }
 
 LevelSelection LevelSelectorUI::wait_for_level_input() {
@@ -241,12 +241,14 @@ LevelSelection LevelSelectorUI::wait_for_level_input() {
                         }
                     }
                 } else if (mouse_event.bstate & BUTTON4_PRESSED) {
-                    current_line++;
-                    prefresh(this->window, current_line, 0, 0, 0, height-1, width-1);
+                    if (current_line + height < height * 2) {
+                        current_line++;
+                        prefresh(this->window, current_line, 0, 0, 0, height - 1, width - 1);
+                    }
                 } else if (mouse_event.bstate & BUTTON5_PRESSED) {
-                    if (current_line > 0) {
+                    if (current_line >= 2) {
                         current_line--;
-                        prefresh(this->window, current_line, 0, 0, 0, height-1, width-1);
+                        prefresh(this->window, current_line, 0, 0, 0, height - 1, width - 1);
                     }
                 }
             }
