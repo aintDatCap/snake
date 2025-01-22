@@ -77,6 +77,8 @@ class LevelSelectorUI {
     WINDOW *window;
     WINDOW** level_buttons;
     LevelSelection level_selection;
+    uint32_t width;
+    uint32_t height;
     
 
   public:

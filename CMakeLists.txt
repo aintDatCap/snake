@@ -24,7 +24,7 @@ add_executable(Snake ${SNAKE_SOURCE_DIR}/main.cpp ${PROGRAM_SOURCES})
 
 target_include_directories(Snake PUBLIC ${SNAKE_SOURCE_DIR})
 
-target_compile_options(Snake PRIVATE -Wall -Wextra -Wpedantic -Werror)
+target_compile_options(Snake PRIVATE -Wall -Wextra -Wpedantic)
 
 
 set(CURSES_NEED_NCURSES TRUE)

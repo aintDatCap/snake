@@ -3,7 +3,7 @@
 
 #include "graphics.hpp"
 #include "game/logic.hpp"
-#include "ncurses/ncurses.h"
+#include <cassert>
 #include <cstdint>
 #include <cstdlib>
 #include <ncurses.h>
@@ -19,6 +19,19 @@
 #define IS_INSIDE_WINDOW(window, x, y)                                                                                 \
     (getbegx(window) <= x && (getbegx(window) + getmaxx(window)) >= x) &&                                              \
         (getbegy(window) <= y && (getbegy(window) + getmaxy(window)) >= y)
+
+#define IS_INSIDE_SUBPAD(subpad, x, y)                                                                                 \
+    (getparx(subpad) <= x && (getparx(subpad) + getmaxx(subpad)) >= x) &&                                              \
+        (getpary(subpad) <= y && (getpary(subpad) + getmaxy(subpad)) >= y)
+
+WINDOW *new_bordered_window(uint16_t height, uint16_t width, uint16_t y, uint16_t x) {
+    WINDOW *window = newwin(height, width, y, x);
+    refresh();
+
+    box(window, 0, 0);
+    wrefresh(window);
+    return window;
+}
 
 void start_ncurses() {
     initscr();
@@ -80,45 +93,34 @@ void GameUI::update_game_window() {
 MenuUI::MenuUI(uint16_t width, uint16_t height) {
     this->player_selection.game_difficulty = DIFFICULTY_NORMAL;
 
-    this->window = newwin(height, width, 0, 0);
-    refresh();
+    this->window = new_bordered_window(height, width, 0, 0);
 
-    box(this->window, 0, 0);
+    this->play_game_button = new_bordered_window(height / 6, width / 4, height - height / 5, (width - width / 4) / 2);
 
-    wrefresh(this->window);
-
-    this->play_game_button = newwin(height / 6, width / 4, height - height / 5, (width - width / 4) / 2);
-    refresh();
-
-    box(this->play_game_button, 0, 0);
     PUT_CENTERED_TEXT(play_game_button, "Gioca");
-
     wrefresh(this->play_game_button);
 
-    this->exit_button = newwin(height / 6, width / 4, height - height / 2, (width - width / 4) / 2);
-    refresh();
-
-    box(this->exit_button, 0, 0);
+    this->exit_button = new_bordered_window(height / 6, width / 4, height - height / 2, (width - width / 4) / 2);
     PUT_CENTERED_TEXT(exit_button, "Esci");
 
     wrefresh(this->exit_button);
 
     refresh();
 
+    this->difficulty_button = nullptr;
     this->render_difficulty_button();
 }
 
 void MenuUI::render_difficulty_button() {
-    if (this->difficulty_button) {
-        delwin(difficulty_button);
+    if (!this->difficulty_button) {
+        uint16_t width = getmaxx(this->window);
+        uint16_t height = getmaxy(this->window);
+        this->difficulty_button = new_bordered_window(height / 6, width / 4, height / 3, (width - width / 4) / 2);
     }
-    uint16_t width = getmaxx(this->window);
-    uint16_t height = getmaxy(this->window);
 
-    this->difficulty_button = newwin(height / 6, width / 4, height / 3, (width - width / 4) / 2);
-    refresh();
+    werase(this->difficulty_button);
+    box(this->difficulty_button, 0, 0); // border
 
-    box(this->difficulty_button, 0, 0);
     switch (this->player_selection.game_difficulty) {
     case DIFFICULTY_EASY:
         PUT_CENTERED_COLORED_TEXT(difficulty_button, "Facile", GREEN_TEXT);
@@ -130,6 +132,7 @@ void MenuUI::render_difficulty_button() {
         PUT_CENTERED_COLORED_TEXT(difficulty_button, "Difficile", RED_TEXT);
         break;
     }
+
     wrefresh(this->difficulty_button);
     curs_set(0);
 }
@@ -186,34 +189,42 @@ PlayerSelection MenuUI::wait_for_user_input() {
 }
 
 LevelSelectorUI::LevelSelectorUI(uint16_t width, uint16_t height) {
-    this->window = newwin(height, width, 0, 0);
-    refresh();
+    this->width = width;
+    this->height = height;
 
-    box(this->window, 0, 0);
-    wrefresh(this->window);
+    this->window = newpad(height * 2, width);
+
+    //box(this->window, 0, 0);
+    scrollok(this->window, true);
+    prefresh(this->window, 0, 0, 0, 0, height-1, width-1);
 
     render_level_buttons();
 }
 
 void LevelSelectorUI::render_level_buttons() {
-    uint16_t width = getmaxx(this->window);
-    uint16_t height = getmaxy(this->window);
 
-    this->level_buttons = (WINDOW **)malloc(sizeof(WINDOW *) * 5);
+    this->level_buttons = (WINDOW **)malloc(sizeof(WINDOW *) * 8);
 
-    for (int i = 1; i <= 5; ++i) {
-        level_buttons[i] = newwin(height / 8, width / 3, ((i) * height) / 6, (width - width / 3) / 2);
-        refresh();
+    for (int i = 1; i <= 8; ++i) {
+        uint16_t x = (width - width / 3) / 2;
+        uint16_t y = ((i)*height) / 6;
+        uint16_t btn_width = width / 3;
+        uint16_t btn_height = height / 8;
+
+        level_buttons[i] = subpad(this->window, btn_height, btn_width, y, x);
         box(level_buttons[i], 0, 0);
+
         char level_text[10];
         snprintf(level_text, sizeof(level_text), "Level %d", i);
         PUT_CENTERED_TEXT(level_buttons[i], level_text);
-        wrefresh(level_buttons[i]);
     }
+    prefresh(this->window, 0, 0, 0, 0, height-1, width-1);
 }
 
 LevelSelection LevelSelectorUI::wait_for_level_input() {
     keypad(this->window, TRUE);
+
+    uint32_t current_line = 0;
 
     while (true) {
         int c = wgetch(this->window);
@@ -222,12 +233,20 @@ LevelSelection LevelSelectorUI::wait_for_level_input() {
             if (getmouse(&mouse_event) == OK) {
                 // left button clicked
                 if (mouse_event.bstate & BUTTON1_CLICKED || mouse_event.bstate & BUTTON1_PRESSED) {
-                    for (int i = 1; i <= 5; ++i) {
-                        if (IS_INSIDE_WINDOW(level_buttons[i], mouse_event.x, mouse_event.y)) {
+                    for (int i = 1; i <= 8; ++i) {
+                        if (IS_INSIDE_SUBPAD(level_buttons[i], mouse_event.x, mouse_event.y)) {
                             this->level_selection.action = LEVEL_SELECT_PLAY;
                             this->level_selection.level = i;
                             return this->level_selection; // Save the value of the selected level (1,2, etc.)
                         }
+                    }
+                } else if (mouse_event.bstate & BUTTON4_PRESSED) {
+                    current_line++;
+                    prefresh(this->window, current_line, 0, 0, 0, height-1, width-1);
+                } else if (mouse_event.bstate & BUTTON5_PRESSED) {
+                    if (current_line > 0) {
+                        current_line--;
+                        prefresh(this->window, current_line, 0, 0, 0, height-1, width-1);
                     }
                 }
             }
@@ -237,10 +256,10 @@ LevelSelection LevelSelectorUI::wait_for_level_input() {
 
 // Destructor
 LevelSelectorUI::~LevelSelectorUI() {
-    delwin(this->window);
-    for (int i = 0; i < 5; ++i) {
+    for (int i = 0; i < 8; ++i) {
         delwin(this->level_buttons[i]);
     }
+    delwin(this->window);
     delete this->level_buttons;
     refresh();
 }
