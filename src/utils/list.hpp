@@ -1,7 +1,7 @@
 #ifndef LIST_HPP
 #define LIST_HPP
 
-#include <cstdint>
+#include <cstddef>
 
 template <typename T> struct ListElement {
     T value;
@@ -38,12 +38,12 @@ template <typename T> class List {
         new_element->before = current;
     }
 
-    ListElement<T> *get_element_at(uint32_t index) {
+    ListElement<T> *get_element_at(size_t index) {
         if (!this->head) {
             return nullptr;
         }
         ListElement<T> *current = this->head;
-        uint32_t i = 0;
+        size_t i = 0;
         while (i < index) {
             if (!current->next) {
                 return nullptr;
@@ -54,12 +54,12 @@ template <typename T> class List {
         return current;
     }
 
-    ListElement<T> *remove_element_at(uint32_t index) {
+    ListElement<T> *remove_element_at(size_t index) {
         if (!this->head) {
             return nullptr;
         }
         ListElement<T> *current = this->head;
-        uint32_t i = 0;
+        size_t i = 0;
         while (i < index) {
             if (!current->next) {
                 return nullptr;
