@@ -32,6 +32,7 @@ class GameUI {
 
     void update_game_window();
     void close_window();
+    WINDOW* getWindow();
 };
 
 typedef enum {
