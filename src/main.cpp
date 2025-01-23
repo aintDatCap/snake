@@ -3,6 +3,33 @@
 
 #define max(a, b) a > b ? a : b
 
+List<Snake::LevelInfo> default_levels() {
+    List<Snake::LevelInfo> levels;
+
+Snake::LevelInfo level_info{0};
+
+    levels.add_element(
+        level_info
+    );
+        levels.add_element(
+        level_info
+    );
+        levels.add_element(
+        level_info
+    );
+        levels.add_element(
+        level_info
+    );
+        levels.add_element(
+        level_info
+    );
+        levels.add_element(
+        level_info
+    );
+
+    return levels;
+}
+
 int main(int, char **) {
     start_ncurses();
     List<Snake::LevelInfo> levels;

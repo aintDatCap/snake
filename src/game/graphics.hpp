@@ -2,6 +2,7 @@
 #define GRAPHICS_HPP
 
 #include "logic.hpp"
+#include "utils/list.hpp"
 #include <cstdint>
 
 #ifdef _WIN32
@@ -76,14 +77,14 @@ class LevelSelectorUI {
   private:
     uint32_t width;
     uint32_t height;
-    uint32_t level_count;
+    List<LevelInfo>* levels;
 
     WINDOW *window;
     WINDOW **level_buttons;
     LevelSelection level_selection;
 
   public:
-    LevelSelectorUI(uint16_t width, uint16_t height, uint32_t level_count);
+    LevelSelectorUI(uint16_t width, uint16_t height, List<LevelInfo>* levels);
     ~LevelSelectorUI();
 
     LevelSelection wait_for_level_input();

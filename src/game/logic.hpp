@@ -6,6 +6,8 @@
 
 namespace Snake {
 
+
+
 typedef struct {
     uint16_t height;
     uint16_t width;
@@ -37,6 +39,10 @@ typedef enum {
     DIFFICULTY_NORMAL,
     DIFFICULTY_HARD
 } GameDifficulty;
+
+typedef struct {
+    uint32_t high_score;
+} LevelInfo;
 
 class Game {
   private:
