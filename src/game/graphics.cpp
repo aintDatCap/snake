@@ -3,7 +3,8 @@
 
 #include "graphics.hpp"
 #include "game/logic.hpp"
-#include "ncurses/ncurses.h"
+
+#include <algorithm>
 #include <cassert>
 #include <cstdint>
 #include <cstdlib>
@@ -189,11 +190,12 @@ PlayerSelection MenuUI::wait_for_user_input() {
     }
 }
 
-LevelSelectorUI::LevelSelectorUI(uint16_t width, uint16_t height, List<LevelInfo>* levels) {
+LevelSelectorUI::LevelSelectorUI(uint16_t width, uint16_t height, List<LevelInfo> *levels) {
+    erase();
     this->width = width;
     this->height = height;
 
-    this->levels= levels;
+    this->levels = levels;
 
     this->window = newpad((levels->get_element_count() + 2) * height / 6, width);
 
@@ -246,15 +248,14 @@ LevelSelection LevelSelectorUI::wait_for_level_input() {
                         }
                     }
                 } else if (mouse_event.bstate & BUTTON4_PRESSED) {
-                    if (current_line >= 2) {
-                        current_line -= 2;
-                        prefresh(this->window, current_line, 0, 0, 0, height - 1, width - 1);
-                    }
+
+                    current_line -= std::min<uint32_t>(2, current_line);
+                    prefresh(this->window, current_line, 0, 0, 0, height - 1, width - 1);
+
                 } else if (mouse_event.bstate & BUTTON5_PRESSED) {
-                    if (current_line + height < (uint32_t)getmaxy(this->window)) {
-                        current_line += 2;
-                        prefresh(this->window, current_line, 0, 0, 0, height - 1, width - 1);
-                    }
+                    // avoid thinking too hard on why it works
+                    current_line += std::min<uint32_t>(2, (uint32_t)getmaxy(this->window) - (current_line + height));
+                    prefresh(this->window, current_line, 0, 0, 0, height - 1, width - 1);
                 }
             }
         }
