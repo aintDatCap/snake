@@ -11,11 +11,13 @@ template <typename T> struct ListElement {
 
 template <typename T> class List {
   private:
+    size_t element_count;
     ListElement<T> *head;
 
   public:
     List() {
         this->head = nullptr;
+        this->element_count = 0;
     }
 
     void add_element(T value) {
@@ -36,6 +38,8 @@ template <typename T> class List {
         }
         current->next = new_element;
         new_element->before = current;
+
+        this->element_count++;
     }
 
     ListElement<T> *get_element_at(size_t index) {
@@ -75,7 +79,13 @@ template <typename T> class List {
 
         current->before->next = current->next;
         current->next->before = current->before;
+
+        this->element_count--;
         return current;
+    }
+
+    size_t get_element_count() const {
+        return this->element_count;
     }
 };
 

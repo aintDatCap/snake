@@ -26,16 +26,13 @@ target_include_directories(Snake PUBLIC ${SNAKE_SOURCE_DIR})
 
 target_compile_options(Snake PRIVATE -Wall -Wextra -Wpedantic -Werror)
 
-
 set(CURSES_NEED_NCURSES TRUE)
 find_package(Curses REQUIRED)
 
 if(${CURSES_FOUND})
   include_directories(${CURSES_INCLUDE_DIRS})
-  target_link_libraries(Snake ${CURSES_LIBRARIES})
+  target_link_libraries(Snake PUBLIC ${CURSES_LIBRARIES})
 endif()
-
-
 
 if(${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_CURRENT_SOURCE_DIR})
 

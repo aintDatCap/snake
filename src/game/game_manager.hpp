@@ -6,10 +6,6 @@
 #include "utils/list.hpp"
 
 namespace Snake {
-typedef struct {
-    uint32_t high_score;
-} LevelInfo;
-
 class SnakeGameManager {
   private:
     uint16_t window_width;
