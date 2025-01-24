@@ -22,8 +22,8 @@ bool coordinates_are_equal(Coordinates a, Coordinates b);
 
 typedef enum : int8_t {
     DIRECTION_UP = 1,
-    DIRECTION_DOWN = 2,
-    DIRECTION_LEFT = ~1,
+    DIRECTION_DOWN = ~1,
+    DIRECTION_LEFT = 2,
     DIRECTION_RIGHT = ~2,
     DIRECTION_NONE = 0
 } Direction;

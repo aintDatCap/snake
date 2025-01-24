@@ -27,7 +27,8 @@ Game::Game(uint16_t table_height, uint16_t table_width, GameDifficulty game_diff
     this->snake_head_position.y = table_height / 2;
 
     this->snake_body = new Queue<Coordinates>();
-    for (uint16_t i = this->snake_head_position.y + 1; i < this->snake_head_position.y + SNAKE_BODY_SIZE + game_difficulty; i++) {
+    for (uint16_t i = this->snake_head_position.y + 1;
+         i < this->snake_head_position.y + SNAKE_BODY_SIZE + game_difficulty; i++) {
         Coordinates coords;
         coords.x = this->snake_head_position.x;
         coords.y = i;
@@ -59,7 +60,7 @@ void Game::new_apple_position() {
 }
 
 uint32_t Game::calculate_points(uint16_t level, GameDifficulty difficulty) const {
-    uint32_t base_points = 10; // Points awarded for eating an apple 
+    uint32_t base_points = 10; // Points awarded for eating an apple
     uint32_t difficulty_multiplier = 1;
 
     // Change multiplier based on difficulty
@@ -82,14 +83,14 @@ uint32_t Game::calculate_points(uint16_t level, GameDifficulty difficulty) const
 
 void Game::set_speed(uint16_t level) {
     switch (this->game_difficulty) {
-        // the game is made harder by making the snake move every 
+        // the game is made harder by making the snake move every
         // unit of time expressed in milliseconds
         // the lower the time intervals the harder the game
-    case DIFFICULTY_EASY: // tentative values for speed before playtesting
-        speed = 300 - (level * 10); // Lower speed 
+    case DIFFICULTY_EASY:           // tentative values for speed before playtesting
+        speed = 300 - (level * 10); // Lower speed
         break;
     case DIFFICULTY_NORMAL:
-        speed = 200 - (level * 15); // Moderate speed 
+        speed = 200 - (level * 15); // Moderate speed
         break;
     case DIFFICULTY_HARD:
         speed = 100 - (level * 20); // Faster speed
@@ -105,6 +106,10 @@ void Game::set_speed(uint16_t level) {
 }
 
 GameResult Game::update_game(Direction player_input) {
+    if (this->result != GAME_UNFINISHED) {
+        return this->result;
+    }
+
     if (coordinates_are_equal(this->snake_head_position, this->apple_position)) {
         // TODO: update player score and create a new apple
         this->new_apple_position();
@@ -114,24 +119,48 @@ GameResult Game::update_game(Direction player_input) {
     // we should change the current direction based on player input
     if (player_input != DIRECTION_NONE && player_input != this->current_direction &&
         player_input != ~this->current_direction) {
-        // the new direction is valid, we can change this->current_direction
+        // the new direction is valid
+        this->current_direction = player_input;
     }
 
+    // move the tail
+    snake_body->dequeue();
+    snake_body->enqueue(snake_head_position);
+
+    // move the head
     switch (this->current_direction) {
     case DIRECTION_UP: {
-        // remove 1 to y
+        snake_head_position.y--;
+        
+        if (snake_head_position.y == 0) {
+            return GAME_LOST;
+        }
         break;
     }
     case DIRECTION_DOWN: {
         // add 1 to y
+        snake_head_position.y++;
+
+        if (snake_head_position.y == game_table.height) { // -1 because of the border
+            return GAME_LOST;
+        }
         break;
     }
     case DIRECTION_LEFT: {
         // remove 1 to x
+        snake_head_position.x--;
+        if (snake_head_position.x == 0) {
+            return GAME_LOST;
+        }
         break;
     }
     case DIRECTION_RIGHT: {
         // add 1 to x
+        snake_head_position.x++;
+
+        if (snake_head_position.x == game_table.width) { 
+            return GAME_LOST;
+        }
         break;
     }
     default: {
