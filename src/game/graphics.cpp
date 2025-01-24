@@ -92,11 +92,12 @@ void GameUI::update_game_window() {
 
     for (uint16_t i = 0; i < this->game->get_snake_body()->size(); ++i) {
         Coordinates coord = this->game->get_snake_body()->get_element_at(i)->value;
-        mvwaddch(this->window, coord.y, coord.x, '*');
+        mvwaddch(this->window, coord.y, coord.x, '$');
     }
     wattroff(this->window, COLOR_PAIR(GREEN_TEXT));
     wrefresh(this->window);
     refresh();
+
 }
 
 // -MenuIU definitions
