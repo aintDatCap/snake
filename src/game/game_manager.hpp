@@ -22,7 +22,7 @@ class SnakeGameManager {
 
     void start_game(GameDifficulty game_difficulty, uint16_t level);
     void show_menu();
-    void next_level();
+    LevelInfo *next_level();
     Direction get_player_input();
 };
 

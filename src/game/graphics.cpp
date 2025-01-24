@@ -77,6 +77,8 @@ WINDOW* GameUI::getWindow(){
 }
 
 void GameUI::update_game_window() {
+    werase(this->window);
+    box(this->window, 0, 0);
     // Rendering the apple
     wattron(this->window, COLOR_PAIR(RED_TEXT));
     Coordinates apple_position = this->game->get_apple_position();
