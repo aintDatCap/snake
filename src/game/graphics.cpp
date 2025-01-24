@@ -43,9 +43,9 @@ void start_ncurses() {
     init_pair(Snake::GREEN_TEXT, COLOR_GREEN, COLOR_BLACK);
     init_pair(Snake::BLUE_TEXT, COLOR_BLUE, COLOR_BLACK);
 
-    mousemask(ALL_MOUSE_EVENTS, NULL);
+    mousemask(ALL_MOUSE_EVENTS, NULL); //for mouse events...
 
-    curs_set(0);
+    curs_set(0); 
 }
 
 void stop_ncurses() {
@@ -54,7 +54,8 @@ void stop_ncurses() {
 }
 
 namespace Snake {
-GameUI::GameUI(Game *game) {
+    // -GameUI definitions
+GameUI::GameUI(Game *game) { 
     this->game = game;
 
     GameTable game_table = game->get_game_table();
@@ -69,6 +70,10 @@ GameUI::GameUI(Game *game) {
 GameUI::~GameUI() {
     delwin(this->window);
     refresh();
+}
+
+WINDOW* GameUI::getWindow(){
+    return this->window;
 }
 
 void GameUI::update_game_window() {
@@ -92,6 +97,7 @@ void GameUI::update_game_window() {
     refresh();
 }
 
+// -MenuIU definitions
 MenuUI::MenuUI(uint16_t width, uint16_t height) {
     this->player_selection.game_difficulty = DIFFICULTY_NORMAL;
 
@@ -100,11 +106,10 @@ MenuUI::MenuUI(uint16_t width, uint16_t height) {
     this->play_game_button = new_bordered_window(height / 6, width / 4, height - height / 5, (width - width / 4) / 2);
 
     PUT_CENTERED_TEXT(play_game_button, "Gioca");
-    wrefresh(this->play_game_button);
+    wrefresh(this->play_game_button); //render the playgame option
 
     this->exit_button = new_bordered_window(height / 6, width / 4, height - height / 2, (width - width / 4) / 2);
     PUT_CENTERED_TEXT(exit_button, "Esci");
-
     wrefresh(this->exit_button);
 
     refresh();
@@ -124,15 +129,15 @@ void MenuUI::render_difficulty_button() {
     box(this->difficulty_button, 0, 0); // border
 
     switch (this->player_selection.game_difficulty) {
-    case DIFFICULTY_EASY:
-        PUT_CENTERED_COLORED_TEXT(difficulty_button, "Facile", GREEN_TEXT);
-        break;
-    case DIFFICULTY_NORMAL:
-        PUT_CENTERED_COLORED_TEXT(difficulty_button, "Normale", BLUE_TEXT);
-        break;
-    case DIFFICULTY_HARD:
-        PUT_CENTERED_COLORED_TEXT(difficulty_button, "Difficile", RED_TEXT);
-        break;
+        case DIFFICULTY_EASY:
+            PUT_CENTERED_COLORED_TEXT(difficulty_button, "Facile", GREEN_TEXT);
+            break;
+        case DIFFICULTY_NORMAL:
+            PUT_CENTERED_COLORED_TEXT(difficulty_button, "Normale", BLUE_TEXT);
+            break;
+        case DIFFICULTY_HARD:
+            PUT_CENTERED_COLORED_TEXT(difficulty_button, "Difficile", RED_TEXT);
+            break;
     }
 
     wrefresh(this->difficulty_button);
@@ -148,7 +153,6 @@ MenuUI::~MenuUI() {
 }
 
 PlayerSelection MenuUI::wait_for_user_input() {
-
     keypad(this->window, TRUE);
 
     while (true) {
@@ -190,6 +194,7 @@ PlayerSelection MenuUI::wait_for_user_input() {
     }
 }
 
+// -LevelSelctorUI definitions
 LevelSelectorUI::LevelSelectorUI(uint16_t width, uint16_t height, List<LevelInfo> *levels) {
     erase();
     this->width = width;
