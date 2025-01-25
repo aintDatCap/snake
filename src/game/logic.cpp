@@ -27,13 +27,15 @@ Game::Game(uint16_t table_height, uint16_t table_width, GameDifficulty game_diff
     this->snake_head_position.y = table_height / 2;
 
     this->snake_body = new Queue<Coordinates>();
-    for (uint16_t i = this->snake_head_position.y + 1;
-         i < this->snake_head_position.y + SNAKE_BODY_SIZE + game_difficulty; i++) {
+
+    for (uint16_t i = this->snake_head_position.y + SNAKE_BODY_SIZE + game_difficulty;
+         i >= this->snake_head_position.y + 1; i--) {
         Coordinates coords;
         coords.x = this->snake_head_position.x;
         coords.y = i;
         this->snake_body->enqueue(coords);
     }
+
     this->score = 0;
     this->level = level;
     this->new_apple_position();
@@ -168,6 +170,13 @@ GameResult Game::update_game(Direction player_input) {
         throw std::invalid_argument("player_input should assume only values defined by the 'Direction' enum");
         break;
     }
+    }
+
+    // if the head collides with the body, then the game is lost
+    for(size_t i = 0; i < this->snake_body->size(); i++) {
+        if(coordinates_are_equal(this->snake_head_position, this->snake_body->get_element_at(i)->value)) {
+            return GAME_LOST;
+        }
     }
 
     return GAME_UNFINISHED;
