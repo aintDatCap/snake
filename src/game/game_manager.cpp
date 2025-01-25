@@ -98,22 +98,24 @@ void SnakeGameManager::show_menu() {
 
         PlayerSelection player_selection = this->menu_ui->wait_for_user_input();
         switch (player_selection.action) {
+            case MENU_SELECT_LEVEL: {
+                this->level_selector_ui = new LevelSelectorUI(this->window_width, this->window_height, &levels);
+                LevelSelection selected_level = this->level_selector_ui->wait_for_level_input(); // wait till user selects a lvl
 
-        case MENU_SELECT_LEVEL: {
-            this->level_selector_ui = new LevelSelectorUI(this->window_width, this->window_height, &levels);
-            LevelSelection selected_level =
-                this->level_selector_ui->wait_for_level_input(); // wait till user selects a lvl
-
-            if (selected_level.action == LEVEL_SELECT_PLAY) {
-                this->start_game(player_selection.game_difficulty, selected_level.level);
-            } else if (selected_level.action == LEVEL_SELECT_EXIT) {
+                if (selected_level.action == LEVEL_SELECT_PLAY) {
+                    this->start_game(player_selection.game_difficulty, selected_level.level);
+        
+                } else if (selected_level.action == LEVEL_SELECT_EXIT) {
+                    break;
+                }
                 break;
             }
-        }
-        case MENU_EXIT_PROGRAM: {
-            clear();
-            return;
-        }
+            case MENU_EXIT_PROGRAM: {
+                clear();
+                return;
+            }
+            default:
+                return;
         }
     }
     /*
