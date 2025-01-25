@@ -44,14 +44,17 @@ void SnakeGameManager::start_game(GameDifficulty game_difficulty, uint32_t level
     delete this->menu_ui;
     this->menu_ui = nullptr;
 
-    this->game = new Game(window_height, window_width, game_difficulty, level);
+    this->game = new Game(window_height, window_width, game_difficulty, level); //obj for game logic
     this->game -> set_speed(level);
-    this->game_ui = new GameUI(this->game); // rendering a new win for th game...
+    this->game_ui = new GameUI(this->game); // rendering a new win for the game...
+  
     // game_ui window settings
     keypad((this->game_ui)->getWindow(), true);  // for arrow keys
     nodelay((this->game_ui)->getWindow(), true); // for non-blocking input
+    mmask_t oldmask; //to save the previous mouse events mask...
+    mousemask(0, &oldmask); //disable mouse for this win
 
-    // TODO: each frame we should:
+    // TODO: in each frame we should:
     // 1) get the player input
     // 2) update the game based on the player input
     // 3) update the game window
@@ -63,6 +66,8 @@ void SnakeGameManager::start_game(GameDifficulty game_difficulty, uint32_t level
         // sleep(in micro-secs) to give time to see frames rendered between each loop
         usleep(game -> get_speed());
     } while (game->update_game(this->get_player_input()) == GAME_UNFINISHED);
+
+    mousemask(oldmask, NULL); //restore mouse events
 }
 
 Direction SnakeGameManager::get_player_input() {
@@ -74,17 +79,16 @@ Direction SnakeGameManager::get_player_input() {
     // then find out if the player is pressing *only* one arrow,
     // otherwise we're returning DIRECTION_NONE
     switch (inp) {
-    case KEY_UP:
-        return DIRECTION_UP;
-    case KEY_DOWN:
-        return DIRECTION_DOWN;
-    case KEY_RIGHT:
-        return DIRECTION_RIGHT;
-    case KEY_LEFT:
-        return DIRECTION_LEFT;
-    default:
-        return DIRECTION_NONE;
-        break;
+        case KEY_UP:
+            return DIRECTION_UP;
+        case KEY_DOWN:
+            return DIRECTION_DOWN;
+        case KEY_RIGHT:
+            return DIRECTION_RIGHT;
+        case KEY_LEFT:
+            return DIRECTION_LEFT;
+        default:
+            return DIRECTION_NONE;
     }
 }
 
@@ -125,6 +129,8 @@ void SnakeGameManager::show_menu() {
                 clear();
                 return;
             }
+            default:
+                return;
         }
     }
 }
