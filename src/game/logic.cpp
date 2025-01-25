@@ -14,7 +14,7 @@ bool coordinates_are_equal(Coordinates a, Coordinates b) {
     return a.x == b.x && a.y == b.y;
 }
 
-Game::Game(uint16_t table_height, uint16_t table_width, GameDifficulty game_difficulty) {
+Game::Game(uint16_t table_height, uint16_t table_width, GameDifficulty game_difficulty, uint32_t level) {
     this->game_difficulty = game_difficulty;
     this->result = GAME_UNFINISHED;
 
@@ -34,7 +34,8 @@ Game::Game(uint16_t table_height, uint16_t table_width, GameDifficulty game_diff
         coords.y = i;
         this->snake_body->enqueue(coords);
     }
-
+    this->score = 0;
+    this->level = level;
     this->new_apple_position();
 }
 
@@ -59,7 +60,7 @@ void Game::new_apple_position() {
     }
 }
 
-uint32_t Game::calculate_points(uint16_t level, GameDifficulty difficulty) const {
+uint32_t Game::calculate_points(uint32_t level, GameDifficulty difficulty) const {
     uint32_t base_points = 10; // Points awarded for eating an apple
     uint32_t difficulty_multiplier = 1;
 
@@ -77,23 +78,22 @@ uint32_t Game::calculate_points(uint16_t level, GameDifficulty difficulty) const
     default:
         throw std::invalid_argument("Invalid game difficulty");
     }
-
     return base_points * difficulty_multiplier * level;
 }
 
 void Game::set_speed(uint32_t level) {
     switch (this->game_difficulty) {
         // the game is made harder by making the snake move every
-        // unit of time expressed in milliseconds
+        // unit of time expressed in microseconds
         // the lower the time intervals the harder the game
     case DIFFICULTY_EASY:           // tentative values for speed before playtesting
         speed = 300000 - (level * 10000); // Lower speed
         break;
     case DIFFICULTY_NORMAL:
-        speed = 200000 - (level * 15000); // Moderate speed
+        speed = 250000 - (level * 15000); // Moderate speed
         break;
     case DIFFICULTY_HARD:
-        speed = 100000 - (level * 20000); // Faster speed
+        speed = 200000 - (level * 20000); // Faster speed
         break;
     default:
         speed = 125000; // Default speed
@@ -111,7 +111,8 @@ GameResult Game::update_game(Direction player_input) {
     }
 
     if (coordinates_are_equal(this->snake_head_position, this->apple_position)) {
-        // TODO: update player score and create a new apple
+        // Increase score and create a new apple
+        this->score += this->calculate_points(this->level, this->game_difficulty);
         this->new_apple_position();
     }
 

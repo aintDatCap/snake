@@ -35,7 +35,7 @@ SnakeGameManager::~SnakeGameManager() { // destructor
     }
 }
 
-void SnakeGameManager::start_game(GameDifficulty game_difficulty, uint16_t level = 0) {
+void SnakeGameManager::start_game(GameDifficulty game_difficulty, uint32_t level) {
 
     // TODO: level management
     if (level == 0) {
@@ -44,7 +44,7 @@ void SnakeGameManager::start_game(GameDifficulty game_difficulty, uint16_t level
     delete this->menu_ui;
     this->menu_ui = nullptr;
 
-    this->game = new Game(window_height, window_width, game_difficulty);
+    this->game = new Game(window_height, window_width, game_difficulty, level);
     this->game -> set_speed(level);
     this->game_ui = new GameUI(this->game); // rendering a new win for th game...
     // game_ui window settings
@@ -99,25 +99,24 @@ void SnakeGameManager::show_menu() {
 
         PlayerSelection player_selection = this->menu_ui->wait_for_user_input();
 
-
         switch (player_selection.action) {
             case MENU_SELECT_LEVEL: {
                 this->level_selector_ui = new LevelSelectorUI(
                     this->window_width, 
                     this->window_height, 
                     &levels);
-                LevelSelection selected_level = 
-                    this->level_selector_ui->wait_for_level_input();
+                
+                // Get the selected level 
+                LevelSelection selected_level = this->level_selector_ui->wait_for_level_input();
                 
                 delete this->level_selector_ui;
                 this->level_selector_ui = nullptr;
-
-                if (selected_level.action == LEVEL_SELECT_PLAY) {
-                    this->start_game(
-                        player_selection.game_difficulty, 
-                        selected_level.level
-                    );
-                } else if (selected_level.action == LEVEL_SELECT_EXIT) {
+                
+                if (selected_level.action == LEVEL_SELECT_PLAY) {  // Check if level is valid 
+                    this->start_game(player_selection.game_difficulty, selected_level.level);
+                }
+                else {
+                    // Handle the case where no valid level was selected, if necessary
                     break;
                 }
                 break;

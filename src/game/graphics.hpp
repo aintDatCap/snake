@@ -34,6 +34,7 @@ class GameUI {
     void update_game_window();
     void close_window();
     WINDOW* getWindow();
+    void render_score(uint32_t score);
 };
 
 typedef enum {
@@ -44,7 +45,6 @@ typedef enum {
 typedef struct {
     MenuAction action;
     GameDifficulty game_difficulty;
-    uint32_t level;
 } PlayerSelection;
 
 class MenuUI {
@@ -71,7 +71,7 @@ typedef enum {
 
 typedef struct {
     LevelSelectAction action;
-    uint16_t level;
+    uint32_t level;
 } LevelSelection;
 
 class LevelSelectorUI {
