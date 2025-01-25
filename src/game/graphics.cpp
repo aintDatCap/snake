@@ -85,6 +85,11 @@ void GameUI::update_game_window() {
     mvwaddch(this->window, apple_position.y, apple_position.x, 'o');
     wattroff(this->window, COLOR_PAIR(RED_TEXT));
 
+     // Rendering the score
+    wmove(window, 0, 0);
+    wprintw(window, "Score: %u", this->game->get_score());
+    wrefresh(window);
+
     // Rendering the snake
     wattron(this->window, COLOR_PAIR(GREEN_TEXT));
     Coordinates snake_head = this->game->get_snake_head_position();
@@ -92,11 +97,12 @@ void GameUI::update_game_window() {
 
     for (uint16_t i = 0; i < this->game->get_snake_body()->size(); ++i) {
         Coordinates coord = this->game->get_snake_body()->get_element_at(i)->value;
-        mvwaddch(this->window, coord.y, coord.x, '*');
+        mvwaddch(this->window, coord.y, coord.x, '$');
     }
     wattroff(this->window, COLOR_PAIR(GREEN_TEXT));
     wrefresh(this->window);
     refresh();
+
 }
 
 // -MenuIU definitions
@@ -250,7 +256,7 @@ LevelSelection LevelSelectorUI::wait_for_level_input() {
                     for (uint32_t i = 0; i < levels->get_element_count(); ++i) {
                         if (IS_INSIDE_SUBPAD(level_buttons[i], mouse_event.x, mouse_event.y, (int32_t)current_line)) {
                             this->level_selection.action = LEVEL_SELECT_PLAY;
-                            this->level_selection.level = i;
+                            this->level_selection.level = i+1;
                             return this->level_selection; // Save the value of the selected level (1,2, etc.)
                         }
                     }

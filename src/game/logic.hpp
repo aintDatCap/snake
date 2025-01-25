@@ -35,9 +35,9 @@ typedef enum {
 } GameResult;
 
 typedef enum {
-    DIFFICULTY_EASY = 0,
-    DIFFICULTY_NORMAL,
-    DIFFICULTY_HARD
+    DIFFICULTY_EASY = 1,
+    DIFFICULTY_NORMAL = 5,
+    DIFFICULTY_HARD = 8, //random values
 } GameDifficulty;
 
 typedef struct {
@@ -54,18 +54,19 @@ class Game {
     Coordinates apple_position;
     Queue<Coordinates> *snake_body;
     uint32_t level;
-    uint16_t speed;
+    uint32_t speed;
+    uint32_t score;
 
     void new_apple_position();
 
   public:
-    Game(uint16_t table_height, uint16_t table_width, GameDifficulty game_difficulty);
+    Game(uint16_t table_height, uint16_t table_width, GameDifficulty game_difficulty, uint32_t level);
 
     GameResult update_game(Direction player_input);
 
-    uint32_t calculate_points(uint16_t level, GameDifficulty difficulty) const; 
+    uint32_t calculate_points(uint32_t level, GameDifficulty difficulty) const; 
 
-    void set_speed(uint16_t level);
+    void set_speed(uint32_t level);
 
     GameDifficulty get_game_difficulty() const {
         return game_difficulty;
@@ -87,12 +88,16 @@ class Game {
         return snake_body;
     }
 
-    uint32_t get_level() const {
-        return level;
-    }
-
     void set_level(uint32_t new_level) {
         level = new_level;
+    }
+
+    uint32_t get_speed() const {
+        return speed;
+    }
+
+    uint32_t get_score() const {
+        return score;
     }
 };
 
