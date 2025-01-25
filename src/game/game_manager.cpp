@@ -71,9 +71,12 @@ void SnakeGameManager::start_game(GameDifficulty game_difficulty, uint32_t level
 }
 
 Direction SnakeGameManager::get_player_input() {
-    WINDOW *gameWin = (this->game_ui)->getWindow();
+    WINDOW *game_win = (this->game_ui)->getWindow();
 
-    int inp = wgetch(gameWin); // inp for game win
+    int inp = wgetch(game_win); // inp for game win
+
+    // clear the input buffer
+    while(wgetch(game_win) != ERR){}
 
     // TODO: maybe we should get all concurrent inputs,
     // then find out if the player is pressing *only* one arrow,
