@@ -10,18 +10,32 @@
 #include <cstdlib>
 #include <ncurses.h>
 
+/**
+ * Puts centered text inside of a window
+ */
 #define PUT_CENTERED_TEXT(window, text)                                                                                \
     mvwprintw(window, getmaxy(window) / 2, (getmaxx(window) - sizeof(text)) / 2, "%s", text)
 
+/**
+ * Puts centered text inside of a window
+ * that has a certain color
+ */
 #define PUT_CENTERED_COLORED_TEXT(window, text, color)                                                                 \
     wattron(window, COLOR_PAIR(color));                                                                                \
     PUT_CENTERED_TEXT(window, text);                                                                                   \
     wattroff(window, COLOR_PAIR(color))
 
+/**
+ * Returns true if the given coordinates are inside of a window
+ */
 #define IS_INSIDE_WINDOW(window, x, y)                                                                                 \
     (getbegx(window) <= x && (getbegx(window) + getmaxx(window)) >= x) &&                                              \
         (getbegy(window) <= y && (getbegy(window) + getmaxy(window)) >= y)
 
+/**
+ * Returns true if the given coordinates are inside of a subpad
+ * requires the parent's current line
+ */
 #define IS_INSIDE_SUBPAD(subpad, x, y, current_line)                                                                   \
     (getparx(subpad) <= x && (getparx(subpad) + getmaxx(subpad)) >= x) &&                                              \
         ((getpary(subpad) - current_line) <= y && (getpary(subpad) + getmaxy(subpad) - current_line) >= y)

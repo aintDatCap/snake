@@ -54,12 +54,6 @@ void SnakeGameManager::start_game(GameDifficulty game_difficulty, uint32_t level
     mmask_t oldmask;                             // to save the previous mouse events mask...
     mousemask(0, &oldmask);                      // disable mouse for this win
 
-    // TODO: in each frame we should:
-    // 1) get the player input
-    // 2) update the game based on the player input
-    // 3) update the game window
-    // 4) wait for the next frame
-
     do {
         game_ui->update_game_window();
         // timer
@@ -75,13 +69,13 @@ Direction SnakeGameManager::get_player_input() {
 
     int inp = wgetch(game_win); // inp for game win
 
-    // clear the input buffer
-    while (wgetch(game_win) != ERR) {
-    }
-
     // TODO: maybe we should get all concurrent inputs,
     // then find out if the player is pressing *only* one arrow,
     // otherwise we're returning DIRECTION_NONE
+    while (wgetch(game_win) != ERR) {
+        // clearing the input buffer
+    }
+
     switch (inp) {
         case KEY_UP:
             return DIRECTION_UP;
@@ -135,11 +129,13 @@ void SnakeGameManager::show_menu() {
     }
 }
 
+/**
+ * Returns the next level if there are any more levels to play
+ * otherwise it returns nullptr
+ */
+
 LevelInfo *SnakeGameManager::next_level() {
-    // TODO:
-    // check if there are any remaining levels
-    // if there's no remaining level, just return nullptr;
-    // otherwise we return the next level
+    // TODO
     return nullptr;
 }
 } // namespace Snake
