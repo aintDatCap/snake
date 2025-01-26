@@ -68,38 +68,38 @@ uint32_t Game::calculate_points(uint32_t level, GameDifficulty difficulty) const
 
     // Change multiplier based on difficulty
     switch (difficulty) {
-    case DIFFICULTY_EASY:
-        difficulty_multiplier = 1;
-        break;
-    case DIFFICULTY_NORMAL:
-        difficulty_multiplier = 2;
-        break;
-    case DIFFICULTY_HARD:
-        difficulty_multiplier = 3;
-        break;
-    default:
-        throw std::invalid_argument("Invalid game difficulty");
+        case DIFFICULTY_EASY:
+            difficulty_multiplier = 1;
+            break;
+        case DIFFICULTY_NORMAL:
+            difficulty_multiplier = 2;
+            break;
+        case DIFFICULTY_HARD:
+            difficulty_multiplier = 3;
+            break;
+        default:
+            throw std::invalid_argument("Invalid game difficulty");
     }
     return base_points * difficulty_multiplier * level;
 }
 
 void Game::set_speed(uint32_t level) {
     switch (this->game_difficulty) {
-        // the game is made harder by making the snake move every
-        // unit of time expressed in microseconds
-        // the lower the time intervals the harder the game
-    case DIFFICULTY_EASY:           // tentative values for speed before playtesting
-        speed = 300000 - (level * 10000); // Lower speed
-        break;
-    case DIFFICULTY_NORMAL:
-        speed = 250000 - (level * 15000); // Moderate speed
-        break;
-    case DIFFICULTY_HARD:
-        speed = 200000 - (level * 20000); // Faster speed
-        break;
-    default:
-        speed = 125000; // Default speed
-        break;
+            // the game is made harder by making the snake move every
+            // unit of time expressed in microseconds
+            // the lower the time intervals the harder the game
+        case DIFFICULTY_EASY:                 // tentative values for speed before playtesting
+            speed = 300000 - (level * 10000); // Lower speed
+            break;
+        case DIFFICULTY_NORMAL:
+            speed = 250000 - (level * 15000); // Moderate speed
+            break;
+        case DIFFICULTY_HARD:
+            speed = 200000 - (level * 20000); // Faster speed
+            break;
+        default:
+            speed = 125000; // Default speed
+            break;
     }
 
     if (speed < 50000) {
@@ -132,49 +132,49 @@ GameResult Game::update_game(Direction player_input) {
 
     // move the head
     switch (this->current_direction) {
-    case DIRECTION_UP: {
-        snake_head_position.y--;
-        
-        if (snake_head_position.y == 0) {
-            return GAME_LOST;
-        }
-        break;
-    }
-    case DIRECTION_DOWN: {
-        // add 1 to y
-        snake_head_position.y++;
+        case DIRECTION_UP: {
+            snake_head_position.y--;
 
-        if (snake_head_position.y == game_table.height) { // -1 because of the border
-            return GAME_LOST;
+            if (snake_head_position.y == 0) {
+                return GAME_LOST;
+            }
+            break;
         }
-        break;
-    }
-    case DIRECTION_LEFT: {
-        // remove 1 to x
-        snake_head_position.x--;
-        if (snake_head_position.x == 0) {
-            return GAME_LOST;
-        }
-        break;
-    }
-    case DIRECTION_RIGHT: {
-        // add 1 to x
-        snake_head_position.x++;
+        case DIRECTION_DOWN: {
+            // add 1 to y
+            snake_head_position.y++;
 
-        if (snake_head_position.x == game_table.width) { 
-            return GAME_LOST;
+            if (snake_head_position.y == game_table.height) { // -1 because of the border
+                return GAME_LOST;
+            }
+            break;
         }
-        break;
-    }
-    default: {
-        throw std::invalid_argument("player_input should assume only values defined by the 'Direction' enum");
-        break;
-    }
+        case DIRECTION_LEFT: {
+            // remove 1 to x
+            snake_head_position.x--;
+            if (snake_head_position.x == 0) {
+                return GAME_LOST;
+            }
+            break;
+        }
+        case DIRECTION_RIGHT: {
+            // add 1 to x
+            snake_head_position.x++;
+
+            if (snake_head_position.x == game_table.width) {
+                return GAME_LOST;
+            }
+            break;
+        }
+        default: {
+            throw std::invalid_argument("player_input should assume only values defined by the 'Direction' enum");
+            break;
+        }
     }
 
     // if the head collides with the body, then the game is lost
-    for(size_t i = 0; i < this->snake_body->size(); i++) {
-        if(coordinates_are_equal(this->snake_head_position, this->snake_body->get_element_at(i)->value)) {
+    for (size_t i = 0; i < this->snake_body->size(); i++) {
+        if (coordinates_are_equal(this->snake_head_position, this->snake_body->get_element_at(i)->value)) {
             return GAME_LOST;
         }
     }

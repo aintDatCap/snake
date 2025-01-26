@@ -3,7 +3,6 @@
 #include <cstdint>
 #include <cstdlib>
 
-
 START_TEST(test_queue_1) {
     Queue<uint32_t> queue;
     queue.enqueue(3);

@@ -2,7 +2,6 @@
 #include "game/graphics.hpp"
 #include <algorithm>
 
-
 List<Snake::LevelInfo> default_levels() {
     List<Snake::LevelInfo> levels;
 
