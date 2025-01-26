@@ -44,15 +44,15 @@ void SnakeGameManager::start_game(GameDifficulty game_difficulty, uint32_t level
     delete this->menu_ui;
     this->menu_ui = nullptr;
 
-    this->game = new Game(window_height, window_width, game_difficulty, level); //obj for game logic
-    this->game -> set_speed(level);
+    this->game = new Game(window_height, window_width, game_difficulty, level); // obj for game logic
+    this->game->set_speed(level);
     this->game_ui = new GameUI(this->game); // rendering a new win for the game...
-  
+
     // game_ui window settings
     keypad((this->game_ui)->getWindow(), true);  // for arrow keys
     nodelay((this->game_ui)->getWindow(), true); // for non-blocking input
-    mmask_t oldmask; //to save the previous mouse events mask...
-    mousemask(0, &oldmask); //disable mouse for this win
+    mmask_t oldmask;                             // to save the previous mouse events mask...
+    mousemask(0, &oldmask);                      // disable mouse for this win
 
     // TODO: in each frame we should:
     // 1) get the player input
@@ -64,10 +64,10 @@ void SnakeGameManager::start_game(GameDifficulty game_difficulty, uint32_t level
         game_ui->update_game_window();
         // timer
         // sleep(in micro-secs) to give time to see frames rendered between each loop
-        usleep(game -> get_speed());
+        usleep(game->get_speed());
     } while (game->update_game(this->get_player_input()) == GAME_UNFINISHED);
 
-    mousemask(oldmask, NULL); //restore mouse events
+    mousemask(oldmask, NULL); // restore mouse events
 }
 
 Direction SnakeGameManager::get_player_input() {
@@ -76,7 +76,8 @@ Direction SnakeGameManager::get_player_input() {
     int inp = wgetch(game_win); // inp for game win
 
     // clear the input buffer
-    while(wgetch(game_win) != ERR){}
+    while (wgetch(game_win) != ERR) {
+    }
 
     // TODO: maybe we should get all concurrent inputs,
     // then find out if the player is pressing *only* one arrow,
@@ -108,21 +109,17 @@ void SnakeGameManager::show_menu() {
 
         switch (player_selection.action) {
             case MENU_SELECT_LEVEL: {
-                this->level_selector_ui = new LevelSelectorUI(
-                    this->window_width, 
-                    this->window_height, 
-                    &levels);
-                
-                // Get the selected level 
+                this->level_selector_ui = new LevelSelectorUI(this->window_width, this->window_height, &levels);
+
+                // Get the selected level
                 LevelSelection selected_level = this->level_selector_ui->wait_for_level_input();
-                
+
                 delete this->level_selector_ui;
                 this->level_selector_ui = nullptr;
-                
-                if (selected_level.action == LEVEL_SELECT_PLAY) {  // Check if level is valid 
+
+                if (selected_level.action == LEVEL_SELECT_PLAY) { // Check if level is valid
                     this->start_game(player_selection.game_difficulty, selected_level.level);
-                }
-                else {
+                } else {
                     // Handle the case where no valid level was selected, if necessary
                     break;
                 }
