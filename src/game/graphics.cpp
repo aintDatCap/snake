@@ -99,14 +99,10 @@ void GameUI::update_game_window(int32_t remaining_time) {
     mvwaddch(this->window, apple_position.y, apple_position.x, 'O');
     wattroff(this->window, COLOR_PAIR(RED_TEXT));
 
-    // Rendering the score
-    wmove(window, 0, 0);
-    wprintw(window, "Score: %u", this->game->get_score());
-    wrefresh(window);
 
         // Rendering the time
     wmove(window, 0, getmaxx(this->window)/2 - 9);
-    wprintw(window, "Time: %i", (int32_t) remaining_time);
+    wprintw(window, "Score: %u   Time: %i", this->game->get_score(),(int32_t) remaining_time);
     wrefresh(window);
 
     // Rendering the snake
