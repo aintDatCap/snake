@@ -4,6 +4,7 @@
 #include "logic.hpp"
 #include "utils/list.hpp"
 #include <cstdint>
+#include <ctime>
 
 #ifdef _WIN32
 #include <ncurses/ncurses.h>
@@ -31,7 +32,7 @@ class GameUI {
     GameUI(Game *game);
     ~GameUI();
 
-    void update_game_window();
+    void update_game_window(int32_t remaining_time);
     void close_window();
     WINDOW *getWindow();
     void render_score(uint32_t score);

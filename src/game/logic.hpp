@@ -45,7 +45,7 @@ typedef struct {
 class Game {
   private:
     GameDifficulty game_difficulty;
-    GameResult result;
+    GameResult game_result;
     GameTable game_table;
     Direction current_direction;
     Coordinates snake_head_position;
@@ -65,6 +65,7 @@ class Game {
     uint32_t calculate_points(uint32_t level, GameDifficulty difficulty) const;
 
     void set_speed(uint32_t level);
+    void win_game();
 
     GameDifficulty get_game_difficulty() const {
         return game_difficulty;

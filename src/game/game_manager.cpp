@@ -54,8 +54,17 @@ void SnakeGameManager::start_game(GameDifficulty game_difficulty, uint32_t level
     mmask_t oldmask;                             // to save the previous mouse events mask...
     mousemask(0, &oldmask);                      // disable mouse for this win
 
+    #define GAME_DURATION 300 // 300 seconds
+
+    const time_t game_start = time(NULL);
     do {
-        game_ui->update_game_window();
+        time_t elapsed_time = time(NULL) - game_start;
+        if(elapsed_time > GAME_DURATION) {
+            game->win_game();
+            break;
+        }
+        
+        game_ui->update_game_window(GAME_DURATION - elapsed_time);
         // timer
         // sleep(in micro-secs) to give time to see frames rendered between each loop
         usleep(game->get_speed());
@@ -67,7 +76,7 @@ void SnakeGameManager::start_game(GameDifficulty game_difficulty, uint32_t level
 Direction SnakeGameManager::get_player_input() {
     WINDOW *game_win = (this->game_ui)->getWindow();
 
-    int inp = wgetch(game_win); // inp for game win
+    int input = wgetch(game_win); // inp for game win
 
     // TODO: maybe we should get all concurrent inputs,
     // then find out if the player is pressing *only* one arrow,
@@ -76,13 +85,21 @@ Direction SnakeGameManager::get_player_input() {
         // clearing the input buffer
     }
 
-    switch (inp) {
+    switch (input) {
+        case 'W':
+        case 'w':
         case KEY_UP:
             return DIRECTION_UP;
+        case 'S':
+        case 's':
         case KEY_DOWN:
             return DIRECTION_DOWN;
+        case 'D':
+        case 'd':
         case KEY_RIGHT:
             return DIRECTION_RIGHT;
+        case 'A':
+        case 'a':
         case KEY_LEFT:
             return DIRECTION_LEFT;
         default:
