@@ -23,18 +23,18 @@ typedef enum {
 } UIColors;
 
 class GameUI {
-    private:
-        WINDOW *window;
-        Game *game;
+  private:
+    WINDOW *window;
+    Game *game;
 
-    public:
-        GameUI(Game *game);
-        ~GameUI();
+  public:
+    GameUI(Game *game);
+    ~GameUI();
 
-        void update_game_window();
-        void close_window();
-        WINDOW *getWindow();
-        void render_score(uint32_t score);
+    void update_game_window();
+    void close_window();
+    WINDOW *getWindow();
+    void render_score(uint32_t score);
 };
 
 typedef enum {
@@ -43,25 +43,25 @@ typedef enum {
 } MenuAction;
 
 typedef struct {
-        MenuAction action;
-        GameDifficulty game_difficulty;
+    MenuAction action;
+    GameDifficulty game_difficulty;
 } PlayerSelection;
 
 class MenuUI {
-    private:
-        WINDOW *window;
-        WINDOW *play_game_button;
-        WINDOW *difficulty_button;
-        WINDOW *exit_button;
-        PlayerSelection player_selection;
+  private:
+    WINDOW *window;
+    WINDOW *play_game_button;
+    WINDOW *difficulty_button;
+    WINDOW *exit_button;
+    PlayerSelection player_selection;
 
-        void render_difficulty_button();
+    void render_difficulty_button();
 
-    public:
-        MenuUI(uint16_t width, uint16_t height);
-        ~MenuUI();
+  public:
+    MenuUI(uint16_t width, uint16_t height);
+    ~MenuUI();
 
-        PlayerSelection wait_for_user_input();
+    PlayerSelection wait_for_user_input();
 };
 
 typedef enum {
@@ -70,26 +70,26 @@ typedef enum {
 } LevelSelectAction;
 
 typedef struct {
-        LevelSelectAction action;
-        uint32_t level;
+    LevelSelectAction action;
+    uint32_t level;
 } LevelSelection;
 
 class LevelSelectorUI {
-    private:
-        uint32_t width;
-        uint32_t height;
-        List<LevelInfo> *levels;
+  private:
+    uint32_t width;
+    uint32_t height;
+    List<LevelInfo> *levels;
 
-        WINDOW *window;
-        WINDOW **level_buttons;
-        LevelSelection level_selection;
+    WINDOW *window;
+    WINDOW **level_buttons;
+    LevelSelection level_selection;
 
-    public:
-        LevelSelectorUI(uint16_t width, uint16_t height, List<LevelInfo> *levels);
-        ~LevelSelectorUI();
+  public:
+    LevelSelectorUI(uint16_t width, uint16_t height, List<LevelInfo> *levels);
+    ~LevelSelectorUI();
 
-        LevelSelection wait_for_level_input();
-        void render_level_buttons();
+    LevelSelection wait_for_level_input();
+    void render_level_buttons();
 };
 
 } // namespace Snake

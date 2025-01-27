@@ -7,23 +7,23 @@
 
 namespace Snake {
 class SnakeGameManager {
-    private:
-        uint16_t window_width;
-        uint16_t window_height;
-        Game *game;
-        MenuUI *menu_ui;
-        GameUI *game_ui;
-        LevelSelectorUI *level_selector_ui;
-        List<LevelInfo> levels;
+  private:
+    uint16_t window_width;
+    uint16_t window_height;
+    Game *game;
+    MenuUI *menu_ui;
+    GameUI *game_ui;
+    LevelSelectorUI *level_selector_ui;
+    List<LevelInfo> levels;
 
-    public:
-        SnakeGameManager(uint16_t window_width, uint16_t window_height, List<LevelInfo> levels);
-        ~SnakeGameManager();
+  public:
+    SnakeGameManager(uint16_t window_width, uint16_t window_height, List<LevelInfo> levels);
+    ~SnakeGameManager();
 
-        void start_game(GameDifficulty game_difficulty, uint32_t level);
-        void show_menu();
-        LevelInfo *next_level();
-        Direction get_player_input();
+    void start_game(GameDifficulty game_difficulty, uint32_t level);
+    void show_menu();
+    LevelInfo *next_level();
+    Direction get_player_input();
 };
 
 } // namespace Snake
