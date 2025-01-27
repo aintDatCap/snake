@@ -40,13 +40,16 @@
     (getparx(subpad) <= x && (getparx(subpad) + getmaxx(subpad)) >= x) &&                                              \
         ((getpary(subpad) - current_line) <= y && (getpary(subpad) + getmaxy(subpad) - current_line) >= y)
 
-WINDOW *new_bordered_window(uint16_t height, uint16_t width, uint16_t y, uint16_t x) {
-    WINDOW *window = newwin(height, width, y, x);
-    refresh();
-
-    box(window, 0, 0);
-    wrefresh(window);
-    return window;
+// Modify new_bordered_window to use ACS characters
+WINDOW* new_bordered_window(uint16_t h, uint16_t w, uint16_t y, uint16_t x) {
+    WINDOW* win = newwin(h, w, y, x);
+    wborder(win, 
+        ACS_VLINE, ACS_VLINE,   // Vertical lines
+        ACS_HLINE, ACS_HLINE,   // Horizontal lines
+        ACS_ULCORNER, ACS_URCORNER,  // Corners
+        ACS_LLCORNER, ACS_LRCORNER);
+    wrefresh(win);
+    return win;
 }
 
 void start_ncurses() {
@@ -93,77 +96,95 @@ WINDOW *GameUI::getWindow() {
 void GameUI::update_game_window(int32_t remaining_time) {
     werase(this->window);
     box(this->window, 0, 0);
+
+    // Rendering the time and score
+    wattron(window, A_BOLD);
+    mvwprintw(window, 0, 2, "Score: %u", this->game->get_score());
+    mvwprintw(window, 0, getmaxx(window)-12, "Time: %i", remaining_time);
+    wattroff(window, A_BOLD);
+
     // Rendering the apple
-    wattron(this->window, COLOR_PAIR(RED_TEXT));
+    wattron(window, COLOR_PAIR(RED_TEXT) | A_BOLD);
     Coordinates apple_position = this->game->get_apple_position();
-    mvwaddch(this->window, apple_position.y, apple_position.x, 'O');
-    wattroff(this->window, COLOR_PAIR(RED_TEXT));
-
-
-        // Rendering the time
-    wmove(window, 0, getmaxx(this->window)/2 - 9);
-    wprintw(window, "Score: %u   Time: %i", this->game->get_score(),(int32_t) remaining_time);
-    wrefresh(window);
-
+    mvwaddch(window, apple_position.y, apple_position.x, ACS_DIAMOND);
+    wattroff(window, COLOR_PAIR(RED_TEXT) | A_BOLD);
+ 
     // Rendering the snake
     wattron(this->window, COLOR_PAIR(GREEN_TEXT));
     Coordinates snake_head = this->game->get_snake_head_position();
-    mvwaddch(this->window, snake_head.y, snake_head.x, '@');
+    mvwaddch(this->window, snake_head.y, snake_head.x, ACS_CKBOARD);  // Pattern block head
 
     for (uint16_t i = 0; i < this->game->get_snake_body()->size(); ++i) {
         Coordinates coord = this->game->get_snake_body()->get_element_at(i)->value;
-        mvwaddch(this->window, coord.y, coord.x, '$');
+        mvwaddch(this->window, coord.y, coord.x, ACS_BOARD);  // # body
     }
     wattroff(this->window, COLOR_PAIR(GREEN_TEXT));
     wrefresh(this->window);
     refresh();
 }
 
-// -MenuIU definitions
+// -- MenuUI definitions with improved styling --
 MenuUI::MenuUI(uint16_t width, uint16_t height) {
     this->player_selection.game_difficulty = DIFFICULTY_NORMAL;
 
-    this->window = new_bordered_window(height, width, 0, 0);
+    // Center main window on screen
+    this->window = new_bordered_window(height, width, 
+                                      (LINES - height)/2,  // Center vertically
+                                      (COLS - width)/2);   // Center horizontally
 
-    this->play_game_button = new_bordered_window(height / 6, width / 4, height - height / 5, (width - width / 4) / 2);
+    // Calculate button positions
+    const int button_height = height / 6;
+    const int button_width = width / 3;
+    const int vertical_spacing = height / 5;
+    
+    // Play button with shadow
+    this->play_game_button = new_bordered_window(button_height, button_width, height/2 - vertical_spacing,(width - button_width)/2);
+    wattron(play_game_button, A_BOLD);
+    PUT_CENTERED_COLORED_TEXT(play_game_button, "Play", GREEN_TEXT);
+    wattroff(play_game_button, A_BOLD);
+    wrefresh(play_game_button);
 
-    PUT_CENTERED_TEXT(play_game_button, "Gioca");
-    wrefresh(this->play_game_button); // render the playgame option
+    // Difficulty button with dynamic text
+    this->difficulty_button = new_bordered_window(button_height,button_width,height/2,(width - button_width)/2);
+    render_difficulty_button();
 
-    this->exit_button = new_bordered_window(height / 6, width / 4, height - height / 2, (width - width / 4) / 2);
-    PUT_CENTERED_TEXT(exit_button, "Esci");
-    wrefresh(this->exit_button);
+    // Exit button
+    this->exit_button = new_bordered_window(button_height, button_width,height/2 + vertical_spacing,(width - button_width)/2);
+    wattron(exit_button, A_BOLD);
+    PUT_CENTERED_COLORED_TEXT(exit_button, "Exit", RED_TEXT);
+    wattroff(exit_button, A_BOLD);
+    wrefresh(exit_button);
 
     refresh();
-
-    this->difficulty_button = nullptr;
-    this->render_difficulty_button();
 }
 
 void MenuUI::render_difficulty_button() {
-    if (!this->difficulty_button) {
-        uint16_t width = getmaxx(this->window);
-        uint16_t height = getmaxy(this->window);
-        this->difficulty_button = new_bordered_window(height / 6, width / 4, height / 3, (width - width / 4) / 2);
+    const char* difficulty_text = "";
+    UIColors color = BLUE_TEXT;
+    
+    switch(this->player_selection.game_difficulty) {
+        case DIFFICULTY_EASY:
+            difficulty_text = "Easy";
+            color = GREEN_TEXT;
+            break;
+        case DIFFICULTY_NORMAL:
+            difficulty_text = "Normal";
+            color = BLUE_TEXT;
+            break;
+        case DIFFICULTY_HARD:
+            difficulty_text = "Hard";
+            color = RED_TEXT;
+            break;
     }
 
-    werase(this->difficulty_button);
-    box(this->difficulty_button, 0, 0); // border
-
-    switch (this->player_selection.game_difficulty) {
-    case DIFFICULTY_EASY:
-        PUT_CENTERED_COLORED_TEXT(difficulty_button, "Facile", GREEN_TEXT);
-        break;
-    case DIFFICULTY_NORMAL:
-        PUT_CENTERED_COLORED_TEXT(difficulty_button, "Normale", BLUE_TEXT);
-        break;
-    case DIFFICULTY_HARD:
-        PUT_CENTERED_COLORED_TEXT(difficulty_button, "Difficile", RED_TEXT);
-        break;
-    }
-
-    wrefresh(this->difficulty_button);
-    curs_set(0);
+    werase(difficulty_button);
+    box(difficulty_button, 0, 0);
+    
+    wattron(difficulty_button, COLOR_PAIR(color) | A_BOLD);
+    PUT_CENTERED_TEXT(difficulty_button, difficulty_text);
+    wattroff(difficulty_button, COLOR_PAIR(color) | A_BOLD);
+    
+    wrefresh(difficulty_button);
 }
 
 MenuUI::~MenuUI() {
