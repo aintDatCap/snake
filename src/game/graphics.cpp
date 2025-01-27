@@ -90,18 +90,23 @@ WINDOW *GameUI::getWindow() {
     return this->window;
 }
 
-void GameUI::update_game_window() {
+void GameUI::update_game_window(int32_t remaining_time) {
     werase(this->window);
     box(this->window, 0, 0);
     // Rendering the apple
     wattron(this->window, COLOR_PAIR(RED_TEXT));
     Coordinates apple_position = this->game->get_apple_position();
-    mvwaddch(this->window, apple_position.y, apple_position.x, 'o');
+    mvwaddch(this->window, apple_position.y, apple_position.x, 'O');
     wattroff(this->window, COLOR_PAIR(RED_TEXT));
 
     // Rendering the score
     wmove(window, 0, 0);
     wprintw(window, "Score: %u", this->game->get_score());
+    wrefresh(window);
+
+        // Rendering the time
+    wmove(window, 0, getmaxx(this->window)/2 - 9);
+    wprintw(window, "Time: %i", (int32_t) remaining_time);
     wrefresh(window);
 
     // Rendering the snake

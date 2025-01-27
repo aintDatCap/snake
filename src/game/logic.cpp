@@ -16,7 +16,7 @@ bool coordinates_are_equal(Coordinates a, Coordinates b) {
 
 Game::Game(uint16_t table_height, uint16_t table_width, GameDifficulty game_difficulty, uint32_t level) {
     this->game_difficulty = game_difficulty;
-    this->result = GAME_UNFINISHED;
+    this->game_result = GAME_UNFINISHED;
 
     this->game_table.height = table_height;
     this->game_table.width = table_width;
@@ -108,8 +108,8 @@ void Game::set_speed(uint32_t level) {
 }
 
 GameResult Game::update_game(Direction player_input) {
-    if (this->result != GAME_UNFINISHED) {
-        return this->result;
+    if (this->game_result != GAME_UNFINISHED) {
+        return this->game_result;
     }
 
     if (coordinates_are_equal(this->snake_head_position, this->apple_position)) {
@@ -136,6 +136,7 @@ GameResult Game::update_game(Direction player_input) {
             snake_head_position.y--;
 
             if (snake_head_position.y == 0) {
+                game_result = GAME_LOST;
                 return GAME_LOST;
             }
             break;
@@ -145,6 +146,7 @@ GameResult Game::update_game(Direction player_input) {
             snake_head_position.y++;
 
             if (snake_head_position.y == game_table.height) { // -1 because of the border
+                game_result = GAME_LOST;
                 return GAME_LOST;
             }
             break;
@@ -153,6 +155,7 @@ GameResult Game::update_game(Direction player_input) {
             // remove 1 to x
             snake_head_position.x--;
             if (snake_head_position.x == 0) {
+                game_result = GAME_LOST;
                 return GAME_LOST;
             }
             break;
@@ -162,6 +165,7 @@ GameResult Game::update_game(Direction player_input) {
             snake_head_position.x++;
 
             if (snake_head_position.x == game_table.width) {
+                game_result = GAME_LOST;
                 return GAME_LOST;
             }
             break;
@@ -175,11 +179,18 @@ GameResult Game::update_game(Direction player_input) {
     // if the head collides with the body, then the game is lost
     for (size_t i = 0; i < this->snake_body->size(); i++) {
         if (coordinates_are_equal(this->snake_head_position, this->snake_body->get_element_at(i)->value)) {
+            game_result = GAME_LOST;
             return GAME_LOST;
         }
     }
 
     return GAME_UNFINISHED;
+}
+
+void Game::win_game() {
+    if (this->game_result == GAME_UNFINISHED) {
+        this->game_result = GAME_WON;
+    }
 }
 } // namespace Snake
 

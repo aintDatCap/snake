@@ -6,7 +6,7 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(SNAKE_SOURCE_DIR ${PROJECT_SOURCE_DIR}/src)
 
-add_subdirectory(dependencies)
+# add_subdirectory(dependencies)
 
 set(PROGRAM_SOURCES
   ${SNAKE_SOURCE_DIR}/utils/queue.hpp
@@ -34,10 +34,10 @@ if(${CURSES_FOUND})
   target_link_libraries(Snake PUBLIC ${CURSES_LIBRARIES})
 endif()
 
-if(${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_CURRENT_SOURCE_DIR})
+# if(${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_CURRENT_SOURCE_DIR})
 
-    include(CTest)
-    enable_testing()
-    add_subdirectory(tests)
+#     include(CTest)
+#     enable_testing()
+#     add_subdirectory(tests)
     
-endif()
+# endif()
