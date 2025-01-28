@@ -137,7 +137,7 @@ MenuUI::MenuUI(uint16_t width, uint16_t height) {
     const int button_width = width / 3;
     const int vertical_spacing = height / 5;
     
-    // Play button with shadow
+    // Play button 
     this->play_game_button = new_bordered_window(button_height, button_width, height/2 - vertical_spacing,(width - button_width)/2);
     wattron(play_game_button, A_BOLD);
     PUT_CENTERED_COLORED_TEXT(play_game_button, "Play", GREEN_TEXT);
