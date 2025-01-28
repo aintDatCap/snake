@@ -7,7 +7,7 @@
 #include <cstdlib>
 #include <stdexcept>
 
-#define SNAKE_BODY_SIZE 4
+#define SNAKE_MINIMUM_BODY_SIZE 4
 
 namespace Snake {
 bool coordinates_are_equal(Coordinates a, Coordinates b) {
@@ -23,21 +23,31 @@ Game::Game(uint16_t table_height, uint16_t table_width, GameDifficulty game_diff
 
     this->current_direction = DIRECTION_UP;
 
-    this->playable_area =  get_playable_dimensions(game_difficulty);
+    this->playable_area = get_playable_dimensions(game_difficulty);
 
-    this->snake_head_position.x = playable_area.width / 2;    // Center X
-    this->snake_head_position.y = playable_area.height / 2;   // Center Y
+    this->snake_head_position.x = playable_area.width / 2;  // Center X
+    this->snake_head_position.y = playable_area.height / 2; // Center Y
 
     this->snake_body = new Queue<Coordinates>();
 
-    for (uint16_t i = this->snake_head_position.y + SNAKE_BODY_SIZE + game_difficulty;
-         i >= this->snake_head_position.y + 1; i--) {
+    const Coordinates first_body_part = Coordinates{this->snake_head_position.x, this->snake_head_position.y};
+    this->snake_body->enqueue(first_body_part);
+
+    uint16_t remaining_snake_body_size = SNAKE_MINIMUM_BODY_SIZE + game_difficulty;
+    // Avoid asking yourself why it works
+    while (remaining_snake_body_size) {
         Coordinates coords;
-        coords.x = snake_head_position.x;
-        coords.y = snake_head_position.y + i + 1;  // Body below head
+        if(remaining_snake_body_size + this->snake_head_position.y >= this->playable_area.height - 2) {
+            coords.y = this->playable_area.height - 2;
+            coords.x = this->snake_head_position.x + remaining_snake_body_size - (coords.y - this->snake_head_position.y);
+            
+        } else {
+            coords.x = this->snake_head_position.x;
+            coords.y = this->snake_head_position.y + remaining_snake_body_size;
+        }
+        remaining_snake_body_size--;
         this->snake_body->enqueue(coords);
     }
-
     this->score = 0;
     this->level = level;
     this->new_apple_position();
@@ -45,10 +55,14 @@ Game::Game(uint16_t table_height, uint16_t table_width, GameDifficulty game_diff
 
 GameTable Game::get_playable_dimensions(GameDifficulty difficulty) {
     switch (difficulty) {
-        case DIFFICULTY_EASY: return {30, 80};
-        case DIFFICULTY_NORMAL: return {25, 70};
-        case DIFFICULTY_HARD: return {20, 60};
-        default: return {25, 70};
+        case DIFFICULTY_EASY:
+            return {30, 80};
+        case DIFFICULTY_NORMAL:
+            return {25, 70};
+        case DIFFICULTY_HARD:
+            return {20, 60};
+        default:
+            return {25, 70};
     }
 }
 

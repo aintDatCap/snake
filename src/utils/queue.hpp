@@ -43,14 +43,10 @@ template <typename T> class Queue {
             return;
         }
 
-        QueueElement<T> *current = this->head;
-        while (current->next) {
-            current = current->next;
-        }
-
-        current->next = new QueueElement<T>;
-        current->next->value = value;
-        current->next->next = nullptr;
+        QueueElement<T> *new_elem = new QueueElement<T>;
+        new_elem->value = value;
+        new_elem->next = this->head;
+        this->head = new_elem;
     }
 
     QueueElement<T> *dequeue() {
@@ -58,13 +54,19 @@ template <typename T> class Queue {
             return nullptr;
         }
 
-        QueueElement<T> *old = this->head;
-        if (this->head->next) {
-            this->head = this->head->next;
-        } else {
+        if (!this->head->next) {
+            QueueElement<T> *elem = this->head;
             this->head = nullptr;
+            return elem;
         }
-        return old;
+
+        QueueElement<T> *current = this->head;
+        while (current->next->next) {
+            current = current->next;
+        }
+        QueueElement<T> *elem = current->next;
+        current->next = nullptr;
+        return elem;
     }
 
     // Method to get the size of the queue

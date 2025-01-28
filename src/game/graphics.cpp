@@ -8,13 +8,13 @@
 #include <cassert>
 #include <cstdint>
 #include <cstdlib>
-#include <ncurses.h>
+#include <string.h>
 
 /**
  * Puts centered text inside of a window
  */
 #define PUT_CENTERED_TEXT(window, text)                                                                                \
-    mvwprintw(window, getmaxy(window) / 2, (getmaxx(window) - sizeof(text)) / 2, "%s", text)
+    mvwprintw(window, getmaxy(window) / 2, (getmaxx(window) - strlen(text)) / 2, "%s", text)
 
 /**
  * Puts centered text inside of a window
@@ -59,6 +59,7 @@ void start_ncurses() {
 
     mousemask(ALL_MOUSE_EVENTS, NULL); // for mouse events...
 
+    noecho(); // No keys on the screen
     curs_set(0);
 }
 

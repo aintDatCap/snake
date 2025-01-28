@@ -3,6 +3,7 @@
 #include "game/logic.hpp"
 #include "graphics.hpp"
 #include <cassert>
+#include <cstdint>
 #include <cstdlib>
 #include <ctime>
 #include <unistd.h> //for usleep()...
@@ -57,6 +58,7 @@ void SnakeGameManager::start_game(GameDifficulty game_difficulty, uint32_t level
     #define GAME_DURATION 300 // 300 seconds
 
     const time_t game_start = time(NULL);
+    const uint32_t game_speed = game->get_speed();
     do {
         time_t elapsed_time = time(NULL) - game_start;
         if(elapsed_time > GAME_DURATION) {
@@ -65,10 +67,12 @@ void SnakeGameManager::start_game(GameDifficulty game_difficulty, uint32_t level
         }
         
         game_ui->update_game_window(GAME_DURATION - elapsed_time);
+        game->update_game(this->get_player_input());
         // timer
         // sleep(in micro-secs) to give time to see frames rendered between each loop
-        usleep(game->get_speed());
-    } while (game->update_game(this->get_player_input()) == GAME_UNFINISHED);
+        usleep(game_speed);
+
+    } while (game->get_game_result() == GAME_UNFINISHED);
 
     mousemask(oldmask, NULL); // restore mouse events
 }
