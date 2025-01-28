@@ -105,6 +105,10 @@ class Game {
     uint32_t get_score() const {
         return score;
     }
+
+    GameResult get_game_result() const {
+        return game_result;
+    }
 };
 
 } // namespace Snake
