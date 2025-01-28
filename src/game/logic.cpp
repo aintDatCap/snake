@@ -30,9 +30,6 @@ Game::Game(uint16_t table_height, uint16_t table_width, GameDifficulty game_diff
 
     this->snake_body = new Queue<Coordinates>();
 
-    const Coordinates first_body_part = Coordinates{this->snake_head_position.x, this->snake_head_position.y};
-    this->snake_body->enqueue(first_body_part);
-
     uint16_t remaining_snake_body_size = SNAKE_MINIMUM_BODY_SIZE + game_difficulty;
     // Avoid asking yourself why it works
     while (remaining_snake_body_size) {
