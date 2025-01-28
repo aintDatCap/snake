@@ -47,6 +47,7 @@ class Game {
     GameDifficulty game_difficulty;
     GameResult game_result;
     GameTable game_table;
+    GameTable playable_area;
     Direction current_direction;
     Coordinates snake_head_position;
     Coordinates apple_position;
@@ -64,6 +65,8 @@ class Game {
 
     uint32_t calculate_points(uint32_t level, GameDifficulty difficulty) const;
 
+    static GameTable get_playable_dimensions(GameDifficulty difficulty);
+
     void set_speed(uint32_t level);
     void win_game();
 
@@ -73,6 +76,10 @@ class Game {
 
     GameTable get_game_table() const {
         return game_table;
+    }
+
+    GameTable get_playable_area() const {
+        return playable_area;
     }
 
     Coordinates get_snake_head_position() const {

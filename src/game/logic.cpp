@@ -23,16 +23,18 @@ Game::Game(uint16_t table_height, uint16_t table_width, GameDifficulty game_diff
 
     this->current_direction = DIRECTION_UP;
 
-    this->snake_head_position.x = table_width / 2;
-    this->snake_head_position.y = table_height / 2;
+    this->playable_area =  get_playable_dimensions(game_difficulty);
+
+    this->snake_head_position.x = playable_area.width / 2;    // Center X
+    this->snake_head_position.y = playable_area.height / 2;   // Center Y
 
     this->snake_body = new Queue<Coordinates>();
 
     for (uint16_t i = this->snake_head_position.y + SNAKE_BODY_SIZE + game_difficulty;
          i >= this->snake_head_position.y + 1; i--) {
         Coordinates coords;
-        coords.x = this->snake_head_position.x;
-        coords.y = i;
+        coords.x = snake_head_position.x;
+        coords.y = snake_head_position.y + i + 1;  // Body below head
         this->snake_body->enqueue(coords);
     }
 
@@ -41,13 +43,22 @@ Game::Game(uint16_t table_height, uint16_t table_width, GameDifficulty game_diff
     this->new_apple_position();
 }
 
+GameTable Game::get_playable_dimensions(GameDifficulty difficulty) {
+    switch (difficulty) {
+        case DIFFICULTY_EASY: return {30, 80};
+        case DIFFICULTY_NORMAL: return {25, 70};
+        case DIFFICULTY_HARD: return {20, 60};
+        default: return {25, 70};
+    }
+}
+
 void Game::new_apple_position() {
     bool valid_position = false;
     while (!valid_position) {
         // Generate random coordinates within the bounds of the playable area,
         // but avoid the borders (first and last rows/columns)
-        this->apple_position.x = rand() % (this->game_table.width - 2) + 1;  // Avoid left and right borders
-        this->apple_position.y = rand() % (this->game_table.height - 2) + 1; // Avoid top and bottom borders
+        this->apple_position.x = rand() % (this->playable_area.width - 2) + 1;  // Avoid left and right borders
+        this->apple_position.y = rand() % (this->playable_area.height - 2) + 1; // Avoid top and bottom borders
 
         // Check if the apple position is valid, i.e., the apple
         // does not overlap with the snake's body
@@ -145,7 +156,7 @@ GameResult Game::update_game(Direction player_input) {
             // add 1 to y
             snake_head_position.y++;
 
-            if (snake_head_position.y == game_table.height) { // -1 because of the border
+            if (snake_head_position.y == playable_area.height - 1) { // -1 because of the border
                 game_result = GAME_LOST;
                 return GAME_LOST;
             }
@@ -164,7 +175,7 @@ GameResult Game::update_game(Direction player_input) {
             // add 1 to x
             snake_head_position.x++;
 
-            if (snake_head_position.x == game_table.width) {
+            if (snake_head_position.x == playable_area.width - 1) {
                 game_result = GAME_LOST;
                 return GAME_LOST;
             }
