@@ -1,8 +1,10 @@
 #ifndef SNAKE_HPP
 #define SNAKE_HPP
 
-#include "game/graphics.hpp"
 #include "game/logic.hpp"
+#include "graphics/menu_ui.hpp"
+#include "graphics/game_ui.hpp"
+#include "graphics/level_selection_ui.hpp"
 #include "utils/list.hpp"
 
 namespace Snake {
@@ -11,9 +13,9 @@ class SnakeGameManager {
     uint16_t window_width;
     uint16_t window_height;
     Game *game;
-    MenuUI *menu_ui;
-    GameUI *game_ui;
-    LevelSelectorUI *level_selector_ui;
+    Graphics::MenuUI *menu_ui;
+    Graphics::GameUI *game_ui;
+    Graphics::LevelSelectionUI *level_selector_ui;
     List<LevelInfo> levels;
 
   public:
