@@ -23,7 +23,8 @@ typedef enum : int8_t {
     DIRECTION_DOWN = ~1,
     DIRECTION_LEFT = 2,
     DIRECTION_RIGHT = ~2,
-    DIRECTION_NONE = 0
+    DIRECTION_NONE = 0,
+    EXIT = 3,
 } Direction;
 
 typedef enum {
