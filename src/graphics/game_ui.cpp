@@ -59,7 +59,7 @@ void GameUI::update_game_window(int32_t remaining_time) {
     // Rendering the apple
     wattron(window, COLOR_PAIR(RED_TEXT) | A_BOLD);
     Snake::Coordinates apple_position = this->game->get_apple_position();
-    mvwaddch(window, start_y + apple_position.y, start_x + apple_position.x, ACS_DIAMOND);
+    mvwaddch(window, start_y + apple_position.y, start_x + apple_position.x, 'o');
     wattroff(window, COLOR_PAIR(RED_TEXT) | A_BOLD);
 
     // Rendering the snake
