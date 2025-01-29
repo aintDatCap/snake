@@ -12,7 +12,7 @@
 namespace Graphics {
 typedef enum {
     PAUSE_EXIT_PROGRAM,
-    PAUSE_SELECT_LEVEL,
+    //PAUSE_SELECT_LEVEL,
     PAUSE_RESUME,
 } PauseUIDecision;
 
@@ -25,7 +25,7 @@ class PauseUI {
   private:
     WINDOW *window;
     WINDOW *resume_button;
-    WINDOW *level_selector_button;
+    //WINDOW *level_selector_button;
     WINDOW *exit_button;
     PauseUIAction player_selection;
 
