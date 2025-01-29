@@ -11,7 +11,6 @@ namespace Snake {
 SnakeGameManager::SnakeGameManager(uint16_t window_width, uint16_t window_height, List<LevelInfo> levels) {
     std::srand(time(NULL));
     this->levels = levels;
-    this->current_level = 0;
     this->game = nullptr;
     this->game_ui = nullptr;
     this->menu_ui = new Graphics::MenuUI(window_width, window_height);
@@ -45,7 +44,7 @@ void SnakeGameManager::start_game(GameDifficulty game_difficulty, uint32_t level
     this->menu_ui = nullptr;
 
     this->game = new Game(window_height, window_width, game_difficulty, level); // obj for game logic
-    this->game->set_speed(level);
+    this->current_level = level;
     this->game_ui = new Graphics::GameUI(this->game); // rendering a new win for the game...
 
     // game_ui window settings
