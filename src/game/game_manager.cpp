@@ -1,7 +1,5 @@
 #include "game/game_manager.hpp"
-#include "game/graphics.hpp"
 #include "game/logic.hpp"
-#include "graphics.hpp"
 #include <cassert>
 #include <cstdint>
 #include <cstdlib>
@@ -15,7 +13,7 @@ SnakeGameManager::SnakeGameManager(uint16_t window_width, uint16_t window_height
     this->levels = levels;
     this->game = nullptr;
     this->game_ui = nullptr;
-    this->menu_ui = new MenuUI(window_width, window_height);
+    this->menu_ui = new Graphics::MenuUI(window_width, window_height);
 
     this->window_height = window_height;
     this->window_width = window_width;
@@ -47,7 +45,7 @@ void SnakeGameManager::start_game(GameDifficulty game_difficulty, uint32_t level
 
     this->game = new Game(window_height, window_width, game_difficulty, level); // obj for game logic
     this->game->set_speed(level);
-    this->game_ui = new GameUI(this->game); // rendering a new win for the game...
+    this->game_ui = new Graphics::GameUI(this->game); // rendering a new win for the game...
 
     // game_ui window settings
     keypad((this->game_ui)->getWindow(), true);  // for arrow keys
@@ -118,21 +116,21 @@ void SnakeGameManager::show_menu() {
         delete this->game_ui;
         this->game_ui = nullptr;
 
-        this->menu_ui = new MenuUI(window_width, window_height);
+        this->menu_ui = new Graphics::MenuUI(window_width, window_height);
 
-        PlayerSelection player_selection = this->menu_ui->wait_for_user_input();
+        Graphics::MenuUIAction player_selection = this->menu_ui->wait_for_user_input();
 
         switch (player_selection.action) {
-            case MENU_SELECT_LEVEL: {
-                this->level_selector_ui = new LevelSelectorUI(this->window_width, this->window_height, &levels);
+            case Graphics::MENU_SELECT_LEVEL: {
+                this->level_selector_ui = new Graphics::LevelSelectionUI(this->window_width, this->window_height, &levels);
 
                 // Get the selected level
-                LevelSelection selected_level = this->level_selector_ui->wait_for_level_input();
+                Graphics::LevelSelection selected_level = this->level_selector_ui->wait_for_level_input();
 
                 delete this->level_selector_ui;
                 this->level_selector_ui = nullptr;
 
-                if (selected_level.action == LEVEL_SELECT_PLAY) { // Check if level is valid
+                if (selected_level.action == Graphics::LEVEL_SELECT_PLAY) { // Check if level is valid
                     this->start_game(player_selection.game_difficulty, selected_level.level);
                 } else {
                     // Handle the case where no valid level was selected, if necessary
@@ -140,7 +138,7 @@ void SnakeGameManager::show_menu() {
                 }
                 break;
             }
-            case MENU_EXIT_PROGRAM: {
+            case Graphics::MENU_EXIT_PROGRAM: {
                 clear();
                 return;
             }

@@ -1,5 +1,5 @@
 #include "game/game_manager.hpp"
-#include "game/graphics.hpp"
+#include "graphics/graphics.hpp"
 #include <algorithm>
 
 List<Snake::LevelInfo> default_levels() {
@@ -22,7 +22,7 @@ List<Snake::LevelInfo> default_levels() {
 }
 
 int main(int, char **) {
-    start_ncurses();
+    Graphics::start_ncurses();
     List<Snake::LevelInfo> levels = default_levels();
 
     uint16_t window_width, window_height;
@@ -33,5 +33,5 @@ int main(int, char **) {
 
     Snake::SnakeGameManager game_manager(window_width, window_height, levels);
 
-    stop_ncurses();
+    Graphics::stop_ncurses();
 }
