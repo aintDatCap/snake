@@ -1,5 +1,7 @@
 #include "game/game_manager.hpp"
 #include "game/logic.hpp"
+#include "graphics/menu_ui.hpp"
+#include "graphics/pause_ui.hpp"
 #include <cassert>
 #include <cstdint>
 #include <cstdlib>
@@ -64,8 +66,19 @@ void SnakeGameManager::start_game(GameDifficulty game_difficulty, uint32_t level
             break;
         }
 
+        Direction player_input = this->get_player_input();
+        if (player_input == EXIT){
+            Graphics::PauseUI pause_ui(window_width, window_height);
+            Graphics::PauseUIAction pause_menu_selection = pause_ui.wait_for_user_input();
+            if (pause_menu_selection.action == Graphics::PAUSE_EXIT_PROGRAM) {
+                break;
+            } else if(pause_menu_selection.action == Graphics::PAUSE_RESUME) {
+                player_input = DIRECTION_NONE;
+            }
+        }
+        
+        game->update_game(player_input);
         game_ui->update_game_window(GAME_DURATION - elapsed_time);
-        game->update_game(this->get_player_input());
         // timer
         // sleep(in micro-secs) to give time to see frames rendered between each loop
         usleep(game_speed);
@@ -130,6 +143,8 @@ Direction SnakeGameManager::get_player_input() {
         case 'a':
         case KEY_LEFT:
             return DIRECTION_LEFT;
+        case KEY_EXIT:
+            return EXIT;
         default:
             return DIRECTION_NONE;
     }
