@@ -105,30 +105,6 @@ uint32_t Game::calculate_points(uint32_t level, GameDifficulty difficulty) const
     return base_points * difficulty_multiplier * level;
 }
 
-void Game::set_speed(uint32_t level) {
-    switch (this->game_difficulty) {
-            // the game is made harder by making the snake move every
-            // unit of time expressed in microseconds
-            // the lower the time intervals the harder the game
-        case DIFFICULTY_EASY:                 // tentative values for speed before playtesting
-            speed = 300000 - (level * 10000); // Lower speed
-            break;
-        case DIFFICULTY_NORMAL:
-            speed = 250000 - (level * 15000); // Moderate speed
-            break;
-        case DIFFICULTY_HARD:
-            speed = 200000 - (level * 20000); // Faster speed
-            break;
-        default:
-            speed = 125000; // Default speed
-            break;
-    }
-
-    if (speed < 50000) {
-        speed = 50000; // Cap the speed at a minimum interval (e.g., 50 ms)
-    }
-}
-
 GameResult Game::update_game(Direction player_input) {
     if (this->game_result != GAME_UNFINISHED) {
         return this->game_result;

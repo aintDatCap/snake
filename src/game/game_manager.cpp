@@ -46,7 +46,7 @@ void SnakeGameManager::start_game(GameDifficulty game_difficulty, uint32_t level
     this->menu_ui = nullptr;
 
     this->game = new Game(window_height, window_width, game_difficulty, level); // obj for game logic
-    this->game->set_speed(level);
+    this->current_level = level;
     this->game_ui = new Graphics::GameUI(this->game); // rendering a new win for the game...
 
     // game_ui window settings
@@ -55,13 +55,13 @@ void SnakeGameManager::start_game(GameDifficulty game_difficulty, uint32_t level
     mmask_t oldmask;                             // to save the previous mouse events mask...
     mousemask(0, &oldmask);                      // disable mouse for this win
 
-    #define GAME_DURATION 300 // 300 seconds
+#define GAME_DURATION 300 // 300 seconds
 
     const time_t game_start = time(NULL);
-    const uint32_t game_speed = game->get_speed();
+    const uint32_t game_speed = get_frame_duration(this->current_level);
     do {
         time_t elapsed_time = time(NULL) - game_start;
-        if(elapsed_time > GAME_DURATION) {
+        if (elapsed_time > GAME_DURATION) {
             game->win_game();
             break;
         }
@@ -86,6 +86,32 @@ void SnakeGameManager::start_game(GameDifficulty game_difficulty, uint32_t level
     } while (game->get_game_result() == GAME_UNFINISHED);
 
     mousemask(oldmask, NULL); // restore mouse events
+}
+
+uint32_t SnakeGameManager::get_frame_duration(uint32_t level) {
+    uint32_t speed;
+    switch (this->game->get_game_difficulty()) {
+        // the game is made harder by making the snake move every
+        // unit of time expressed in microseconds
+        // the lower the time intervals the harder the game
+        case DIFFICULTY_EASY:                 // tentative values for speed before playtesting
+            speed = 300000 - (level * 10000); // Lower speed
+            break;
+        case DIFFICULTY_NORMAL:
+            speed = 250000 - (level * 15000); // Moderate speed
+            break;
+        case DIFFICULTY_HARD:
+            speed = 200000 - (level * 20000); // Faster speed
+            break;
+        default:
+            speed = 125000; // Default speed
+            break;
+    }
+
+    if (speed < 50000) {
+        speed = 50000; // Cap the speed at a minimum interval (e.g., 50 ms)
+    }
+    return speed;
 }
 
 Direction SnakeGameManager::get_player_input() {
@@ -137,7 +163,8 @@ void SnakeGameManager::show_menu() {
 
         switch (player_selection.action) {
             case Graphics::MENU_SELECT_LEVEL: {
-                this->level_selector_ui = new Graphics::LevelSelectionUI(this->window_width, this->window_height, &levels);
+                this->level_selector_ui =
+                    new Graphics::LevelSelectionUI(this->window_width, this->window_height, &levels);
 
                 // Get the selected level
                 Graphics::LevelSelection selected_level = this->level_selector_ui->wait_for_level_input();
