@@ -53,7 +53,6 @@ class Game {
     Coordinates apple_position;
     Queue<Coordinates> *snake_body;
     uint32_t level;
-    uint32_t speed;
     uint32_t score;
 
     void new_apple_position();
@@ -96,10 +95,6 @@ class Game {
 
     void set_level(uint32_t new_level) {
         level = new_level;
-    }
-
-    uint32_t get_speed() const {
-        return speed;
     }
 
     uint32_t get_score() const {
