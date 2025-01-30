@@ -77,6 +77,7 @@ void SnakeGameManager::start_game(GameDifficulty game_difficulty, uint32_t level
             } else if(pause_menu_selection.action == Graphics::PAUSE_RESUME) {
                 player_input = DIRECTION_NONE;
             }
+            clear();
             mousemask(0, &oldmask);
         }
         
