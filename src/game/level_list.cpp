@@ -1,23 +1,39 @@
 #ifndef LEVELS_LIST_CPP
 #define LEVELS_LIST_CPP
 
-#include "game/levels_list.hpp"
+#include "game/level_list.hpp"
+#include "game/logic.hpp"
+#include <cstddef>
+#include <cstdio>
 
 namespace Snake {
 
-LevelsList::LevelsList() {
+LevelList::LevelList() {
     this->head = nullptr;
     this->selected = nullptr;
     this->element_count = 0;
 }
-LevelsList::~LevelsList() {
+
+LevelList::LevelList(const char* file_path): LevelList::LevelList() {
+    FILE* file = fopen(file_path, "r");
+    if(file != NULL) {
+        LevelInfo *level_info = new LevelInfo;
+        while(std::fread(level_info, sizeof(LevelInfo), 1 , file)) {
+            // I PRAY THAT THIS IS GOING TO WORK WHEN 
+            // I'M GOING TO SHOW IT TO THE PROFESSOR
+            this->add_element(*level_info);
+        }
+    }
+}
+
+LevelList::~LevelList() {
     while (head) {
         remove_element_at(0); // Remove elements one by one
     }
 }
 
-void LevelsList::add_element(LevelInfo level_info) {
-    LevelsListElement *new_element = new LevelsListElement;
+void LevelList::add_element(LevelInfo level_info) {
+    LevelListElement *new_element = new LevelListElement;
     new_element->info = level_info;
     if (!head) { // if head still empty
         this->head = new_element;
@@ -29,7 +45,7 @@ void LevelsList::add_element(LevelInfo level_info) {
         return;
     }
 
-    LevelsListElement *current = head;
+    LevelListElement *current = head;
 
     while (current->next) { // go to the end of the list...
         current = current->next;
@@ -40,12 +56,12 @@ void LevelsList::add_element(LevelInfo level_info) {
     element_count++;
 }
 
-LevelsListElement *LevelsList::get_element_at(size_t index) {
+LevelListElement *LevelList::get_element_at(size_t index) {
     if (!head) { // empty list
         return nullptr;
     }
 
-    LevelsListElement *current = head;
+    LevelListElement *current = head;
     size_t i = 0;
     while (i < index) {
         if (!current->next) { // if could not reach till the end...
@@ -57,11 +73,11 @@ LevelsListElement *LevelsList::get_element_at(size_t index) {
     return current;
 }
 
-LevelsListElement *LevelsList::remove_element_at(int index) {
+LevelListElement *LevelList::remove_element_at(int index) {
     if (!this->head) {
         return nullptr;
     }
-    LevelsListElement *current = this->head;
+    LevelListElement *current = this->head;
     int i = 0;
     while (i < index) {
         if (!current->next) {
@@ -87,11 +103,11 @@ LevelsListElement *LevelsList::remove_element_at(int index) {
     return current;
 }
 
-size_t LevelsList::get_element_count() {
+size_t LevelList::get_element_count() {
     return this->element_count;
 }
 
-LevelsListElement *LevelsList::next_level() {
+LevelListElement *LevelList::next_level() {
     if (!head || !selected->next) {
         return nullptr;
     }
@@ -99,12 +115,23 @@ LevelsListElement *LevelsList::next_level() {
     return this->selected;
 }
 
-LevelsListElement *LevelsList::previous_level() {
+LevelListElement *LevelList::previous_level() {
     if (!head || !selected->previous) {
         return nullptr;
     }
     this->selected = this->selected->previous;
     return this->selected;
+}
+
+void LevelList::save_as_file(const char* file_path) {
+    FILE* file = std::fopen(file_path, "w");
+    if(file != NULL) {
+
+        for(size_t i = 0; i < this->get_element_count(); i++) {
+            std::fwrite(&this->get_element_at(i)->info, sizeof(LevelInfo), 1, file);
+        }
+        fclose(file);
+    }
 }
 
 } // namespace Snake

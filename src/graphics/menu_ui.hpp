@@ -13,6 +13,7 @@ namespace Graphics {
 typedef enum {
     MENU_EXIT_PROGRAM,
     MENU_SELECT_LEVEL,
+    MENU_LEADERBOARD,
 } MenuUIDecision;
 
 typedef struct {
@@ -26,6 +27,7 @@ class MenuUI {
     WINDOW *play_game_button;
     WINDOW *difficulty_button;
     WINDOW *exit_button;
+    WINDOW *leaderboard_button;
     MenuUIAction player_selection;
 
     void render_difficulty_button();

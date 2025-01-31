@@ -11,14 +11,23 @@ template <typename T> struct ListElement {
 
 template <typename T> class List {
   private:
-    size_t element_count;
     ListElement<T> *head;
+    size_t element_count;
 
   public:
     List() {
         this->head = nullptr;
         this->element_count = 0;
     }
+
+    void clear() {
+        while(head != nullptr) {
+            ListElement<T>* temp = head;
+            head = head->next;
+            delete temp;
+        }
+        element_count = 0;
+    }    
 
     void add_element(T value) {
         if (!this->head) {
@@ -57,6 +66,14 @@ template <typename T> class List {
         }
         return current;
     }
+    
+    const ListElement<T>* get_element_at(size_t index) const {
+        ListElement<T>* current = head;
+        for(size_t i = 0; i < index && current != nullptr; i++) {
+            current = current->next;
+        }
+        return current;
+    }    
 
     ListElement<T> *remove_element_at(size_t index) {
         if (!this->head) {

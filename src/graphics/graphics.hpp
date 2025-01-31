@@ -16,6 +16,7 @@ typedef enum {
     RED_TEXT = 1,
     GREEN_TEXT = 2,
     BLUE_TEXT = 3,
+    YELLOW_TEXT = 4
 } UIColors;
 
 /**

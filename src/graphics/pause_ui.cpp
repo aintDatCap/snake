@@ -34,8 +34,7 @@ PauseUI::PauseUI(uint16_t width, uint16_t height) {
     // wrefresh(level_selector_button);
 
     // Exit button
-    this->exit_button =
-        new_bordered_window(button_height, button_width, height / 2, (width - button_width) / 2);
+    this->exit_button = new_bordered_window(button_height, button_width, height / 2, (width - button_width) / 2);
     wattron(exit_button, A_BOLD);
     put_centered_colored_text(exit_button, "Exit", RED_TEXT);
     wattroff(exit_button, A_BOLD);
@@ -46,7 +45,7 @@ PauseUI::PauseUI(uint16_t width, uint16_t height) {
 
 PauseUI::~PauseUI() {
     delwin(this->resume_button);
-    //delwin(this->level_selector_button);
+    // delwin(this->level_selector_button);
     delwin(this->exit_button);
     delwin(this->window);
     refresh();
@@ -80,5 +79,6 @@ PauseUIAction PauseUI::wait_for_user_input() {
         }
     }
 }
-#endif
 } // namespace Graphics
+
+#endif

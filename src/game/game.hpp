@@ -5,6 +5,7 @@
 #include "game/snake_body.hpp"
 
 namespace Snake{
+
 class Game {
   private:
     GameDifficulty game_difficulty;

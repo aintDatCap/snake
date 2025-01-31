@@ -67,20 +67,21 @@ void SnakeGameManager::start_game(GameDifficulty game_difficulty, uint32_t level
         }
 
         Direction player_input = this->get_player_input();
-        if (player_input == EXIT){
+        if (player_input == EXIT) {
             Graphics::PauseUI pause_ui(window_width, window_height);
 
             mousemask(oldmask, NULL);
             Graphics::PauseUIAction pause_menu_selection = pause_ui.wait_for_user_input();
             if (pause_menu_selection.action == Graphics::PAUSE_EXIT_PROGRAM) {
+
                 break;
-            } else if(pause_menu_selection.action == Graphics::PAUSE_RESUME) {
+            } else if (pause_menu_selection.action == Graphics::PAUSE_RESUME) {
                 player_input = DIRECTION_NONE;
             }
             clear();
             mousemask(0, &oldmask);
         }
-        
+
         game->update_game(player_input);
         game_ui->update_game_window(GAME_DURATION - elapsed_time);
         // timer
@@ -98,14 +99,14 @@ uint32_t SnakeGameManager::get_frame_duration(uint32_t level) {
         // the game is made harder by making the snake move every
         // unit of time expressed in microseconds
         // the lower the time intervals the harder the game
-        case DIFFICULTY_EASY:                 // tentative values for speed before playtesting
+        case DIFFICULTY_EASY:
             speed = 300000 - (level * 10000); // Lower speed
             break;
         case DIFFICULTY_NORMAL:
             speed = 250000 - (level * 15000); // Moderate speed
             break;
         case DIFFICULTY_HARD:
-            speed = 200000 - (level * 20000); // Faster speed
+            speed = 200000 - (level * 17500); // Faster speed
             break;
         default:
             speed = 125000; // Default speed
@@ -184,6 +185,9 @@ void SnakeGameManager::show_menu() {
                     break;
                 }
                 break;
+            }
+            case Graphics::MENU_LEADERBOARD: {
+                return;
             }
             case Graphics::MENU_EXIT_PROGRAM: {
                 clear();

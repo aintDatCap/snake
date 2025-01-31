@@ -6,6 +6,7 @@
 #include "graphics/game_ui.hpp"
 #include "graphics/level_selection_ui.hpp"
 #include "utils/list.hpp"
+#include "game/leaderboard_manager.hpp"
 #include <cstdint>
 
 namespace Snake {
@@ -13,13 +14,13 @@ class SnakeGameManager {
   private:
     uint16_t window_width;
     uint16_t window_height;
-    Game *game;
-    Graphics::MenuUI *menu_ui;
-    Graphics::GameUI *game_ui;
-    Graphics::LevelSelectionUI *level_selector_ui;
     List<LevelInfo> levels;
+    LeaderboardManager lb;
+    Game *game;
+    Graphics::GameUI *game_ui;
+    Graphics::MenuUI *menu_ui;
+    Graphics::LevelSelectionUI *level_selector_ui;
     size_t current_level;
-
   public:
     SnakeGameManager(uint16_t window_width, uint16_t window_height, List<LevelInfo> levels);
     ~SnakeGameManager();

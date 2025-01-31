@@ -7,19 +7,19 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(SNAKE_SOURCE_DIR ${PROJECT_SOURCE_DIR}/src)
 
 set(PROGRAM_SOURCES
-  ${SNAKE_SOURCE_DIR}/utils/queue.hpp
-  ${SNAKE_SOURCE_DIR}/utils/list.hpp
-
   ${SNAKE_SOURCE_DIR}/game/snake_body.hpp
   ${SNAKE_SOURCE_DIR}/game/snake_body.cpp
 
   ${SNAKE_SOURCE_DIR}/game/logic.hpp
   ${SNAKE_SOURCE_DIR}/game/logic.cpp
+  ${SNAKE_SOURCE_DIR}/game/level_list.hpp
+  ${SNAKE_SOURCE_DIR}/game/level_list.cpp
   ${SNAKE_SOURCE_DIR}/game/game.hpp
   ${SNAKE_SOURCE_DIR}/game/game.cpp
   ${SNAKE_SOURCE_DIR}/game/game_manager.hpp
   ${SNAKE_SOURCE_DIR}/game/game_manager.cpp
-
+  ${SNAKE_SOURCE_DIR}/game/leaderboard_manager.hpp
+  ${SNAKE_SOURCE_DIR}/game/leaderboard_manager.cpp
   #Graphics
   ${SNAKE_SOURCE_DIR}/graphics/graphics.hpp
   ${SNAKE_SOURCE_DIR}/graphics/graphics.cpp
