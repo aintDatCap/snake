@@ -2,7 +2,7 @@
 #define GAME_HPP
 
 #include "game/logic.hpp"
-#include "utils/queue.hpp"
+#include "game/snake_body.hpp"
 
 namespace Snake{
 class Game {
@@ -12,9 +12,8 @@ class Game {
     GameTable game_table;
     GameTable playable_area;
     Direction current_direction;
-    Coordinates snake_head_position;
     Coordinates apple_position;
-    Queue<Coordinates> *snake_body;
+    SnakeBody *snake_body;
     uint32_t level;
     uint32_t score;
 
@@ -41,15 +40,11 @@ class Game {
         return playable_area;
     }
 
-    Coordinates get_snake_head_position() const {
-        return snake_head_position;
-    }
-
     Coordinates get_apple_position() const {
         return apple_position;
     }
 
-    Queue<Coordinates> *get_snake_body() const {
+    SnakeBody *get_snake_body() const {
         return snake_body;
     }
 

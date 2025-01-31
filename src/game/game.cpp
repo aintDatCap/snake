@@ -2,6 +2,8 @@
 #define GAME_CPP
 
 #include "game/game.hpp"
+#include "game/logic.hpp"
+#include "game/snake_body.hpp"
 #include <stdexcept>
 #include <stdlib.h>
 
@@ -18,23 +20,23 @@ Game::Game(uint16_t table_height, uint16_t table_width, GameDifficulty game_diff
 
     this->playable_area = get_playable_dimensions(game_difficulty);
 
-    this->snake_head_position.x = playable_area.width / 2;  // Center X
-    this->snake_head_position.y = playable_area.height / 2; // Center Y
+    Coordinates snake_head_position;
+    snake_head_position.x = playable_area.width / 2;
+    snake_head_position.y = playable_area.height / 2;
 
-    this->snake_body = new Queue<Coordinates>();
+    this->snake_body = new SnakeBody(snake_head_position);
 
     uint16_t remaining_snake_body_size = SNAKE_MINIMUM_BODY_SIZE + game_difficulty;
     // Avoid asking yourself why it works
     while (remaining_snake_body_size) {
         Coordinates coords;
-        if (remaining_snake_body_size + this->snake_head_position.y >= this->playable_area.height - 2) {
+        if (remaining_snake_body_size + snake_head_position.y >= this->playable_area.height - 2) {
             coords.y = this->playable_area.height - 2;
-            coords.x =
-                this->snake_head_position.x + remaining_snake_body_size - (coords.y - this->snake_head_position.y);
+            coords.x = snake_head_position.x + remaining_snake_body_size - (coords.y - snake_head_position.y);
 
         } else {
-            coords.x = this->snake_head_position.x;
-            coords.y = this->snake_head_position.y + remaining_snake_body_size;
+            coords.x = snake_head_position.x;
+            coords.y = snake_head_position.y + remaining_snake_body_size;
         }
         remaining_snake_body_size--;
         this->snake_body->enqueue(coords);
@@ -57,7 +59,7 @@ void Game::new_apple_position() {
         valid_position = true;
         for (uint16_t i = 0; i < this->snake_body->size(); ++i) {
             auto body_part_element = this->snake_body->get_element_at(i);
-            if (body_part_element && coordinates_are_equal(this->apple_position, body_part_element->value)) {
+            if (body_part_element && coordinates_are_equal(this->apple_position, body_part_element->position)) {
                 valid_position = false;
                 break;
             }
@@ -90,8 +92,9 @@ GameResult Game::update_game(Direction player_input) {
     if (this->game_result != GAME_UNFINISHED) {
         return this->game_result;
     }
+    SnakePart *snake_head = snake_body->get_head();
 
-    if (coordinates_are_equal(this->snake_head_position, this->apple_position)) {
+    if (coordinates_are_equal(snake_head->position, this->apple_position)) {
         // Increase score and create a new apple
         this->score += this->calculate_points(this->level, this->game_difficulty);
         this->new_apple_position();
@@ -107,14 +110,15 @@ GameResult Game::update_game(Direction player_input) {
 
     // move the tail
     snake_body->dequeue();
-    snake_body->enqueue(snake_head_position);
+
+    Coordinates new_snake_head_pos = snake_head->position;
 
     // move the head
     switch (this->current_direction) {
         case DIRECTION_UP: {
-            snake_head_position.y--;
+            new_snake_head_pos.y--;
 
-            if (snake_head_position.y == 0) {
+            if (new_snake_head_pos.y == 0) {
                 game_result = GAME_LOST;
                 return GAME_LOST;
             }
@@ -122,9 +126,9 @@ GameResult Game::update_game(Direction player_input) {
         }
         case DIRECTION_DOWN: {
             // add 1 to y
-            snake_head_position.y++;
+            new_snake_head_pos.y++;
 
-            if (snake_head_position.y == playable_area.height - 1) { // -1 because of the border
+            if (new_snake_head_pos.y == playable_area.height - 1) { // -1 because of the border
                 game_result = GAME_LOST;
                 return GAME_LOST;
             }
@@ -132,8 +136,8 @@ GameResult Game::update_game(Direction player_input) {
         }
         case DIRECTION_LEFT: {
             // remove 1 to x
-            snake_head_position.x--;
-            if (snake_head_position.x == 0) {
+            new_snake_head_pos.x--;
+            if (new_snake_head_pos.x == 0) {
                 game_result = GAME_LOST;
                 return GAME_LOST;
             }
@@ -141,9 +145,9 @@ GameResult Game::update_game(Direction player_input) {
         }
         case DIRECTION_RIGHT: {
             // add 1 to x
-            snake_head_position.x++;
+            new_snake_head_pos.x++;
 
-            if (snake_head_position.x == playable_area.width - 1) {
+            if (new_snake_head_pos.x == playable_area.width - 1) {
                 game_result = GAME_LOST;
                 return GAME_LOST;
             }
@@ -154,10 +158,11 @@ GameResult Game::update_game(Direction player_input) {
             break;
         }
     }
+    snake_body->enqueue(new_snake_head_pos);
 
     // if the head collides with the body, then the game is lost
-    for (size_t i = 0; i < this->snake_body->size(); i++) {
-        if (coordinates_are_equal(this->snake_head_position, this->snake_body->get_element_at(i)->value)) {
+    for (size_t i = 1; i < this->snake_body->size(); i++) {
+        if (coordinates_are_equal(this->snake_body->get_head()->position, this->snake_body->get_element_at(i)->position)) {
             game_result = GAME_LOST;
             return GAME_LOST;
         }

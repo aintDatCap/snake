@@ -22,9 +22,10 @@ class SnakeBody {
     void enqueue(Snake::Coordinates position);
     SnakePart *dequeue();
 
-    size_t size();
     // Method to get an element at a specific index in the queue
-    SnakePart *get_element_at(int index);
+    SnakePart *get_element_at(size_t index);
+    SnakePart *get_head();
+    size_t size();
 };
 } // namespace Snake
 #endif
