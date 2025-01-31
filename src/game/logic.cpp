@@ -2,7 +2,6 @@
 #define LOGIC_CPP
 
 #include "logic.hpp"
-#include <cstdlib>
 
 namespace Snake {
 bool coordinates_are_equal(Coordinates a, Coordinates b) {

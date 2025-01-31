@@ -46,6 +46,7 @@ void start_ncurses() {
     init_pair(Graphics::RED_TEXT, COLOR_RED, COLOR_BLACK);
     init_pair(Graphics::GREEN_TEXT, COLOR_GREEN, COLOR_BLACK);
     init_pair(Graphics::BLUE_TEXT, COLOR_BLUE, COLOR_BLACK);
+    init_pair(Graphics::YELLOW_TEXT, COLOR_YELLOW, COLOR_BLACK);
 
     mousemask(ALL_MOUSE_EVENTS, NULL); // for mouse events...
 

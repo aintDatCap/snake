@@ -6,33 +6,37 @@
 
 namespace Graphics {
 
-// -- MenuUI definitions with improved styling --
 MenuUI::MenuUI(uint16_t width, uint16_t height) {
     this->player_selection.game_difficulty = Snake::DIFFICULTY_NORMAL;
 
-    // Center main window on screen
-    this->window = new_bordered_window(height, width,
-                                       (LINES - height) / 2, // Center vertically
-                                       (COLS - width) / 2);  // Center horizontally
+    this->window = new_bordered_window(height, width, (LINES - height) / 2, (COLS - width) / 2);
 
-    // Calculate button positions
+    // Button dimensions and spacing
     const int button_height = height / 6;
     const int button_width = width / 3;
-    const int vertical_spacing = height / 5;
+    const int vertical_spacing = height / 6; 
 
-    // Play button
+    // Play button 
     this->play_game_button =
-        new_bordered_window(button_height, button_width, height / 2 - vertical_spacing, (width - button_width) / 2);
+        new_bordered_window(button_height, button_width, height / 2 - 2 * vertical_spacing, (width - button_width) / 2);
     wattron(play_game_button, A_BOLD);
     put_centered_colored_text(play_game_button, "Play", GREEN_TEXT);
     wattroff(play_game_button, A_BOLD);
     wrefresh(play_game_button);
 
-    // Difficulty button with dynamic text
-    this->difficulty_button = new_bordered_window(button_height, button_width, height / 2, (width - button_width) / 2);
+    // Difficulty button 
+    this->difficulty_button = new_bordered_window(button_height, button_width, height / 2 - vertical_spacing, (width - button_width) / 2);
     render_difficulty_button();
 
-    // Exit button
+    // Leaderboard button
+    this->leaderboard_button =
+        new_bordered_window(button_height, button_width, height / 2, (width - button_width) / 2);
+    wattron(leaderboard_button, A_BOLD);
+    put_centered_colored_text(leaderboard_button, "Leaderboard", YELLOW_TEXT);
+    wattroff(leaderboard_button, A_BOLD);
+    wrefresh(leaderboard_button);
+
+    // Exit button (position adjusted downward)
     this->exit_button =
         new_bordered_window(button_height, button_width, height / 2 + vertical_spacing, (width - button_width) / 2);
     wattron(exit_button, A_BOLD);
@@ -76,6 +80,7 @@ MenuUI::~MenuUI() {
     delwin(this->window);
     delwin(this->play_game_button);
     delwin(this->difficulty_button);
+    delwin(this->leaderboard_button);
     delwin(this->exit_button);
     refresh();
 }
@@ -111,6 +116,9 @@ MenuUIAction MenuUI::wait_for_user_input() {
                         render_difficulty_button();
                     } else if (is_inside_window(exit_button, mouse_event.x, mouse_event.y)) {
                         player_selection.action = MENU_EXIT_PROGRAM;
+                        return player_selection;
+                    } else if (is_inside_window(leaderboard_button, mouse_event.x, mouse_event.y)) {
+                        player_selection.action = MENU_LEADERBOARD;
                         return player_selection;
                     }
                 }
