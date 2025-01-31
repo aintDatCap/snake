@@ -1,7 +1,7 @@
 #ifndef GAME_UI_HPP
 #define GAME_UI_HPP
 
-#include "game/logic.hpp"
+#include "game/game.hpp"
 
 #ifdef _WIN32
 #include <ncurses/ncurses.h>

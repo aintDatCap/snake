@@ -64,12 +64,12 @@ void GameUI::update_game_window(int32_t remaining_time) {
 
     // Rendering the snake
     wattron(this->window, COLOR_PAIR(GREEN_TEXT));
-    Snake::Coordinates snake_head = this->game->get_snake_head_position();
+    Snake::Coordinates snake_head = this->game->get_snake_body()->get_head()->position;
     mvwaddch(this->window, start_y + snake_head.y, start_x + snake_head.x,
              '@'); // @ head (ACS characters display incorrectly)
 
-    for (uint16_t i = 0; i < this->game->get_snake_body()->size(); ++i) {
-        Snake::Coordinates coord = this->game->get_snake_body()->get_element_at(i)->value;
+    for (uint16_t i = 1; i < this->game->get_snake_body()->size(); ++i) {
+        Snake::Coordinates coord = this->game->get_snake_body()->get_element_at(i)->position;
         mvwaddch(this->window, start_y + coord.y, start_x + coord.x, '#'); // # body
     }
     wattroff(this->window, COLOR_PAIR(GREEN_TEXT));

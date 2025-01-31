@@ -10,8 +10,13 @@ set(PROGRAM_SOURCES
   ${SNAKE_SOURCE_DIR}/utils/queue.hpp
   ${SNAKE_SOURCE_DIR}/utils/list.hpp
 
+  ${SNAKE_SOURCE_DIR}/game/snake_body.hpp
+  ${SNAKE_SOURCE_DIR}/game/snake_body.cpp
+
   ${SNAKE_SOURCE_DIR}/game/logic.hpp
   ${SNAKE_SOURCE_DIR}/game/logic.cpp
+  ${SNAKE_SOURCE_DIR}/game/game.hpp
+  ${SNAKE_SOURCE_DIR}/game/game.cpp
   ${SNAKE_SOURCE_DIR}/game/game_manager.hpp
   ${SNAKE_SOURCE_DIR}/game/game_manager.cpp
 
