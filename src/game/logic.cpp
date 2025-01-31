@@ -2,7 +2,7 @@
 #define LOGIC_CPP
 
 #include "logic.hpp"
-#include "utils/queue.hpp"
+#include "utils/snake_body.hpp" // "utils/queue.hpp"
 #include <cstdint>
 #include <cstdlib>
 #include <stdexcept>
