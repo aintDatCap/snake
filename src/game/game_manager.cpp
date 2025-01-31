@@ -10,15 +10,7 @@
 
 namespace Snake {
 
-SnakeGameManager::SnakeGameManager(uint16_t window_width, uint16_t window_height,
-                                  List<LevelInfo> levels)
-    : window_width(window_width),   
-      window_height(window_height),
-      levels(levels),                
-      lb(),                         
-      game(nullptr),                
-      game_ui(nullptr),             
-      menu_ui(new Graphics::MenuUI(window_width, window_height)){
+SnakeGameManager::SnakeGameManager(uint16_t window_width, uint16_t window_height, List<LevelInfo> levels) {
     std::srand(time(NULL));
     this->levels = levels;
     this->game = nullptr;
@@ -53,7 +45,7 @@ void SnakeGameManager::start_game(GameDifficulty game_difficulty, uint32_t level
     delete this->menu_ui;
     this->menu_ui = nullptr;
 
-    this->game = new Game(window_height, window_width, game_difficulty, level, lb); // obj for game logic
+    this->game = new Game(window_height, window_width, game_difficulty, level); // obj for game logic
     this->current_level = level;
     this->game_ui = new Graphics::GameUI(this->game); // rendering a new win for the game...
 
@@ -75,21 +67,21 @@ void SnakeGameManager::start_game(GameDifficulty game_difficulty, uint32_t level
         }
 
         Direction player_input = this->get_player_input();
-        if (player_input == EXIT){
+        if (player_input == EXIT) {
             Graphics::PauseUI pause_ui(window_width, window_height);
 
             mousemask(oldmask, NULL);
             Graphics::PauseUIAction pause_menu_selection = pause_ui.wait_for_user_input();
             if (pause_menu_selection.action == Graphics::PAUSE_EXIT_PROGRAM) {
-                game->save_score_if_needed();
+
                 break;
-            } else if(pause_menu_selection.action == Graphics::PAUSE_RESUME) {
+            } else if (pause_menu_selection.action == Graphics::PAUSE_RESUME) {
                 player_input = DIRECTION_NONE;
             }
             clear();
             mousemask(0, &oldmask);
         }
-        
+
         game->update_game(player_input);
         game_ui->update_game_window(GAME_DURATION - elapsed_time);
         // timer
@@ -107,7 +99,7 @@ uint32_t SnakeGameManager::get_frame_duration(uint32_t level) {
         // the game is made harder by making the snake move every
         // unit of time expressed in microseconds
         // the lower the time intervals the harder the game
-        case DIFFICULTY_EASY:                 
+        case DIFFICULTY_EASY:
             speed = 300000 - (level * 10000); // Lower speed
             break;
         case DIFFICULTY_NORMAL:

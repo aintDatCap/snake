@@ -3,7 +3,6 @@
 
 #include "game/logic.hpp"
 #include "game/snake_body.hpp"
-#include "game/leaderboard_manager.hpp"
 
 namespace Snake{
 
@@ -16,22 +15,19 @@ class Game {
     Direction current_direction;
     Coordinates apple_position;
     SnakeBody *snake_body;
-    LeaderboardManager& leaderboard;
     uint32_t level;
     uint32_t score;
 
     void new_apple_position();
 
   public:
-    Game(uint16_t table_height, uint16_t table_width, GameDifficulty game_difficulty, uint32_t level, LeaderboardManager& leaderboard);
+    Game(uint16_t table_height, uint16_t table_width, GameDifficulty game_difficulty, uint32_t level);
 
     GameResult update_game(Direction player_input);
 
     uint32_t calculate_points(uint32_t level, GameDifficulty difficulty) const;
     
     void win_game();
-
-    void save_score_if_needed();
 
     GameDifficulty get_game_difficulty() const {
         return game_difficulty;

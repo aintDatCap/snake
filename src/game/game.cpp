@@ -9,12 +9,7 @@
 
 namespace Snake {
 
-Game::Game(uint16_t table_height, uint16_t table_width, GameDifficulty game_difficulty, uint32_t level,
-        LeaderboardManager& leaderboard) : 
-    game_difficulty(game_difficulty),  
-    leaderboard(leaderboard),
-    level(level),
-    score(0) {
+Game::Game(uint16_t table_height, uint16_t table_width, GameDifficulty game_difficulty, uint32_t level) {
 
     this->game_difficulty = game_difficulty;
     this->game_result = GAME_UNFINISHED;
@@ -50,11 +45,6 @@ Game::Game(uint16_t table_height, uint16_t table_width, GameDifficulty game_diff
     this->score = 0;
     this->level = level;
     this->new_apple_position();
-}
-
-void Game::save_score_if_needed() {
-    if(game_result == GAME_UNFINISHED) return;
-    leaderboard.add_entry(score, level, game_difficulty);
 }
 
 void Game::new_apple_position() {
@@ -131,7 +121,6 @@ GameResult Game::update_game(Direction player_input) {
 
             if (new_snake_head_pos.y == 0) {
                 game_result = GAME_LOST;
-                save_score_if_needed(); 
                 return GAME_LOST;
             }
             break;
@@ -142,7 +131,6 @@ GameResult Game::update_game(Direction player_input) {
 
             if (new_snake_head_pos.y == playable_area.height - 1) { // -1 because of the border
                 game_result = GAME_LOST;
-                save_score_if_needed();
                 return GAME_LOST;
             }
             break;
@@ -150,9 +138,9 @@ GameResult Game::update_game(Direction player_input) {
         case DIRECTION_LEFT: {
             // remove 1 to x
             new_snake_head_pos.x--;
+
             if (new_snake_head_pos.x == 0) {
                 game_result = GAME_LOST;
-                save_score_if_needed();
                 return GAME_LOST;
             }
             break;
@@ -163,7 +151,6 @@ GameResult Game::update_game(Direction player_input) {
 
             if (new_snake_head_pos.x == playable_area.width - 1) {
                 game_result = GAME_LOST;
-                save_score_if_needed();
                 return GAME_LOST;
             }
             break;
@@ -180,7 +167,6 @@ GameResult Game::update_game(Direction player_input) {
         if (coordinates_are_equal(this->snake_body->get_head()->position,
                                   this->snake_body->get_element_at(i)->position)) {
             game_result = GAME_LOST;
-            save_score_if_needed();
             return GAME_LOST;
         }
     }
@@ -191,7 +177,6 @@ GameResult Game::update_game(Direction player_input) {
 void Game::win_game() {
     if (this->game_result == GAME_UNFINISHED) {
         this->game_result = GAME_WON;
-        save_score_if_needed();
     }
 }
 } // namespace Snake
