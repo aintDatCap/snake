@@ -45,6 +45,7 @@ void start_ncurses();
 void stop_ncurses();
 
 WINDOW *new_bordered_window(uint16_t height, uint16_t width, uint16_t y, uint16_t x);
+WINDOW *new_bordered_subpad(WINDOW* parent, uint16_t height, uint16_t width, uint16_t y, uint16_t x);
 
 } // namespace Graphics
 

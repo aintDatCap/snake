@@ -2,20 +2,22 @@
 #define LEVEL_SELECTION_UI_CPP
 
 #include "graphics/level_selection_ui.hpp"
+#include "game/level_list.hpp"
 #include "graphics/graphics.hpp"
 #include <algorithm>
 
 namespace Graphics {
 
 // -LevelSelctorUI definitions
-LevelSelectionUI::LevelSelectionUI(uint16_t width, uint16_t height, List<Snake::LevelInfo> *levels) {
+LevelSelectionUI::LevelSelectionUI(uint16_t width, uint16_t height, Snake::LevelList *levels, Snake::GameDifficulty selected_difficulty) {
     erase();
     this->width = width;
     this->height = height;
 
     this->levels = levels;
+    this->selected_difficulty = selected_difficulty;
 
-    this->window = newpad((levels->get_element_count() + 2) * height / 6, width);
+    this->window = newpad((levels->get_element_count(selected_difficulty) + 2) * height / 6, width);
 
     box(this->window, 0, 0);
     scrollok(this->window, true);
@@ -25,7 +27,7 @@ LevelSelectionUI::LevelSelectionUI(uint16_t width, uint16_t height, List<Snake::
 }
 
 void LevelSelectionUI::render_level_buttons() {
-    const size_t level_count = levels->get_element_count();
+    const size_t level_count = levels->get_element_count(selected_difficulty);
 
     this->level_buttons = new WINDOW *[level_count];
 
@@ -58,7 +60,7 @@ LevelSelection LevelSelectionUI::wait_for_level_input() {
             if (getmouse(&mouse_event) == OK) {
                 // left button clicked
                 if (mouse_event.bstate & BUTTON1_CLICKED || mouse_event.bstate & BUTTON1_PRESSED) {
-                    for (uint32_t i = 0; i < levels->get_element_count(); ++i) {
+                    for (uint32_t i = 0; i < levels->get_element_count(selected_difficulty); ++i) {
                         if (is_inside_subpad(level_buttons[i], mouse_event.x, mouse_event.y, (int32_t)current_line)) {
                             this->level_selection.action = LEVEL_SELECT_PLAY;
                             this->level_selection.level = i + 1;
@@ -82,7 +84,7 @@ LevelSelection LevelSelectionUI::wait_for_level_input() {
 
 // Destructor
 LevelSelectionUI::~LevelSelectionUI() {
-    for (uint32_t i = 0; i < levels->get_element_count(); ++i) {
+    for (uint32_t i = 0; i < levels->get_element_count(selected_difficulty); ++i) {
         delwin(this->level_buttons[i]);
     }
     delwin(this->window);

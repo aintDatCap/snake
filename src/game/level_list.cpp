@@ -11,19 +11,6 @@ namespace Snake {
 LevelList::LevelList() {
     this->head = nullptr;
     this->selected = nullptr;
-    this->element_count = 0;
-}
-
-LevelList::LevelList(const char* file_path): LevelList::LevelList() {
-    FILE* file = fopen(file_path, "r");
-    if(file != NULL) {
-        LevelInfo *level_info = new LevelInfo;
-        while(std::fread(level_info, sizeof(LevelInfo), 1 , file)) {
-            // I PRAY THAT THIS IS GOING TO WORK WHEN 
-            // I'M GOING TO SHOW IT TO THE PROFESSOR
-            this->add_element(*level_info);
-        }
-    }
 }
 
 LevelList::~LevelList() {
@@ -41,7 +28,6 @@ void LevelList::add_element(LevelInfo level_info) {
         this->head->previous = nullptr;
 
         this->selected = head;
-        this->element_count++;
         return;
     }
 
@@ -52,8 +38,6 @@ void LevelList::add_element(LevelInfo level_info) {
     }
     current->next = new_element;
     new_element->previous = current;
-
-    element_count++;
 }
 
 LevelListElement *LevelList::get_element_at(size_t index) {
@@ -99,12 +83,30 @@ LevelListElement *LevelList::remove_element_at(int index) {
     current->previous->next = current->next;
     current->next->previous = current->previous;
 
-    this->element_count--;
     return current;
 }
 
 size_t LevelList::get_element_count() {
-    return this->element_count;
+    size_t count = 0;
+    LevelListElement *current = this->head;
+    while (current) {
+        count++;
+        current = current->next;
+    }
+    return count;
+}
+
+size_t LevelList::get_element_count(GameDifficulty difficulty) {
+    size_t count = 0;
+    LevelListElement *current = this->head;
+    while (current) {
+        if (current->info.difficulty == difficulty) {
+            count++;
+        }
+
+        current = current->next;
+    }
+    return count;
 }
 
 LevelListElement *LevelList::next_level() {
@@ -123,11 +125,46 @@ LevelListElement *LevelList::previous_level() {
     return this->selected;
 }
 
-void LevelList::save_as_file(const char* file_path) {
-    FILE* file = std::fopen(file_path, "w");
-    if(file != NULL) {
+LevelListElement *LevelList::get_current() {
+    return this->selected;
+}
 
-        for(size_t i = 0; i < this->get_element_count(); i++) {
+bool LevelList::set_current_level(GameDifficulty difficulty, size_t index) {
+    LevelListElement *current = this->head;
+    while (current) {
+        if (current->info.difficulty == difficulty && current->info.id == index) {
+            this->selected = current;
+            return true;
+        }
+        current = current->next;
+    }
+    return false;
+}
+
+LevelList *LevelList::from_file(const char *file_path) {
+    FILE *file = fopen(file_path, "r");
+    if (file == NULL) {
+        return nullptr;
+    }
+
+    LevelList *level_list = new LevelList();
+    LevelInfo *level_info = new LevelInfo;
+    while (std::fread(level_info, sizeof(LevelInfo), 1, file)) {
+        // I PRAY THAT THIS IS GOING TO WORK WHEN
+        // I'M GOING TO SHOW IT TO THE PROFESSOR
+        level_list->add_element(*level_info);
+    }
+
+    fclose(file);
+
+    return level_list;
+}
+
+void LevelList::save_as_file(const char *file_path) {
+    FILE *file = std::fopen(file_path, "w");
+    if (file != NULL) {
+
+        for (size_t i = 0; i < this->get_element_count(); i++) {
             std::fwrite(&this->get_element_at(i)->info, sizeof(LevelInfo), 1, file);
         }
         fclose(file);
