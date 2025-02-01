@@ -125,6 +125,22 @@ LevelListElement *LevelList::previous_level() {
     return this->selected;
 }
 
+LevelListElement *LevelList::get_current() {
+    return this->selected;
+}
+
+bool LevelList::set_current_level(GameDifficulty difficulty, size_t index) {
+    LevelListElement *current = this->head;
+    while (current) {
+        if (current->info.difficulty == difficulty && current->info.id == index) {
+            this->selected = current;
+            return true;
+        }
+        current = current->next;
+    }
+    return false;
+}
+
 LevelList *LevelList::from_file(const char *file_path) {
     FILE *file = fopen(file_path, "r");
     if (file == NULL) {

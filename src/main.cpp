@@ -8,11 +8,10 @@
 Snake::LevelList *default_levels() {
     Snake::LevelList* levels = new Snake::LevelList;
 
-    uint32_t id = 0;
-    for (uint16_t i = 0; i < 8; i++) {
-        levels->add_element(Snake::LevelInfo(0, i, Snake::DIFFICULTY_EASY, id++));
-        levels->add_element(Snake::LevelInfo(0, i, Snake::DIFFICULTY_NORMAL, id++));
-        levels->add_element(Snake::LevelInfo(0, i, Snake::DIFFICULTY_HARD, id++));
+    for (uint16_t i = 1; i <=8; i++) {
+        levels->add_element(Snake::LevelInfo(0, i, Snake::DIFFICULTY_EASY));
+        levels->add_element(Snake::LevelInfo(0, i, Snake::DIFFICULTY_NORMAL));
+        levels->add_element(Snake::LevelInfo(0, i, Snake::DIFFICULTY_HARD));
     }
 
     return levels;
@@ -21,7 +20,7 @@ Snake::LevelList *default_levels() {
 int main(int, char **) {
     Graphics::start_ncurses();
 
-    Snake::LevelList* level_list = Snake::LevelList::from_file("levels.bin");
+    Snake::LevelList* level_list = Snake::LevelList::from_file(LEVELS_FILE_NAME);
 
     if(!level_list) {
         level_list = default_levels();

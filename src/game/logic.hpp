@@ -3,6 +3,8 @@
 
 #include <cstdint>
 
+#define LEVELS_FILE_NAME "levels.bin"
+
 namespace Snake {
 
 #define SNAKE_MINIMUM_BODY_SIZE 4
@@ -40,14 +42,13 @@ struct Coordinates {
 
 struct LevelInfo {
     uint32_t high_score;
-    uint32_t level;
-    GameDifficulty difficulty;
     uint32_t id;
-    LevelInfo(uint32_t high_score = 0, uint32_t level = 0, GameDifficulty difficulty = DIFFICULTY_EASY, uint32_t id=0) {
+    GameDifficulty difficulty;
+
+    LevelInfo(uint32_t high_score = 0, uint32_t id = 0, GameDifficulty difficulty = DIFFICULTY_EASY) {
         this->high_score = high_score;
-        this->level = level;
-        this->difficulty = difficulty;
         this->id = id;
+        this->difficulty = difficulty;
     }
 };
 

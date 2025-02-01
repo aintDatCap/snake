@@ -32,6 +32,9 @@ class LevelList {
 
     LevelListElement *next_level();
     LevelListElement *previous_level();
+    LevelListElement *get_current();
+
+    bool set_current_level(GameDifficulty difficulty, size_t index);
 
     static LevelList *from_file(const char *file_path);
     void save_as_file(const char *file_path);

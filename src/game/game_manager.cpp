@@ -1,8 +1,10 @@
 #include "game/game_manager.hpp"
 #include "game/level_list.hpp"
 #include "game/logic.hpp"
+#include "graphics/leaderboard_ui.hpp"
 #include "graphics/menu_ui.hpp"
 #include "graphics/pause_ui.hpp"
+#include <algorithm>
 #include <cassert>
 #include <cstdint>
 #include <cstdlib>
@@ -13,7 +15,7 @@ namespace Snake {
 
 SnakeGameManager::SnakeGameManager(uint16_t window_width, uint16_t window_height, LevelList *levels) {
     std::srand(time(NULL));
-    this->levels = levels;
+    this->level_list = levels;
     this->game = nullptr;
     this->game_ui = nullptr;
     this->menu_ui = new Graphics::MenuUI(window_width, window_height);
@@ -37,17 +39,15 @@ SnakeGameManager::~SnakeGameManager() { // destructor
     }
 }
 
-void SnakeGameManager::start_game(GameDifficulty game_difficulty, uint32_t level) {
-
-    // TODO: level management
-    if (level == 0) {
-    }
+void SnakeGameManager::start_game(GameDifficulty game_difficulty, uint32_t level_id) {
 
     delete this->menu_ui;
     this->menu_ui = nullptr;
 
-    this->game = new Game(window_height, window_width, game_difficulty, level); // obj for game logic
-    this->current_level = level;
+    this->game = new Game(window_height, window_width, game_difficulty, level_id); // obj for game logic
+
+    assert(this->level_list->set_current_level(game_difficulty, level_id));
+
     this->game_ui = new Graphics::GameUI(this->game); // rendering a new win for the game...
 
     // game_ui window settings
@@ -59,7 +59,7 @@ void SnakeGameManager::start_game(GameDifficulty game_difficulty, uint32_t level
 #define GAME_DURATION 300 // 300 seconds
 
     const time_t game_start = time(NULL);
-    const uint32_t game_speed = get_frame_duration(this->current_level);
+    const uint32_t game_speed = get_frame_duration(this->level_list->get_current()->info.id);
     do {
         time_t elapsed_time = time(NULL) - game_start;
         if (elapsed_time > GAME_DURATION) {
@@ -91,6 +91,10 @@ void SnakeGameManager::start_game(GameDifficulty game_difficulty, uint32_t level
 
     } while (game->get_game_result() == GAME_UNFINISHED);
 
+    LevelListElement *current_level = level_list->get_current();
+    current_level->info.high_score = std::max(current_level->info.high_score, game->get_score());
+
+    level_list->save_as_file(LEVELS_FILE_NAME);
     mousemask(oldmask, NULL); // restore mouse events
 }
 
@@ -171,7 +175,7 @@ void SnakeGameManager::show_menu() {
         switch (player_selection.action) {
             case Graphics::MENU_SELECT_LEVEL: {
                 this->level_selector_ui = new Graphics::LevelSelectionUI(this->window_width, this->window_height,
-                                                                         levels, player_selection.game_difficulty);
+                                                                         level_list, player_selection.game_difficulty);
 
                 // Get the selected level
                 Graphics::LevelSelection selected_level = this->level_selector_ui->wait_for_level_input();
@@ -188,7 +192,10 @@ void SnakeGameManager::show_menu() {
                 break;
             }
             case Graphics::MENU_LEADERBOARD: {
-                return;
+                Graphics::LeaderboardUI leaderboard_ui =
+                    Graphics::LeaderboardUI(this->window_width, this->window_height, this->level_list);
+                leaderboard_ui.wait_for_user_input();
+                break;
             }
             case Graphics::MENU_EXIT_PROGRAM: {
                 clear();

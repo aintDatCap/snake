@@ -38,6 +38,13 @@ WINDOW *new_bordered_window(uint16_t height, uint16_t width, uint16_t y, uint16_
     wrefresh(window);
     return window;
 }
+WINDOW *new_bordered_subpad(WINDOW* parent, uint16_t height, uint16_t width, uint16_t y, uint16_t x) {
+        WINDOW *window = subpad(parent, height, width, y, x);
+    refresh();
+    box(window, 0, 0);
+    wrefresh(window);
+    return window;
+}
 
 void start_ncurses() {
     initscr();
