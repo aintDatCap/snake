@@ -1,8 +1,8 @@
 #ifndef LEVEL_SELECTION_UI_HPP
 #define LEVEL_SELECTION_UI_HPP
 
+#include "game/level_list.hpp"
 #include "game/logic.hpp"
-#include "utils/list.hpp"
 #ifdef _WIN32
 #include <ncurses/ncurses.h>
 #else
@@ -25,14 +25,15 @@ class LevelSelectionUI {
   private:
     uint32_t width;
     uint32_t height;
-    List<Snake::LevelInfo> *levels;
+    Snake::LevelList *levels;
+    Snake::GameDifficulty selected_difficulty;
 
     WINDOW *window;
     WINDOW **level_buttons;
     LevelSelection level_selection;
 
   public:
-    LevelSelectionUI(uint16_t width, uint16_t height, List<Snake::LevelInfo> *levels);
+    LevelSelectionUI(uint16_t width, uint16_t height, Snake::LevelList *levels, Snake::GameDifficulty selected_difficulty);
     ~LevelSelectionUI();
 
     LevelSelection wait_for_level_input();

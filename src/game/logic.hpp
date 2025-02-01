@@ -42,8 +42,12 @@ struct LevelInfo {
     uint32_t high_score;
     uint32_t level;
     GameDifficulty difficulty;
-    LevelInfo(uint32_t s = 0, uint32_t l = 0, GameDifficulty d = DIFFICULTY_EASY)
-        : high_score(s), level(l), difficulty(d) {
+    uint32_t id;
+    LevelInfo(uint32_t high_score = 0, uint32_t level = 0, GameDifficulty difficulty = DIFFICULTY_EASY, uint32_t id=0) {
+        this->high_score = high_score;
+        this->level = level;
+        this->difficulty = difficulty;
+        this->id = id;
     }
 };
 

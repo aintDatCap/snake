@@ -1,4 +1,5 @@
 #include "game/game_manager.hpp"
+#include "game/level_list.hpp"
 #include "game/logic.hpp"
 #include "graphics/menu_ui.hpp"
 #include "graphics/pause_ui.hpp"
@@ -10,7 +11,7 @@
 
 namespace Snake {
 
-SnakeGameManager::SnakeGameManager(uint16_t window_width, uint16_t window_height, List<LevelInfo> levels) {
+SnakeGameManager::SnakeGameManager(uint16_t window_width, uint16_t window_height, LevelList *levels) {
     std::srand(time(NULL));
     this->levels = levels;
     this->game = nullptr;
@@ -169,8 +170,8 @@ void SnakeGameManager::show_menu() {
 
         switch (player_selection.action) {
             case Graphics::MENU_SELECT_LEVEL: {
-                this->level_selector_ui =
-                    new Graphics::LevelSelectionUI(this->window_width, this->window_height, &levels);
+                this->level_selector_ui = new Graphics::LevelSelectionUI(this->window_width, this->window_height,
+                                                                         levels, player_selection.game_difficulty);
 
                 // Get the selected level
                 Graphics::LevelSelection selected_level = this->level_selector_ui->wait_for_level_input();

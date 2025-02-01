@@ -18,8 +18,8 @@ set(PROGRAM_SOURCES
   ${SNAKE_SOURCE_DIR}/game/game.cpp
   ${SNAKE_SOURCE_DIR}/game/game_manager.hpp
   ${SNAKE_SOURCE_DIR}/game/game_manager.cpp
-  ${SNAKE_SOURCE_DIR}/game/leaderboard_manager.hpp
-  ${SNAKE_SOURCE_DIR}/game/leaderboard_manager.cpp
+  # ${SNAKE_SOURCE_DIR}/game/leaderboard_manager.hpp
+  # ${SNAKE_SOURCE_DIR}/game/leaderboard_manager.cpp
   #Graphics
   ${SNAKE_SOURCE_DIR}/graphics/graphics.hpp
   ${SNAKE_SOURCE_DIR}/graphics/graphics.cpp

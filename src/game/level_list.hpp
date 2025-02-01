@@ -14,13 +14,11 @@ struct LevelListElement {
 
 class LevelList {
   private:
-    size_t element_count;
     LevelListElement *head;
     LevelListElement *selected; // keeps track of current level
 
   public:
     LevelList();
-    LevelList(const char* file_path);
     ~LevelList();
 
     void add_element(LevelInfo level_info);
@@ -30,11 +28,13 @@ class LevelList {
     LevelListElement *remove_element_at(int index);
 
     size_t get_element_count();
+    size_t get_element_count(GameDifficulty difficulty);
 
     LevelListElement *next_level();
     LevelListElement *previous_level();
 
-    void save_as_file(const char* file_path);
+    static LevelList *from_file(const char *file_path);
+    void save_as_file(const char *file_path);
 };
 } // namespace Snake
 
