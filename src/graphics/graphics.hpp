@@ -41,6 +41,11 @@ bool is_inside_window(WINDOW *win, int x, int y);
  */
 bool is_inside_subpad(WINDOW *subpad, int x, int y, int current_parent_line);
 
+/*
+* Draws snake ASCII art
+*/
+void draw_art(WINDOW* win, const char** art, uint16_t art_lines, int start_y, int start_x);
+
 void start_ncurses();
 void stop_ncurses();
 
