@@ -56,16 +56,38 @@ void SnakeGameManager::start_game(GameDifficulty game_difficulty, uint32_t level
     mmask_t oldmask;                             // to save the previous mouse events mask...
     mousemask(0, &oldmask);                      // disable mouse for this win
 
+#ifdef NDEBUG
 #define GAME_DURATION 150 // 2 minutes and an half
-
-    const time_t game_start = time(NULL);
-    const uint32_t game_speed = get_frame_duration(this->level_list->get_current()->info.id);
+#else
+#define GAME_DURATION 20
+#endif
+    time_t game_start = time(NULL);
+    uint32_t game_speed = get_frame_duration(this->level_list->get_current()->info.id);
     do {
         time_t elapsed_time = time(NULL) - game_start;
         if (elapsed_time > GAME_DURATION) {
-            game->win_game();
-            next_level();
-            break;
+            this->game->win_game();
+            
+            LevelListElement *current_level = level_list->get_current();
+            current_level->info.high_score = std::max(current_level->info.high_score, game->get_score());
+
+            // if there is any remaining level
+            if (this->next_level()) {
+
+                delete game;
+
+                this->game = new Game(window_height, window_width, game_difficulty, level_list->get_current()->info.id);
+                this->game_ui->wait_for_user_win_screen();
+
+                delete game_ui;
+                this->game_ui = new Graphics::GameUI(this->game);
+                game_start = time(NULL);
+
+                game_ui->update_game_window(GAME_DURATION);
+                nodelay((this->game_ui)->getWindow(), true);
+            } else {
+                break;
+            }
         }
 
         Direction player_input = this->get_player_input();
@@ -83,9 +105,8 @@ void SnakeGameManager::start_game(GameDifficulty game_difficulty, uint32_t level
             clear();
             mousemask(0, &oldmask);
         }
-        
 
-        if(game->update_game(player_input) != GAME_UNFINISHED) {
+        if (game->update_game(player_input) != GAME_UNFINISHED) {
             // managing the ending frame
             break;
         }
@@ -213,21 +234,18 @@ void SnakeGameManager::show_menu() {
 }
 
 /**
- * Returns the next level if there are any more levels to play
- * otherwise it returns nullptr
+ * Returns true and goes to the next level if there are any
+ * otherwise it only returns false
  */
-void SnakeGameManager::next_level() {
-    LevelListElement* current = level_list->get_current();
+bool SnakeGameManager::next_level() {
+    LevelListElement *current = level_list->get_current();
     GameDifficulty current_diff = current->info.difficulty;
     uint32_t current_id = current->info.id;
-    if (level_list->set_current_level(current_diff, current_id + 1)) {
-        start_game(current_diff, current_id + 1);
-    } else {
-        level_list->set_current_level(current_diff, current_id);
-        show_menu();
+    if (!level_list->set_current_level(current_diff, current_id + 1)) {
+        return false;
     }
+
+    return true;
 }
-
-
 
 } // namespace Snake

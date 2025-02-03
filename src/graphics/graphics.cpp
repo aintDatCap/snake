@@ -31,14 +31,14 @@ bool is_inside_subpad(WINDOW *subpad, int x, int y, int current_parent_line) {
             (getpary(subpad) + getmaxy(subpad) - current_parent_line) >= y);
 }
 
-WINDOW *new_bordered_window(uint16_t height, uint16_t width, uint16_t y, uint16_t x) {
+WINDOW *new_bordered_window(int height, int width, int y, int x) {
     WINDOW *window = newwin(height, width, y, x);
     refresh();
     box(window, 0, 0);
     wrefresh(window);
     return window;
 }
-WINDOW *new_bordered_subpad(WINDOW *parent, uint16_t height, uint16_t width, uint16_t y, uint16_t x) {
+WINDOW *new_bordered_subpad(WINDOW *parent, int height, int width, int y, int x) {
     WINDOW *window = subpad(parent, height, width, y, x);
     refresh();
     box(window, 0, 0);

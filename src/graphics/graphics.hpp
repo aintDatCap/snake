@@ -49,8 +49,8 @@ void draw_art(WINDOW* win, const char** art, uint16_t art_lines, int start_y, in
 void start_ncurses();
 void stop_ncurses();
 
-WINDOW *new_bordered_window(uint16_t height, uint16_t width, uint16_t y, uint16_t x);
-WINDOW *new_bordered_subpad(WINDOW* parent, uint16_t height, uint16_t width, uint16_t y, uint16_t x);
+WINDOW *new_bordered_window(int height, int width, int y, int x);
+WINDOW *new_bordered_subpad(WINDOW* parent, int height, int width, int y, int x);
 
 } // namespace Graphics
 
