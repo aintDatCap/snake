@@ -14,6 +14,7 @@ namespace Graphics {
 class GameUI {
   private:
     WINDOW *window;
+    WINDOW *game_window;
     Snake::Game *game;
 
   public:
