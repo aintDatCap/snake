@@ -3,6 +3,8 @@
 
 #include "graphics/game_ui.hpp"
 #include "graphics/graphics.hpp"
+#include <algorithm>
+#include <cstring>
 #include <ncurses.h>
 
 namespace Graphics {
@@ -28,15 +30,13 @@ GameUI::GameUI(Snake::Game *game) {
     const int start_x = (getmaxx(window) - playable_area.width) / 2;
     const int start_y = (getmaxy(window) - playable_area.height) / 2;
 
-    wattron(window, COLOR_PAIR(BLUE_TEXT));
     this->game_window = new_bordered_window(playable_area.height, playable_area.width, start_y, start_x);
-    wattroff(window, COLOR_PAIR(BLUE_TEXT));
 
     // Draw SNAKE ASCII art on the left side
-    draw_art(window, ascii_art, 24, (getmaxy(window) - 27), start_x - 15);
+    draw_art(window, ascii_art, 24, start_y - (24 - playable_area.height) / 2, start_x - 15);
 
     // Draw SNAKE ASCII art on the right side
-    draw_art(window, ascii_art, 24, (getmaxy(window) - 27), start_x + playable_area.width + 3);
+    draw_art(window, ascii_art, 24, start_y - (24 - playable_area.height) / 2, start_x + playable_area.width + 3);
 }
 
 GameUI::~GameUI() {
@@ -58,12 +58,12 @@ void GameUI::update_game_window(int32_t remaining_time) {
     wattron(window, A_BOLD | COLOR_PAIR(YELLOW_TEXT));
     mvwprintw(window, 0, 2, "Score: %5u", this->game->get_score());
     mvwprintw(window, 0, getmaxx(window) - 12, "Time: %3d", remaining_time);
-    wattroff(window, A_BOLD);
+    wattroff(window, A_BOLD | COLOR_PAIR(YELLOW_TEXT));
 
     wrefresh(this->window);
 
     werase(this->game_window);
-    // border
+    // borders
     wattron(this->game_window, COLOR_PAIR(BLUE_TEXT));
     box(this->game_window, 0, 0);
     wattroff(this->game_window, COLOR_PAIR(BLUE_TEXT));
@@ -87,6 +87,17 @@ void GameUI::update_game_window(int32_t remaining_time) {
     wattroff(this->game_window, COLOR_PAIR(GREEN_TEXT));
     wrefresh(this->game_window);
     refresh();
+}
+
+void GameUI::wait_for_user_win_screen() {
+    wattron(window, A_BOLD | COLOR_PAIR(YELLOW_TEXT));
+    mvwprintw(window, 0, 2, "Score: %5u", this->game->get_score());
+    wattroff(window, COLOR_PAIR(YELLOW_TEXT));
+
+    wattron(window, COLOR_PAIR(GREEN_TEXT));
+    const char game_won_text[] = "GAME WON!!";
+    mvwprintw(window, 0, getmaxx(window) / 2 - strlen(game_won_text), game_won_text);
+    wattroff(window, A_BOLD | COLOR_PAIR(GREEN_TEXT));
 }
 } // namespace Graphics
 

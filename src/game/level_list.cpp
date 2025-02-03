@@ -151,7 +151,7 @@ LevelList *LevelList::from_file(const char *file_path) {
     LevelInfo *level_info = new LevelInfo;
     while (std::fread(level_info, sizeof(LevelInfo), 1, file)) {
         // I PRAY THAT THIS IS GOING TO WORK WHEN
-        // I'M GOING TO SHOW IT TO THE PROFESSOR
+        // I'M GOING TO SHOW IT TO THE COMMISSION
         level_list->add_element(*level_info);
     }
 
