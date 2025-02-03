@@ -3,24 +3,9 @@
 
 #include "graphics/game_ui.hpp"
 #include "graphics/graphics.hpp"
+#include <ncurses.h>
 
 namespace Graphics {
-GameUI::GameUI(Snake::Game *game) {
-    this->game = game;
-
-    Snake::GameTable game_table = game->get_game_table();
-
-    this->window = new_bordered_window(game_table.height, game_table.width, 0, 0);
-}
-
-GameUI::~GameUI() {
-    delwin(this->window);
-    refresh();
-}
-
-WINDOW *GameUI::getWindow() {
-    return this->window;
-}
 
 // ASCII Art definitions
 const char *ascii_art[24] = {
@@ -29,39 +14,22 @@ const char *ascii_art[24] = {
     "\\____|__  /", " ____  __. ",  "|    |/ _| ",   "|      <   ",  "|    |  \\  ",  "|____|__ \\ ",
     "___________",  "\\_   _____/", " |    __)_ ",   " |        \\", "/_______  /",   "        \\/ ",
 };
+GameUI::GameUI(Snake::Game *game) {
+    this->game = game;
 
-void GameUI::update_game_window(int32_t remaining_time) {
-    // Clear the window
-    werase(this->window);
-    // box(this->window, 0, 0);
+    Snake::GameTable game_table = game->get_game_table();
 
-    // Rendering the time and score
-    wattron(window, A_BOLD | COLOR_PAIR(YELLOW_TEXT));
-    mvwprintw(window, 0, 2, "Score: %u", this->game->get_score());
-    mvwprintw(window, 0, getmaxx(window) - 12, "Time: %i", remaining_time);
-    wattroff(window, A_BOLD);
+    this->window = newwin(game_table.height, game_table.width, 0, 0);
+    refresh();
 
-    // Get the playable area size based on difficulty
     Snake::GameTable playable_area = this->game->get_playable_area();
 
     // Calculate the position of the inner border
-    int start_x = (getmaxx(window) - playable_area.width) / 2;
-    int start_y = (getmaxy(window) - playable_area.height) / 2;
+    const int start_x = (getmaxx(window) - playable_area.width) / 2;
+    const int start_y = (getmaxy(window) - playable_area.height) / 2;
 
-    // Draw the inner border
     wattron(window, COLOR_PAIR(BLUE_TEXT));
-    for (int x = start_x; x < start_x + playable_area.width; x++) {
-        mvwaddch(window, start_y, x, ACS_HLINE);
-        mvwaddch(window, start_y + playable_area.height - 1, x, ACS_HLINE);
-    }
-    for (int y = start_y; y < start_y + playable_area.height; y++) {
-        mvwaddch(window, y, start_x, ACS_VLINE);
-        mvwaddch(window, y, start_x + playable_area.width - 1, ACS_VLINE);
-    }
-    mvwaddch(window, start_y, start_x, ACS_ULCORNER);
-    mvwaddch(window, start_y, start_x + playable_area.width - 1, ACS_URCORNER);
-    mvwaddch(window, start_y + playable_area.height - 1, start_x, ACS_LLCORNER);
-    mvwaddch(window, start_y + playable_area.height - 1, start_x + playable_area.width - 1, ACS_LRCORNER);
+    this->game_window = new_bordered_window(playable_area.height, playable_area.width, start_y, start_x);
     wattroff(window, COLOR_PAIR(BLUE_TEXT));
 
     // Draw SNAKE ASCII art on the left side
@@ -69,25 +37,55 @@ void GameUI::update_game_window(int32_t remaining_time) {
 
     // Draw SNAKE ASCII art on the right side
     draw_art(window, ascii_art, 24, (getmaxy(window) - 27), start_x + playable_area.width + 3);
+}
 
-    // Rendering the apple 
-    wattron(window, COLOR_PAIR(RED_TEXT) | A_BOLD);
+GameUI::~GameUI() {
+    delwin(this->window);
+    delwin(this->game_window);
+    refresh();
+}
+
+WINDOW *GameUI::getWindow() {
+    return this->window;
+}
+
+void GameUI::update_game_window(int32_t remaining_time) {
+    // Clear the window
+    // werase(this->window);
+    // box(this->window, 0, 0);
+
+    // Rendering the time and score
+    wattron(window, A_BOLD | COLOR_PAIR(YELLOW_TEXT));
+    mvwprintw(window, 0, 2, "Score: %5u", this->game->get_score());
+    mvwprintw(window, 0, getmaxx(window) - 12, "Time: %3d", remaining_time);
+    wattroff(window, A_BOLD);
+
+    wrefresh(this->window);
+
+    werase(this->game_window);
+    // border
+    wattron(this->game_window, COLOR_PAIR(BLUE_TEXT));
+    box(this->game_window, 0, 0);
+    wattroff(this->game_window, COLOR_PAIR(BLUE_TEXT));
+
+    // Rendering the apple
+    wattron(this->game_window, COLOR_PAIR(RED_TEXT) | A_BOLD);
     Snake::Coordinates apple_position = this->game->get_apple_position();
-    mvwaddch(window, start_y + apple_position.y, start_x + apple_position.x, 'o');
-    wattroff(window, COLOR_PAIR(RED_TEXT) | A_BOLD);
+    mvwaddch(this->game_window, apple_position.y, apple_position.x, 'o');
+    wattroff(this->game_window, COLOR_PAIR(RED_TEXT) | A_BOLD);
 
     // Rendering the snake
-    wattron(this->window, COLOR_PAIR(GREEN_TEXT));
+    wattron(this->game_window, COLOR_PAIR(GREEN_TEXT));
     Snake::Coordinates snake_head = this->game->get_snake_body()->get_head()->position;
-    mvwaddch(this->window, start_y + snake_head.y, start_x + snake_head.x,
+    mvwaddch(this->game_window, snake_head.y, snake_head.x,
              '@'); // @ head (ACS characters display incorrectly)
 
     for (uint16_t i = 1; i < this->game->get_snake_body()->size(); ++i) {
         Snake::Coordinates coord = this->game->get_snake_body()->get_element_at(i)->position;
-        mvwaddch(this->window, start_y + coord.y, start_x + coord.x, '#'); // # body
+        mvwaddch(this->game_window, coord.y, coord.x, '#'); // # body
     }
-    wattroff(this->window, COLOR_PAIR(GREEN_TEXT));
-    wrefresh(this->window);
+    wattroff(this->game_window, COLOR_PAIR(GREEN_TEXT));
+    wrefresh(this->game_window);
     refresh();
 }
 } // namespace Graphics

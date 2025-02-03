@@ -83,9 +83,12 @@ void SnakeGameManager::start_game(GameDifficulty game_difficulty, uint32_t level
             mousemask(0, &oldmask);
         }
         
-        game_ui->update_game_window(GAME_DURATION - elapsed_time);
-        game->update_game(player_input);
 
+        if(game->update_game(player_input) != GAME_UNFINISHED) {
+            // managing the ending frame
+            break;
+        }
+        game_ui->update_game_window(GAME_DURATION - elapsed_time);
         // timer
         // sleep(in micro-secs) to give time to see frames rendered between each loop
         usleep(game_speed);
