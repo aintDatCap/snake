@@ -56,10 +56,13 @@ void SnakeGameManager::start_game(GameDifficulty game_difficulty, uint32_t level
     mmask_t oldmask;                             // to save the previous mouse events mask...
     mousemask(0, &oldmask);                      // disable mouse for this win
 
+#ifdef NDEBUG
 #define GAME_DURATION 150 // 2 minutes and an half
-
-    const time_t game_start = time(NULL);
-    const uint32_t game_speed = get_frame_duration(this->level_list->get_current()->info.id);
+#else
+#define GAME_DURATION 20
+#endif
+    time_t game_start = time(NULL);
+    uint32_t game_speed = get_frame_duration(this->level_list->get_current()->info.id);
     do {
         time_t elapsed_time = time(NULL) - game_start;
         if (elapsed_time > GAME_DURATION) {
@@ -78,6 +81,10 @@ void SnakeGameManager::start_game(GameDifficulty game_difficulty, uint32_t level
 
                 delete game_ui;
                 this->game_ui = new Graphics::GameUI(this->game);
+                game_start = time(NULL);
+
+                game_ui->update_game_window(GAME_DURATION);
+                nodelay((this->game_ui)->getWindow(), true);
             } else {
                 break;
             }

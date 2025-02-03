@@ -3,7 +3,6 @@
 
 #include "graphics/game_ui.hpp"
 #include "graphics/graphics.hpp"
-#include <algorithm>
 #include <cstring>
 #include <ncurses.h>
 
@@ -98,6 +97,21 @@ void GameUI::wait_for_user_win_screen() {
     const char game_won_text[] = "GAME WON!!";
     mvwprintw(window, 0, getmaxx(window) / 2 - strlen(game_won_text), game_won_text);
     wattroff(window, A_BOLD | COLOR_PAIR(GREEN_TEXT));
+
+    wrefresh(window);
+
+    werase(this->game_window);
+        // borders
+    wattron(this->game_window, COLOR_PAIR(BLUE_TEXT));
+    box(this->game_window, 0, 0);
+    wattroff(this->game_window, COLOR_PAIR(BLUE_TEXT));
+
+    put_centered_colored_text(this->game_window, "PRESS ENTER TO START THE NEXT LEVEL", COLOR_YELLOW);
+    wrefresh(this->game_window);
+
+    nodelay(this->window, false);
+    while (wgetch(window) != '\n') {
+    }
 }
 } // namespace Graphics
 
