@@ -3,7 +3,6 @@
 
 #include "graphics/game_ui.hpp"
 #include "graphics/graphics.hpp"
-#include "ncurses/ncurses.h"
 
 namespace Graphics {
 GameUI::GameUI(Snake::Game *game) {
