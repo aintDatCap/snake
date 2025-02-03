@@ -49,6 +49,9 @@ class Game {
         return snake_body;
     }
 
+    uint32_t get_level() {
+        return level;
+    }
     void set_level(uint32_t new_level) {
         level = new_level;
     }
