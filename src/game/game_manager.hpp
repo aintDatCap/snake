@@ -26,7 +26,7 @@ class SnakeGameManager {
     void start_game(GameDifficulty game_difficulty, uint32_t level_id);
     void show_menu();
     uint32_t get_frame_duration(uint32_t level);
-    LevelInfo *next_level();
+    void next_level();
     Direction get_player_input();
 };
 

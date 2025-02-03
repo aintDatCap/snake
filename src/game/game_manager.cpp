@@ -212,9 +212,18 @@ void SnakeGameManager::show_menu() {
  * Returns the next level if there are any more levels to play
  * otherwise it returns nullptr
  */
-
-LevelInfo *SnakeGameManager::next_level() {
-    // TODO
-    return nullptr;
+void SnakeGameManager::next_level() {
+    LevelListElement* current = level_list->get_current();
+    GameDifficulty current_diff = current->info.difficulty;
+    uint32_t current_id = current->info.id;
+    if (level_list->set_current_level(current_diff, current_id + 1)) {
+        start_game(current_diff, current_id + 1);
+    } else {
+        level_list->set_current_level(current_diff, current_id);
+        show_menu();
+    }
 }
+
+
+
 } // namespace Snake

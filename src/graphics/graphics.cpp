@@ -38,12 +38,28 @@ WINDOW *new_bordered_window(uint16_t height, uint16_t width, uint16_t y, uint16_
     wrefresh(window);
     return window;
 }
-WINDOW *new_bordered_subpad(WINDOW* parent, uint16_t height, uint16_t width, uint16_t y, uint16_t x) {
-        WINDOW *window = subpad(parent, height, width, y, x);
+WINDOW *new_bordered_subpad(WINDOW *parent, uint16_t height, uint16_t width, uint16_t y, uint16_t x) {
+    WINDOW *window = subpad(parent, height, width, y, x);
     refresh();
     box(window, 0, 0);
     wrefresh(window);
     return window;
+}
+
+void draw_art(WINDOW *win, const char **art, uint16_t art_lines, int start_y, int start_x) {
+    int max_y, max_x;
+    getmaxyx(win, max_y, max_x);
+
+    wattron(win, COLOR_PAIR(GREEN_TEXT));
+    for (int i = 0; i < art_lines; i++) {
+        int y_pos = start_y + i;
+        int x_pos = start_x;
+        if (y_pos >= 0 && y_pos < max_y && x_pos >= 0) {
+            mvwaddstr(win, y_pos, x_pos, art[i]);
+        }
+    }
+    wattroff(win, COLOR_PAIR(GREEN_TEXT));
+    wrefresh(win);
 }
 
 void start_ncurses() {

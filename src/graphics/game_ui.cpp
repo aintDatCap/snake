@@ -3,6 +3,7 @@
 
 #include "graphics/game_ui.hpp"
 #include "graphics/graphics.hpp"
+#include "ncurses/ncurses.h"
 
 namespace Graphics {
 GameUI::GameUI(Snake::Game *game) {
@@ -22,13 +23,21 @@ WINDOW *GameUI::getWindow() {
     return this->window;
 }
 
+// ASCII Art definitions
+const char *ascii_art[24] = {
+    "  _________",  " /   _____/",  " \\_____  \\ ", " /        \\", "/_______  /",   " \\      \\/ ",
+    " /   |   \\ ", "/    |    \\", "\\_______  /",  "  /  _  \\/ ", " /  /_\\  \\ ", "/    |    \\",
+    "\\____|__  /", " ____  __. ",  "|    |/ _| ",   "|      <   ",  "|    |  \\  ",  "|____|__ \\ ",
+    "___________",  "\\_   _____/", " |    __)_ ",   " |        \\", "/_______  /",   "        \\/ ",
+};
+
 void GameUI::update_game_window(int32_t remaining_time) {
     // Clear the window
     werase(this->window);
     // box(this->window, 0, 0);
 
     // Rendering the time and score
-    wattron(window, A_BOLD);
+    wattron(window, A_BOLD | COLOR_PAIR(YELLOW_TEXT));
     mvwprintw(window, 0, 2, "Score: %u", this->game->get_score());
     mvwprintw(window, 0, getmaxx(window) - 12, "Time: %i", remaining_time);
     wattroff(window, A_BOLD);
@@ -56,7 +65,13 @@ void GameUI::update_game_window(int32_t remaining_time) {
     mvwaddch(window, start_y + playable_area.height - 1, start_x + playable_area.width - 1, ACS_LRCORNER);
     wattroff(window, COLOR_PAIR(BLUE_TEXT));
 
-    // Rendering the apple
+    // Draw SNAKE ASCII art on the left side
+    draw_art(window, ascii_art, 24, (getmaxy(window) - 27), start_x - 15);
+
+    // Draw SNAKE ASCII art on the right side
+    draw_art(window, ascii_art, 24, (getmaxy(window) - 27), start_x + playable_area.width + 3);
+
+    // Rendering the apple 
     wattron(window, COLOR_PAIR(RED_TEXT) | A_BOLD);
     Snake::Coordinates apple_position = this->game->get_apple_position();
     mvwaddch(window, start_y + apple_position.y, start_x + apple_position.x, 'o');
