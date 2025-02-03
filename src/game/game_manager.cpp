@@ -64,6 +64,7 @@ void SnakeGameManager::start_game(GameDifficulty game_difficulty, uint32_t level
         time_t elapsed_time = time(NULL) - game_start;
         if (elapsed_time > GAME_DURATION) {
             game->win_game();
+            next_level();
             break;
         }
 
