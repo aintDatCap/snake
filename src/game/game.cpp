@@ -164,8 +164,7 @@ GameResult Game::update_game(Direction player_input) {
 
     // if the head collides with the body, then the game is lost
     for (size_t i = 1; i < this->snake_body->size(); i++) {
-        if (coordinates_are_equal(this->snake_body->get_head()->position,
-                                  this->snake_body->get_element_at(i)->position)) {
+        if (coordinates_are_equal(new_snake_head_pos, this->snake_body->get_element_at(i)->position)) {
             game_result = GAME_LOST;
             return GAME_LOST;
         }

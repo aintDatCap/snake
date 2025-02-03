@@ -56,7 +56,7 @@ void SnakeGameManager::start_game(GameDifficulty game_difficulty, uint32_t level
     mmask_t oldmask;                             // to save the previous mouse events mask...
     mousemask(0, &oldmask);                      // disable mouse for this win
 
-#define GAME_DURATION 300 // 300 seconds
+#define GAME_DURATION 150 // 2 minutes and an half
 
     const time_t game_start = time(NULL);
     const uint32_t game_speed = get_frame_duration(this->level_list->get_current()->info.id);
@@ -82,9 +82,10 @@ void SnakeGameManager::start_game(GameDifficulty game_difficulty, uint32_t level
             clear();
             mousemask(0, &oldmask);
         }
-
-        game->update_game(player_input);
+        
         game_ui->update_game_window(GAME_DURATION - elapsed_time);
+        game->update_game(player_input);
+
         // timer
         // sleep(in micro-secs) to give time to see frames rendered between each loop
         usleep(game_speed);
