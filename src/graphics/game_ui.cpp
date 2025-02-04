@@ -30,12 +30,7 @@ GameUI::GameUI(Snake::Game *game) {
     const int start_y = (getmaxy(window) - playable_area.height) / 2;
 
     this->game_window = new_bordered_window(playable_area.height, playable_area.width, start_y, start_x);
-
-    // Draw SNAKE ASCII art on the left side
-    draw_art(window, ascii_art, 24, start_y - (24 - playable_area.height) / 2, start_x - 15);
-
-    // Draw SNAKE ASCII art on the right side
-    draw_art(window, ascii_art, 24, start_y - (24 - playable_area.height) / 2, start_x + playable_area.width + 3);
+    render_snake_art();
 }
 
 GameUI::~GameUI() {
@@ -46,6 +41,19 @@ GameUI::~GameUI() {
 
 WINDOW *GameUI::getWindow() {
     return this->window;
+}
+
+void GameUI::render_snake_art() {
+    Snake::GameTable playable_area = this->game->get_playable_area();
+
+    // Calculate the position of the inner border
+    const int start_x = (getmaxx(window) - playable_area.width) / 2;
+    const int start_y = (getmaxy(window) - playable_area.height) / 2;
+    // Draw SNAKE ASCII art on the left side
+    draw_art(window, ascii_art, 24, start_y - (24 - playable_area.height) / 2, start_x - 15);
+
+    // Draw SNAKE ASCII art on the right side
+    draw_art(window, ascii_art, 24, start_y - (24 - playable_area.height) / 2, start_x + playable_area.width + 3);
 }
 
 void GameUI::update_game_window(int32_t remaining_time) {
@@ -101,7 +109,7 @@ void GameUI::wait_for_user_win_screen() {
     wrefresh(window);
 
     werase(this->game_window);
-        // borders
+    // borders
     wattron(this->game_window, COLOR_PAIR(BLUE_TEXT));
     box(this->game_window, 0, 0);
     wattroff(this->game_window, COLOR_PAIR(BLUE_TEXT));

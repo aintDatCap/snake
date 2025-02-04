@@ -9,6 +9,12 @@ namespace Snake {
 
 #define SNAKE_MINIMUM_BODY_SIZE 4
 
+#ifdef NDEBUG
+#define GAME_DURATION 150 // 2 minutes and an half
+#else
+#define GAME_DURATION 20
+#endif
+
 typedef enum : int8_t {
     DIRECTION_UP = 1,
     DIRECTION_DOWN = ~1,
