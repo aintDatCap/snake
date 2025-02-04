@@ -49,7 +49,14 @@ void draw_art(WINDOW* win, const char** art, uint16_t art_lines, int start_y, in
 void start_ncurses();
 void stop_ncurses();
 
+/**
+ * Returns a new bordered window with the given paramethers
+ */
 WINDOW *new_bordered_window(int height, int width, int y, int x);
+
+/**
+ * Returns a new bordered subpad with the given paramethers
+ */
 WINDOW *new_bordered_subpad(WINDOW* parent, int height, int width, int y, int x);
 
 } // namespace Graphics

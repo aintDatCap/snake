@@ -78,6 +78,9 @@ LevelSelection LevelSelectionUI::wait_for_level_input() {
                     prefresh(this->window, current_line, 0, 0, 0, height - 1, width - 1);
                 }
             }
+        } else if(c == 'q') {
+            this->level_selection.action = LEVEL_SELECT_EXIT;
+            return this->level_selection;
         }
     }
 }

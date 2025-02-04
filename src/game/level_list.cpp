@@ -117,14 +117,6 @@ LevelListElement *LevelList::next_level() {
     return this->selected;
 }
 
-LevelListElement *LevelList::previous_level() {
-    if (!head || !selected->previous) {
-        return nullptr;
-    }
-    this->selected = this->selected->previous;
-    return this->selected;
-}
-
 LevelListElement *LevelList::get_current() {
     return this->selected;
 }

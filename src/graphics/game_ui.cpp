@@ -103,7 +103,7 @@ void GameUI::wait_for_user_win_screen() {
 
     wattron(window, COLOR_PAIR(GREEN_TEXT));
     const char game_won_text[] = "GAME WON!!";
-    mvwprintw(window, 0, getmaxx(window) / 2 - strlen(game_won_text), game_won_text);
+    mvwprintw(window, getbegy(this->game_window)/2, (getmaxx(window) - strlen(game_won_text)) / 2 , game_won_text);
     wattroff(window, A_BOLD | COLOR_PAIR(GREEN_TEXT));
 
     wrefresh(window);
