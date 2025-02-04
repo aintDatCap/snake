@@ -56,18 +56,15 @@ void SnakeGameManager::start_game(GameDifficulty game_difficulty, uint32_t level
     mmask_t oldmask;                             // to save the previous mouse events mask...
     mousemask(0, &oldmask);                      // disable mouse for this win
 
-#ifdef NDEBUG
-#define GAME_DURATION 150 // 2 minutes and an half
-#else
-#define GAME_DURATION 20
-#endif
-    time_t game_start = time(NULL);
-    uint32_t game_speed = get_frame_duration(this->level_list->get_current()->info.id);
+    // in microseconds
+    int32_t remaining_time = GAME_DURATION * 1'000'000;
+    // in microseconds
+    uint32_t frame_duration = this->get_frame_duration(this->level_list->get_current()->info.id);
     do {
-        time_t elapsed_time = time(NULL) - game_start;
-        if (elapsed_time > GAME_DURATION) {
+
+        if (remaining_time <= 0) {
             this->game->win_game();
-            
+
             LevelListElement *current_level = level_list->get_current();
             current_level->info.high_score = std::max(current_level->info.high_score, game->get_score());
 
@@ -81,7 +78,9 @@ void SnakeGameManager::start_game(GameDifficulty game_difficulty, uint32_t level
 
                 delete game_ui;
                 this->game_ui = new Graphics::GameUI(this->game);
-                game_start = time(NULL);
+
+                remaining_time = GAME_DURATION * 1'000'000;
+                frame_duration = this->get_frame_duration(this->level_list->get_current()->info.id);
 
                 game_ui->update_game_window(GAME_DURATION);
                 nodelay((this->game_ui)->getWindow(), true);
@@ -104,17 +103,19 @@ void SnakeGameManager::start_game(GameDifficulty game_difficulty, uint32_t level
             }
             clear();
             mousemask(0, &oldmask);
+            game_ui->update_game_window(remaining_time / 1'000'000);
+            game_ui->render_snake_art();
         }
 
         if (game->update_game(player_input) != GAME_UNFINISHED) {
             // managing the ending frame
             break;
         }
-        game_ui->update_game_window(GAME_DURATION - elapsed_time);
+        game_ui->update_game_window(remaining_time / 1'000'000);
         // timer
         // sleep(in micro-secs) to give time to see frames rendered between each loop
-        usleep(game_speed);
-
+        usleep(frame_duration);
+        remaining_time -= frame_duration;
     } while (game->get_game_result() == GAME_UNFINISHED);
 
     LevelListElement *current_level = level_list->get_current();
