@@ -57,8 +57,10 @@ struct LevelInfo {
         this->difficulty = difficulty;
     }
 };
-
+// Returns the game table size for the given difficulty
 GameTable get_playable_dimensions(GameDifficulty difficulty);
+
+// Compares the given coordinates
 bool coordinates_are_equal(Coordinates a, Coordinates b);
 
 } // namespace Snake
