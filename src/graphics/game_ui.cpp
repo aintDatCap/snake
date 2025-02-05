@@ -23,6 +23,10 @@ GameUI::GameUI(Snake::Game *game) {
     this->window = newwin(game_table.height, game_table.width, 0, 0);
     refresh();
 
+    const char text[] = "Press Q to quit";
+    mvwprintw(this->window, game_table.height * (0.95), (getmaxx(this->window) - strlen(text)) / 2, text);
+    wrefresh(this->window);
+
     Snake::GameTable playable_area = this->game->get_playable_area();
 
     // Calculate the position of the inner border
@@ -30,7 +34,7 @@ GameUI::GameUI(Snake::Game *game) {
     const int start_y = (getmaxy(window) - playable_area.height) / 2;
 
     this->game_window = new_bordered_window(playable_area.height, playable_area.width, start_y, start_x);
-    render_snake_art();
+    render_content();
 }
 
 GameUI::~GameUI() {
@@ -43,7 +47,7 @@ WINDOW *GameUI::getWindow() {
     return this->window;
 }
 
-void GameUI::render_snake_art() {
+void GameUI::render_content() {
     Snake::GameTable playable_area = this->game->get_playable_area();
 
     // Calculate the position of the inner border
@@ -54,6 +58,10 @@ void GameUI::render_snake_art() {
 
     // Draw SNAKE ASCII art on the right side
     draw_art(window, ascii_art, 24, start_y - (24 - playable_area.height) / 2, start_x + playable_area.width + 3);
+
+    const char text[] = "Press Q to quit";
+    mvwprintw(this->window, getmaxy(this->window) * (0.95), (getmaxx(this->window) - strlen(text)) / 2, text);
+    wrefresh(this->window);
 }
 
 void GameUI::update_game_window(int32_t remaining_time) {
@@ -103,7 +111,7 @@ void GameUI::wait_for_user_win_screen() {
 
     wattron(window, COLOR_PAIR(GREEN_TEXT));
     const char game_won_text[] = "GAME WON!!";
-    mvwprintw(window, getbegy(this->game_window)/2, (getmaxx(window) - strlen(game_won_text)) / 2 , game_won_text);
+    mvwprintw(window, getbegy(this->game_window) / 2, (getmaxx(window) - strlen(game_won_text)) / 2, game_won_text);
     wattroff(window, A_BOLD | COLOR_PAIR(GREEN_TEXT));
 
     wrefresh(window);
