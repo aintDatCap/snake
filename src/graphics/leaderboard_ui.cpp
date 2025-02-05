@@ -66,7 +66,7 @@ void LeaderboardUI::render_leaderboard() {
 
     // Difficulty normal
     this->diff_normal_label = new_colored_bordered_subpad(this->leaderboard_win, this->height / 5, this->width - 2,
-                                                          current_y, 0, COLOR_GREEN);
+                                                          current_y, 0, COLOR_BLUE);
     put_centered_colored_text(diff_normal_label, "DIFFICULTY NORMAL", COLOR_BLUE);
 
     current_y += this->height / 5;
