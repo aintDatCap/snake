@@ -29,6 +29,7 @@ class LevelSelectionUI {
     Snake::GameDifficulty selected_difficulty;
 
     WINDOW *window;
+    WINDOW *level_selection_win;
     WINDOW **level_buttons;
     LevelSelection level_selection;
 

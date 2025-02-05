@@ -15,13 +15,15 @@ class LeaderboardUI {
     uint32_t width;
     uint32_t height;
     WINDOW *window;
-    WINDOW* diff_easy_label;
-    WINDOW* diff_normal_label;
-    WINDOW* diff_hard_label;
+    WINDOW *leaderboard_win;
+    WINDOW *diff_easy_label;
+    WINDOW *diff_normal_label;
+    WINDOW *diff_hard_label;
     WINDOW **level_entries;
     Snake::LevelList *level_list;
 
     void render_leaderboard();
+    
   public:
     LeaderboardUI(uint16_t width, uint16_t height, Snake::LevelList *level_list);
     ~LeaderboardUI();

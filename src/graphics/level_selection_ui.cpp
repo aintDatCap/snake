@@ -5,6 +5,8 @@
 #include "game/level_list.hpp"
 #include "graphics/graphics.hpp"
 #include <algorithm>
+#include <cstring>
+#include <ncurses.h>
 
 namespace Graphics {
 
@@ -17,11 +19,17 @@ LevelSelectionUI::LevelSelectionUI(uint16_t width, uint16_t height, Snake::Level
     this->levels = levels;
     this->selected_difficulty = selected_difficulty;
 
-    this->window = newpad((levels->get_element_count(selected_difficulty) + 2) * height / 6, width);
+    this->window = newwin(height, width, 0, 0);
+    refresh();
+    const char text[] = "Press Q to quit";
+    mvwprintw(this->window, height * (0.95), (getmaxx(this->window) - strlen(text)) / 2, text);
+    wrefresh(this->window);
 
-    box(this->window, 0, 0);
-    scrollok(this->window, true);
-    prefresh(this->window, 0, 0, 0, 0, height - 1, width - 1);
+    this->level_selection_win = newpad((levels->get_element_count(selected_difficulty) + 2) * height / 6, width - 2);
+
+    box(this->level_selection_win, 0, 0);
+    scrollok(this->level_selection_win, true);
+    prefresh(this->level_selection_win, 0, 0, 0, 0, height*0.9, width - 2);
 
     render_level_buttons();
 }
@@ -38,23 +46,23 @@ void LevelSelectionUI::render_level_buttons() {
         uint16_t btn_width = width / 3;
         uint16_t btn_height = height / 8;
 
-        level_buttons[i] = subpad(this->window, btn_height, btn_width, y, x);
+        level_buttons[i] = subpad(this->level_selection_win, btn_height, btn_width, y, x);
         box(level_buttons[i], 0, 0);
 
         char level_text[10];
         snprintf(level_text, sizeof(level_text), "Level %d", i + 1);
         put_centered_text(level_buttons[i], level_text);
     }
-    prefresh(this->window, 0, 0, 0, 0, height - 1, width - 1);
+    prefresh(this->level_selection_win, 0, 0, 0, 0, height*0.9, width - 2);
 }
 
 LevelSelection LevelSelectionUI::wait_for_level_input() {
-    keypad(this->window, TRUE);
+    keypad(this->level_selection_win, TRUE);
 
     uint32_t current_line = 0;
 
     while (true) {
-        int c = wgetch(this->window);
+        int c = wgetch(this->level_selection_win);
         if (c == KEY_MOUSE) {
             MEVENT mouse_event;
             if (getmouse(&mouse_event) == OK) {
@@ -70,12 +78,12 @@ LevelSelection LevelSelectionUI::wait_for_level_input() {
                 } else if (mouse_event.bstate & BUTTON4_PRESSED) {
 
                     current_line -= std::min<uint32_t>(2, current_line);
-                    prefresh(this->window, current_line, 0, 0, 0, height - 1, width - 1);
+                    prefresh(this->level_selection_win, current_line, 0, 0, 0, height*0.9, width - 2);
 
                 } else if (mouse_event.bstate & BUTTON5_PRESSED) {
                     // avoid thinking too hard on why it works
-                    current_line += std::min<uint32_t>(2, (uint32_t)getmaxy(this->window) - (current_line + height));
-                    prefresh(this->window, current_line, 0, 0, 0, height - 1, width - 1);
+                    current_line += std::min<uint32_t>(2, (uint32_t)getmaxy(this->level_selection_win) - (current_line + height*0.9 - 1));
+                    prefresh(this->level_selection_win, current_line, 0, 0, 0, height *0.9, width - 2);
                 }
             }
         } else if(c == 'q') {
@@ -90,7 +98,7 @@ LevelSelectionUI::~LevelSelectionUI() {
     for (uint32_t i = 0; i < levels->get_element_count(selected_difficulty); ++i) {
         delwin(this->level_buttons[i]);
     }
-    delwin(this->window);
+    delwin(this->level_selection_win);
     delete this->level_buttons;
     refresh();
 }

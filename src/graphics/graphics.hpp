@@ -59,6 +59,11 @@ WINDOW *new_bordered_window(int height, int width, int y, int x);
  */
 WINDOW *new_bordered_subpad(WINDOW* parent, int height, int width, int y, int x);
 
+/**
+ * Returns a new bordered subpad with the given paramethers
+ */
+WINDOW *new_colored_bordered_subpad(WINDOW* parent, int height, int width, int y, int x, int color_id);
+
 } // namespace Graphics
 
 #endif
