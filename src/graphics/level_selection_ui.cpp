@@ -100,6 +100,7 @@ LevelSelectionUI::~LevelSelectionUI() {
     }
     delwin(this->level_selection_win);
     delete this->level_buttons;
+    delwin(this->window);
     refresh();
 }
 } // namespace Graphics

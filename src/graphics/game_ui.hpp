@@ -23,7 +23,7 @@ class GameUI {
 
     void update_game_window(int32_t remaining_time);
     void close_window();
-    void render_snake_art();
+    void render_content();
     void wait_for_user_win_screen();
     WINDOW *getWindow();
     void render_score(uint32_t score);

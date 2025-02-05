@@ -43,8 +43,8 @@ void LeaderboardUI::render_leaderboard() {
     uint32_t current_y = 0;
     // Difficulty easy
     this->diff_easy_label = new_colored_bordered_subpad(this->leaderboard_win, this->height / 5, this->width - 2,
-                                                        current_y, 0, COLOR_GREEN);
-    put_centered_colored_text(diff_easy_label, "DIFFICULTY EASY", COLOR_GREEN);
+                                                        current_y, 0, GREEN_TEXT);
+    put_centered_colored_text(diff_easy_label, "DIFFICULTY EASY", GREEN_TEXT);
 
     current_y += this->height / 5;
 
@@ -66,8 +66,8 @@ void LeaderboardUI::render_leaderboard() {
 
     // Difficulty normal
     this->diff_normal_label = new_colored_bordered_subpad(this->leaderboard_win, this->height / 5, this->width - 2,
-                                                          current_y, 0, COLOR_BLUE);
-    put_centered_colored_text(diff_normal_label, "DIFFICULTY NORMAL", COLOR_BLUE);
+                                                          current_y, 0, BLUE_TEXT);
+    put_centered_colored_text(diff_normal_label, "DIFFICULTY NORMAL", BLUE_TEXT);
 
     current_y += this->height / 5;
 
@@ -88,8 +88,8 @@ void LeaderboardUI::render_leaderboard() {
 
     // Difficulty hard
     this->diff_hard_label =
-        new_colored_bordered_subpad(this->leaderboard_win, this->height / 5, this->width - 2, current_y, 0, COLOR_RED);
-    put_centered_colored_text(diff_hard_label, "DIFFICULTY HARD", COLOR_RED);
+        new_colored_bordered_subpad(this->leaderboard_win, this->height / 5, this->width - 2, current_y, 0, RED_TEXT);
+    put_centered_colored_text(diff_hard_label, "DIFFICULTY HARD", RED_TEXT);
 
     current_y += this->height / 5;
 
@@ -149,6 +149,7 @@ LeaderboardUI::~LeaderboardUI() {
         delwin(this->level_entries[i]);
     }
     delwin(this->leaderboard_win);
+    delwin(this->window);
 }
 } // namespace Graphics
 

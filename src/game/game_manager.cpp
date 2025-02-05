@@ -104,7 +104,7 @@ void SnakeGameManager::start_game(GameDifficulty game_difficulty, uint32_t level
             clear();
             mousemask(0, &oldmask);
             game_ui->update_game_window(remaining_time / 1'000'000);
-            game_ui->render_snake_art();
+            game_ui->render_content();
         }
 
         if (game->update_game(player_input) != GAME_UNFINISHED) {
@@ -180,8 +180,8 @@ Direction SnakeGameManager::get_player_input() {
         case 'a':
         case KEY_LEFT:
             return DIRECTION_LEFT;
-        case 'P':
-        case 'p':
+        case 'Q':
+        case 'q':
             return EXIT;
         default:
             return DIRECTION_NONE;
