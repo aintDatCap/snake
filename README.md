@@ -7,10 +7,10 @@ The given guidelines regarding the project were to create a simple terminal-base
 
 ### Structure of the project's codebase
 The project has been structured and developed follwoing the 'MVC' programming framework, and 
-its core is in the *'/src'* folder where:
-- the *'main.cpp'* file is the starting point of the Snake Game program
-- the *'/game'* folder is where all the necessary classes for the logic and control sections(*following the MVC framework*) are stored
-- the *'/graphics'* folder is where all the necessary classes for the various graphical components are stored 
+its core is in the *`/src`* folder where:
+- the *`main.cpp`* file is the starting point of the Snake Game program
+- the *`/game`* folder is where all the necessary classes for the logic and control sections(*following the MVC framework*) are stored
+- the *`/graphics`* folder is where all the necessary classes for the various graphical components are stored 
 
 ## Installation and dependency tools
 Following are the steps required to play the game:
@@ -28,13 +28,13 @@ After running the project, the user will be shown the main terminal screen where
 * Click the currently set difficulty set the game difficulty     
     * by clicking the second button, the user will be able to set the desired difficulty level(*'Normal'*, *'Hard'* or *'Easy'*)
 * Click Leaderboard
-    * by clicling this third button, a new screen containing a list of levels(grouped based on the 3 different difficulties) and the points gained so far in each of these levels will be shown
+    * by clicking this third button, a new screen containing a list of levels(grouped based on the 3 different difficulties) and the points gained so far in each of these levels will be shown
     * by clicking 'q' on the keyboard the user will be able to go back to the home screen
 * Click Exit
-    * if this last button is clicked, the user will exit and terminate the program
+    * if this last button is clicked, the program will be closed
     
 ## Authors 
 * Caprini Federico (*'aintDatCap'*)
-* Grillinin Leonardo (*'LeonardoGrillini'*)
+* Grillini Leonardo (*'LeonardoGrillini'*)
 * Hossain Ababil (*'AbaSkillzz'*)
 
