@@ -56,7 +56,7 @@ void LeaderboardUI::render_leaderboard() {
                 new_bordered_subpad(this->leaderboard_win, this->height / 6, width / 2, current_y, width / 4);
 
             char text[40];
-            snprintf(text, sizeof(text), "Level: %d\tHigh score: %d", info.id, info.high_score);
+            snprintf(text, sizeof(text), "Level: %d\tHigh score: %5d", info.id, info.high_score);
             put_centered_text(this->level_entries[subpad_index], text);
 
             current_y += this->height / 6;
