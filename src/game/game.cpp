@@ -100,10 +100,6 @@ GameResult Game::update_game(Direction player_input) {
         this->score += this->calculate_points(this->level, this->game_difficulty);
         this->new_apple_position();
     }
-    // if the level is completed additional points are awarded
-    if (this->game_result == GAME_WON){
-        this->score += (this->calculate_points(this->level,this->game_difficulty) * this->level) ;
-    }
 
     // if the desired direction is valid and is different from the current one
     // we should change the current direction based on player input
@@ -179,6 +175,8 @@ GameResult Game::update_game(Direction player_input) {
 
 void Game::win_game() {
     if (this->game_result == GAME_UNFINISHED) {
+        // Additional points are awarded
+        this->score += (this->calculate_points(this->level,this->game_difficulty) * this->level) ;
         this->game_result = GAME_WON;
     }
 }
