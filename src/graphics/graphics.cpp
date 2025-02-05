@@ -46,6 +46,16 @@ WINDOW *new_bordered_subpad(WINDOW *parent, int height, int width, int y, int x)
     return window;
 }
 
+WINDOW *new_colored_bordered_subpad(WINDOW *parent, int height, int width, int y, int x, int color_id) {
+    WINDOW *window = subpad(parent, height, width, y, x);
+    refresh();
+    wattron(window, COLOR_PAIR(color_id));
+    box(window, 0, 0);
+    wattroff(window, COLOR_PAIR(color_id));
+    wrefresh(window);
+    return window;
+}
+
 void draw_art(WINDOW *win, const char **art, uint16_t art_lines, int start_y, int start_x) {
     int max_y, max_x;
     getmaxyx(win, max_y, max_x);
