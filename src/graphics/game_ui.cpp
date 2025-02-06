@@ -23,7 +23,7 @@ GameUI::GameUI(Snake::Game *game) {
     this->window = newwin(game_table.height, game_table.width, 0, 0);
     refresh();
 
-    const char text[] = "Press Q to quit";
+    const char text[] = "Press Q to pause the game";
     mvwprintw(this->window, game_table.height * (0.95), (getmaxx(this->window) - strlen(text)) / 2, text);
     wrefresh(this->window);
 
@@ -59,7 +59,7 @@ void GameUI::render_content() {
     // Draw SNAKE ASCII art on the right side
     draw_art(window, ascii_art, 24, start_y - (24 - playable_area.height) / 2, start_x + playable_area.width + 3);
 
-    const char text[] = "Press Q to quit";
+    const char text[] = "Press Q to pause the game";
     mvwprintw(this->window, getmaxy(this->window) * (0.95), (getmaxx(this->window) - strlen(text)) / 2, text);
     wrefresh(this->window);
 }
