@@ -1,4 +1,4 @@
-# Snake Game
+# [Snake](https://github.com/SnakeUnibo/snake)
 
 ## About the project
 This is a project made by 3 students from the University of Bologna for their Programming course.
@@ -13,11 +13,21 @@ its core is in the *`/src`* folder where:
 - the *`/graphics`* folder is where all the necessary classes for the various graphical components are stored 
 
 ## Installation and dependency tools
+### Linux
 Following are the steps required to play the game:
 * Make sure to have installed the ncurses library on your machine
 * Make sure to have correctly configured the GCC compiler(compiler used to create and test this project)
 * Install and configure CMake to be used to build the project and being able to run it (i.g. if using the VsCode environment, there is the microsoft extention named *'CMake Tools'* to make this process easier and faster)
-* After correctly building the project(without errors) using CMake, run the project and the program will show the *following GUI on the terminal screen*:
+
+
+### Windows
+The project can be compiled thanks to MSYS:
+* Install MSYS
+* Add the `/usr/bin/` path, inside of the MSYS folder, to your environmental variables
+* Run the MSYS terminal (the pink one) and execute the command `pacman -S gcc ncurses-devel base-devel`
+* Now you can setup the project using the MSYS gcc executable
+
+After correctly building the project(without errors) using CMake, run the project and the program will show the *following GUI on the terminal screen*:
     ![Image](./docs/imgs/home.png)
 
 ## How to play
@@ -34,7 +44,6 @@ After running the project, the user will be shown the main terminal screen where
     * if this last button is clicked, the program will be closed
     
 ## Authors 
-* Caprini Federico (*'aintDatCap'*)
-* Grillini Leonardo (*'LeonardoGrillini'*)
-* Hossain Ababil (*'AbaSkillzz'*)
-
+* Caprini Federico [*aintDatCap*](https://github.com/aintDatCap)
+* Grillini Leonardo [*LeonardoGrillini*](https://github.com/LeonardoGrillini)
+* Hossain Ababil [*AbaSkillzz*](https://github.com/AbaSkillzz)

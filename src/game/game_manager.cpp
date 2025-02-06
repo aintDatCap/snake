@@ -225,6 +225,7 @@ void SnakeGameManager::show_menu() {
                 break;
             }
             case Graphics::MENU_EXIT_PROGRAM: {
+                level_list->save_as_file(LEVELS_FILE_NAME);
                 clear();
                 return;
             }

@@ -81,8 +81,8 @@ LevelSelection LevelSelectionUI::wait_for_level_input() {
                     prefresh(this->level_selection_win, current_line, 0, 0, 0, height*0.9, width - 2);
 
                 } else if (mouse_event.bstate & BUTTON5_PRESSED) {
-                    // avoid thinking too hard on why it works
-                    current_line += std::min<uint32_t>(2, (uint32_t)getmaxy(this->level_selection_win) - (current_line + height*0.9 - 1));
+                    // the minimum between two rows and the remaining space to scroll 
+                    current_line += std::min<uint32_t>(2, (uint32_t)getmaxy(this->level_selection_win) - (current_line + height*0.9 + 1));
                     prefresh(this->level_selection_win, current_line, 0, 0, 0, height *0.9, width - 2);
                 }
             }
