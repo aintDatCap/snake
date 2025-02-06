@@ -159,6 +159,7 @@ void LevelList::save_as_file(const char *file_path) {
         for (size_t i = 0; i < this->get_element_count(); i++) {
             std::fwrite(&this->get_element_at(i)->info, sizeof(LevelInfo), 1, file);
         }
+
         fclose(file);
     }
 }

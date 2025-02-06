@@ -24,8 +24,8 @@ LeaderboardUI::LeaderboardUI(uint16_t width, uint16_t height, Snake::LevelList *
 
     wrefresh(this->window);
 
-    const uint16_t labels_size = this->height / 5 * 4;
-    const uint16_t entries_size = (level_list->get_element_count() + 1) * height / 6;
+    const uint16_t labels_size = this->height * 3 / 5;
+    const uint16_t entries_size = level_list->get_element_count() * height / 5;
     this->leaderboard_win = newpad(entries_size + labels_size, width - 2);
 
     box(leaderboard_win, 0, 0);
@@ -42,8 +42,8 @@ void LeaderboardUI::render_leaderboard() {
 
     uint32_t current_y = 0;
     // Difficulty easy
-    this->diff_easy_label = new_colored_bordered_subpad(this->leaderboard_win, this->height / 5, this->width - 2,
-                                                        current_y, 0, GREEN_TEXT);
+    this->diff_easy_label =
+        new_colored_bordered_subpad(this->leaderboard_win, this->height / 5, this->width - 2, current_y, 0, GREEN_TEXT);
     put_centered_colored_text(diff_easy_label, "DIFFICULTY EASY", GREEN_TEXT);
 
     current_y += this->height / 5;
@@ -65,8 +65,8 @@ void LeaderboardUI::render_leaderboard() {
     }
 
     // Difficulty normal
-    this->diff_normal_label = new_colored_bordered_subpad(this->leaderboard_win, this->height / 5, this->width - 2,
-                                                          current_y, 0, BLUE_TEXT);
+    this->diff_normal_label =
+        new_colored_bordered_subpad(this->leaderboard_win, this->height / 5, this->width - 2, current_y, 0, BLUE_TEXT);
     put_centered_colored_text(diff_normal_label, "DIFFICULTY NORMAL", BLUE_TEXT);
 
     current_y += this->height / 5;
@@ -127,9 +127,9 @@ void LeaderboardUI::wait_for_user_input() {
 
                     prefresh(this->leaderboard_win, current_line, 0, 1, 1, height * (0.9), width - 2);
                 } else if (mouse_event.bstate & BUTTON5_PRESSED) {
-                    // the minimum between two rows and the remaining space to scroll 
+                    // the minimum between two rows and the remaining space to scroll
                     current_line += std::min<uint32_t>(2, (uint32_t)getmaxy(this->leaderboard_win) -
-                                                              (current_line + height * (0.9) + 1));
+                                                              (current_line + height * (0.9)));
 
                     prefresh(this->leaderboard_win, current_line, 0, 1, 1, height * (0.9), width - 2);
                 }

@@ -25,6 +25,7 @@ class GameUI {
     void close_window();
     void render_content();
     void wait_for_user_win_screen();
+    void wait_for_user_loss_screen();
     WINDOW *getWindow();
     void render_score(uint32_t score);
 };

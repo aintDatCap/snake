@@ -122,6 +122,11 @@ void SnakeGameManager::start_game(GameDifficulty game_difficulty, uint32_t level
     current_level->info.high_score = std::max(current_level->info.high_score, game->get_score());
 
     level_list->save_as_file(LEVELS_FILE_NAME);
+
+    if(game->get_game_result() == GAME_LOST) {
+        game_ui->wait_for_user_loss_screen();
+    }
+
     mousemask(oldmask, NULL); // restore mouse events
 }
 

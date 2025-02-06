@@ -70,10 +70,10 @@ void GameUI::update_game_window(int32_t remaining_time) {
     // box(this->window, 0, 0);
 
     // Rendering the time and score
-    wattron(window, A_BOLD | COLOR_PAIR(YELLOW_TEXT));
-    mvwprintw(window, 0, 2, "Score: %5u", this->game->get_score());
-    mvwprintw(window, 0, getmaxx(window) - 12, "Time: %3d", remaining_time);
-    wattroff(window, A_BOLD | COLOR_PAIR(YELLOW_TEXT));
+    wattron(this->window, A_BOLD | COLOR_PAIR(YELLOW_TEXT));
+    mvwprintw(this->window, 0, 2, "Score: %5u", this->game->get_score());
+    mvwprintw(this->window, 0, getmaxx(window) - 12, "Time: %3d", remaining_time);
+    wattroff(this->window, A_BOLD | COLOR_PAIR(YELLOW_TEXT));
 
     wrefresh(this->window);
 
@@ -105,14 +105,49 @@ void GameUI::update_game_window(int32_t remaining_time) {
 }
 
 void GameUI::wait_for_user_win_screen() {
+    wattron(this->window, A_BOLD | COLOR_PAIR(YELLOW_TEXT));
+    mvwprintw(this->window, 0, 2, "Score: %5u", this->game->get_score());
+    wattroff(this->window, COLOR_PAIR(YELLOW_TEXT));
+
+    wattron(this->window, COLOR_PAIR(GREEN_TEXT));
+    const char game_won_text[] = "GAME WON!!";
+    mvwprintw(this->window, getbegy(this->game_window) / 2, (getmaxx(window) - strlen(game_won_text)) / 2,
+              game_won_text);
+    wattroff(this->window, A_BOLD | COLOR_PAIR(GREEN_TEXT));
+
+    // Remove the text at the bottom of the window
+    wmove(this->window, getmaxy(this->window) * (0.95), 0);
+    wclrtoeol(this->window);
+
+    wrefresh(this->window);
+
+    werase(this->game_window);
+    // borders
+    wattron(this->game_window, COLOR_PAIR(BLUE_TEXT));
+    box(this->game_window, 0, 0);
+    wattroff(this->game_window, COLOR_PAIR(BLUE_TEXT));
+
+    put_centered_colored_text(this->game_window, "PRESS ENTER TO START THE NEXT LEVEL", COLOR_YELLOW);
+    wrefresh(this->game_window);
+
+    nodelay(this->window, false);
+    while (wgetch(window) != '\n') {
+    }
+}
+
+void GameUI::wait_for_user_loss_screen() {
     wattron(window, A_BOLD | COLOR_PAIR(YELLOW_TEXT));
     mvwprintw(window, 0, 2, "Score: %5u", this->game->get_score());
     wattroff(window, COLOR_PAIR(YELLOW_TEXT));
 
-    wattron(window, COLOR_PAIR(GREEN_TEXT));
-    const char game_won_text[] = "GAME WON!!";
+    wattron(window, COLOR_PAIR(RED_TEXT));
+    const char game_won_text[] = "GAME LOST!!";
     mvwprintw(window, getbegy(this->game_window) / 2, (getmaxx(window) - strlen(game_won_text)) / 2, game_won_text);
-    wattroff(window, A_BOLD | COLOR_PAIR(GREEN_TEXT));
+    wattroff(window, A_BOLD | COLOR_PAIR(RED_TEXT));
+
+    // Remove the text at the bottom of the window
+    wmove(this->window, getmaxy(this->window) * (0.95), 0);
+    wclrtoeol(this->window);
 
     wrefresh(window);
 
@@ -122,7 +157,7 @@ void GameUI::wait_for_user_win_screen() {
     box(this->game_window, 0, 0);
     wattroff(this->game_window, COLOR_PAIR(BLUE_TEXT));
 
-    put_centered_colored_text(this->game_window, "PRESS ENTER TO START THE NEXT LEVEL", COLOR_YELLOW);
+    put_centered_colored_text(this->game_window, "PRESS ENTER TO GO BACK TO THE MAIN MENU", COLOR_YELLOW);
     wrefresh(this->game_window);
 
     nodelay(this->window, false);
