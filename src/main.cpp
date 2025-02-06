@@ -20,15 +20,11 @@ Snake::LevelList *default_levels() {
 int main(int, char **) {
     Graphics::start_ncurses();
 
-    #ifdef NDEBUG
     Snake::LevelList* level_list = Snake::LevelList::from_file(LEVELS_FILE_NAME);
 
     if(!level_list) {
         level_list = default_levels();
     }
-    #else
-    Snake::LevelList* level_list = default_levels();
-    #endif
 
     uint16_t window_width, window_height;
     getmaxyx(stdscr, window_height, window_width);
