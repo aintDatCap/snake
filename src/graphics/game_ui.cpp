@@ -100,6 +100,8 @@ void GameUI::update_game_window(int32_t remaining_time) {
         mvwaddch(this->game_window, coord.y, coord.x, '#'); // # body
     }
     wattroff(this->game_window, COLOR_PAIR(GREEN_TEXT));
+    curs_set(0);
+
     wrefresh(this->game_window);
     refresh();
 }
