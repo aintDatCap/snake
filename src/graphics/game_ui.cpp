@@ -143,7 +143,7 @@ void GameUI::wait_for_user_loss_screen() {
     wattroff(window, COLOR_PAIR(YELLOW_TEXT));
 
     wattron(window, COLOR_PAIR(RED_TEXT));
-    const char game_won_text[] = "GAME LOST!!";
+    const char game_won_text[] = "GAME LOST";
     mvwprintw(window, getbegy(this->game_window) / 2, (getmaxx(window) - strlen(game_won_text)) / 2, game_won_text);
     wattroff(window, A_BOLD | COLOR_PAIR(RED_TEXT));
 
