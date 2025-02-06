@@ -3,7 +3,7 @@
 ## About the project
 This is a project made by 3 students from the University of Bologna for their Programming course.
 The given guidelines regarding the project were to create a simple terminal-based snake videogame in the c++ programming language, specifically using the graphics library *curses/ncurses.h* and the basic programming concepts learnt during the lectures.
-![Image](./readme-media/game.png)
+![Image](./docs/imgs/game.png)
 
 ### Structure of the project's codebase
 The project has been structured and developed follwoing the 'MVC' programming framework, and 
@@ -18,7 +18,7 @@ Following are the steps required to play the game:
 * Make sure to have correctly configured the GCC compiler(compiler used to create and test this project)
 * Install and configure CMake to be used to build the project and being able to run it (i.g. if using the VsCode environment, there is the microsoft extention named *'CMake Tools'* to make this process easier and faster)
 * After correctly building the project(without errors) using CMake, run the project and the program will show the *following GUI on the terminal screen*:
-    ![Image](./readme-media/home.png)
+    ![Image](./docs/imgs/home.png)
 
 ## How to play
 After running the project, the user will be shown the main terminal screen where he can:
