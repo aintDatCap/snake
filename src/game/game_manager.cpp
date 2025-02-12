@@ -83,6 +83,7 @@ void SnakeGameManager::start_game(GameDifficulty game_difficulty, uint32_t level
                 frame_duration = this->get_frame_duration(this->level_list->get_current()->info.id);
 
                 game_ui->update_game_window(GAME_DURATION);
+                keypad((this->game_ui)->getWindow(), true);  // for arrow keys
                 nodelay((this->game_ui)->getWindow(), true);
             } else {
                 break;
